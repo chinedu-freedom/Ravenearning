@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import logoImg from "../../../../public/logo.jpeg";
 
 export default function VerifyOtpPage() {
   const router = useRouter();
@@ -25,7 +26,6 @@ export default function VerifyOtpPage() {
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
-  const siteLogo = settings.platform_logo || "/logo.jpeg";
 
   useEffect(() => {
     setIsMounted(true);
@@ -42,10 +42,12 @@ export default function VerifyOtpPage() {
     );
   }
 
-  const handleChange = (value, index) => {
-    if (!/^[0-9]?$/.test(value)) return;
+  const handleOtpChange = (e, index) => {
+    const value = e.target.value;
+    if (isNaN(value)) return;
+
     const newOtp = [...otp];
-    newOtp[index] = value;
+    newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
     const joinedOtp = newOtp.join("");
@@ -105,8 +107,15 @@ export default function VerifyOtpPage() {
       {/* Left side (OTP Form) */}
       <div className="min-h-screen flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
         <div className="w-full max-w-sm text-center flex flex-col items-center">
-          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-            <img src={siteLogo} alt="Logo" className="w-full h-full object-cover" />
+          <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
+            <Image 
+              src={logoImg} 
+              alt="Logo" 
+              width={64} 
+              height={64} 
+              className="w-full h-full object-cover" 
+              priority 
+            />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify OTP</h2>
           <p className="text-sm text-gray-500 mb-8">

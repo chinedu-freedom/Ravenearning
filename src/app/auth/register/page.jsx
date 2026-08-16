@@ -7,10 +7,12 @@ import { usePost, useFetchData } from "@/hooks/useApi";
 import { Input } from "@/components/ui/auth-input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { setAuthToken } from "@/config/axiosInstance";
 import { useEffect, useState, Suspense } from "react";
 import { Smartphone } from "lucide-react";
+import logoImg from "../../../../public/logo.jpeg";
 
 function SignupForm() {
   const router = useRouter();
@@ -37,9 +39,6 @@ function SignupForm() {
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
-  const siteLogo = (settings?.platform_logo && !settings.platform_logo.includes('/uploads/')) 
-    ? settings.platform_logo 
-    : "/logo.jpeg";
 
   useEffect(() => {
     setIsMounted(true);
@@ -101,14 +100,13 @@ function SignupForm() {
         <div className="w-full max-w-md">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-              <img 
-                src={siteLogo || "/logo.jpeg"} 
+              <Image 
+                src={logoImg} 
                 alt="Logo" 
+                width={64} 
+                height={64} 
                 className="w-full h-full object-cover" 
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = "/logo.jpeg";
-                }}
+                priority 
               />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Sign up</h1>

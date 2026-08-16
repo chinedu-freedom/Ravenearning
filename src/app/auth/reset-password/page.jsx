@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { usePost, useFetchData } from "@/hooks/useApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import logoImg from "../../../../public/logo.jpeg";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -20,7 +21,6 @@ export default function ResetPasswordPage() {
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
-  const siteLogo = settings.platform_logo || "/logo.jpeg";
 
   useEffect(() => {
     setIsMounted(true);
@@ -95,8 +95,15 @@ export default function ResetPasswordPage() {
       <div className="min-h-screen flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
         <div className="w-full max-w-sm">
           <div className="mb-10 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-              <img src={siteLogo} alt="Logo" className="w-full h-full object-cover" />
+            <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
+              <Image 
+                src={logoImg} 
+                alt="Logo" 
+                width={64} 
+                height={64} 
+                className="w-full h-full object-cover" 
+                priority 
+              />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
               Reset Password
