@@ -37,7 +37,9 @@ function SignupForm() {
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
-  const siteLogo = settings.platform_logo || "/logo.jpeg";
+  const siteLogo = (settings?.platform_logo && !settings.platform_logo.includes('/uploads/')) 
+    ? settings.platform_logo 
+    : "/logo.jpeg";
 
   useEffect(() => {
     setIsMounted(true);
@@ -99,7 +101,15 @@ function SignupForm() {
         <div className="w-full max-w-md">
           <div className="mb-10 flex flex-col items-center text-center">
             <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-              <img src={siteLogo} alt="Logo" className="w-full h-full object-cover" />
+              <img 
+                src={siteLogo || "/logo.jpeg"} 
+                alt="Logo" 
+                className="w-full h-full object-cover" 
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/logo.jpeg";
+                }}
+              />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Sign up</h1>
             <p className="text-gray-500 text-sm">
@@ -111,10 +121,10 @@ function SignupForm() {
             {/* Phone Number */}
             <div>
               <Input 
-                label="Mobile Phone Number" 
+                label="Phone Number" 
                 prefix="+27" 
                 icon={Smartphone}
-                placeholder="Mobile phone number"
+                placeholder="Phone number"
                 type="tel" 
                 {...register("phone")} 
               />
