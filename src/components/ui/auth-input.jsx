@@ -17,6 +17,9 @@ const Input = React.forwardRef(
       onChange,
       id,
       name,
+      prefix,
+      icon: Icon,
+      placeholder,
       ...props
     },
     ref
@@ -113,6 +116,13 @@ const Input = React.forwardRef(
 
     return (
       <div className="relative w-full">
+        {prefix && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none select-none text-gray-800 font-semibold text-sm z-10">
+            {Icon && <Icon className="w-4 h-4 text-gray-700 shrink-0" />}
+            <span>{prefix}</span>
+            <span className="text-gray-300">|</span>
+          </div>
+        )}
         <input
           id={generatedId}
           ref={combinedRef}
@@ -121,29 +131,19 @@ const Input = React.forwardRef(
           value={currentValue}
           onChange={handleChange}
           onBlur={handleBlur}
-          placeholder=" "
+          placeholder={placeholder || " "}
           className={cn(
             "peer block w-full rounded-md border border-gray-300 bg-white px-3 py-3 text-sm text-black",
             "focus:border-[#4fb3ff] focus:outline-none focus:ring-1 focus:ring-[#93c5fd] transition-all duration-150",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            
-            // 🔥 CRITICAL: Override autofill styles
-            "autofill:bg-white autofill:shadow-[inset_0_0_0px_1000px_white]",
-            "[-webkit-text-fill-color:black]",
-            "[&:-webkit-autofill]:bg-white",
-            "[&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_white]",
-            "[&:-internal-autofill-selected]:bg-white",
-            "[&:-internal-autofill-selected]:shadow-[inset_0_0_0px_1000px_white]",
-            
+            prefix ? (Icon ? "pl-[76px]" : "pl-16") : "",
             isPassword ? "pr-10" : "",
             className
           )}
-          // Additional inline style for maximum browser compatibility
           style={{
-            // Force white background on autofill
             boxShadow: "inset 0 0 0 1000px white",
           }}
-          {...props}
+          {...otherProps}
         />
 
         {label && (
@@ -152,7 +152,7 @@ const Input = React.forwardRef(
             className={cn(
               "absolute left-3 pointer-events-none transition-all duration-200",
               "text-gray-500",
-              shouldFloatLabel
+              (shouldFloatLabel || prefix)
                 ? [
                     "-top-2 text-xs font-medium text-[#4fb3ff]",
                     "bg-white px-1",
