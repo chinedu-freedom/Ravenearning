@@ -1,0 +1,331 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Volume2, ArrowRight, Play, X, Landmark, Wallet, Mail, BarChart2 } from "lucide-react";
+import { useFetchData } from "@/hooks/useApi";
+import { usePWA } from "@/components/PWAProvider";
+import { toast } from "sonner";
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const { isInstallable, installPWA } = usePWA();
+
+  // Fetch backend settings & profile for support links and language details
+  const { data: settingsResponse } = useFetchData("/settings", ["platform-settings"]);
+  const settings = settingsResponse?.settings || {};
+
+  const { data: userProfileResponse } = useFetchData("/users/me", ["user-profile"]);
+  const userProfile = userProfileResponse?.user;
+
+  // Carousel Slides
+  const slides = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=800&q=80",
+      title: "Ravenearning Cloud Mining",
+      subtitle: "Experience next-gen smart mining yield"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
+      title: "Explore the Ecosystem",
+      subtitle: "Daily automated yield on premium mining contracts"
+    },
+    {
+      id: 3,
+      image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80",
+      title: "Secure Active Mining",
+      subtitle: "Guaranteed daily returns with Ravenearning mining packages"
+    }
+  ];
+
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  // Auto play carousel slider
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % slides.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  return (
+    <div className="flex flex-col h-full bg-[#f0f4f8] overflow-y-auto pb-2 [&::-webkit-scrollbar]:hidden relative select-none">
+      
+      {/* Image Carousel Banner */}
+      <div className="px-4 pt-3 pb-1">
+        <div className="relative h-[180px] w-full rounded-[24px] overflow-hidden shadow-md bg-[#111827]">
+          {slides.map((slide, idx) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                idx === activeSlide ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="w-full h-full object-cover"
+              />
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+              {/* Slide text */}
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <h2 className="text-[17px] font-black leading-tight tracking-tight shadow-sm">
+                  {slide.title}
+                </h2>
+                <p className="text-[11px] text-white/90 font-medium mt-0.5 tracking-wide leading-none">
+                  {slide.subtitle}
+                </p>
+              </div>
+            </div>
+          ))}
+          {/* Indicator dots */}
+          <div className="absolute bottom-3 right-4 flex gap-1.5 z-10 items-center">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  idx === activeSlide ? "bg-[#4f8cff] w-4" : "bg-white/50 w-2"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 pt-3 pb-4 space-y-4">
+
+        {/* Action Grid (Matching eonassetsmining) */}
+        <div className="bg-[#111827] rounded-[24px] p-4 shadow-sm border border-white/5">
+          <div className="grid grid-cols-4 gap-y-5 gap-x-2">
+            {[
+              { label: "Recharge", icon: <span className="text-[24px]">💰</span>, action: () => router.push('/dashboard/wallet/deposit') },
+              { 
+                label: "Withdraw", 
+                icon: (
+                  <svg className="w-6 h-6 text-white my-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="17 1 21 5 17 9" />
+                    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                    <polyline points="7 23 3 19 7 15" />
+                    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                  </svg>
+                ), 
+                action: () => router.push('/dashboard/wallet/withdraw') 
+              },
+              { label: "Mine", icon: <span className="text-[24px]">⛏️</span>, action: () => router.push('/dashboard/mining') },
+              { label: "Active Mining", icon: <span className="text-[24px]">⚡</span>, action: () => router.push('/dashboard/investments') },
+              { label: "Bonus Code", icon: <span className="text-[24px]">🎁</span>, action: () => router.push('/dashboard/treasure') },
+              { label: "Referrals", icon: <span className="text-[24px]">👥</span>, action: () => router.push('/dashboard/team') },
+              { 
+                label: "Telegram Group", 
+                icon: (
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#38bdf8]" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.02-2.22-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.08 5.61-5.07c.24-.22-.05-.34-.38-.13l-6.93 4.36-2.98-.93c-.65-.2-.66-.65.14-.96l11.64-4.48c.54-.2 1.01.12.84 1.01z"/>
+                  </svg>
+                ), 
+                action: () => window.dispatchEvent(new Event('open-telegram-modal'))
+              },
+            ].map((item, idx) => (
+              <div 
+                key={idx} 
+                onClick={item.action} 
+                className="flex flex-col items-center gap-1.5 cursor-pointer group"
+              >
+                <div className="h-8 flex items-center justify-center select-none group-hover:scale-115 transition-transform duration-200">
+                  {item.icon}
+                </div>
+                <span className="text-[10px] text-white/80 font-medium text-center leading-tight">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Announcement Bar */}
+        <div className="bg-[#f0f9ff] text-[#0369a1] px-4 py-2.5 rounded-xl flex items-center gap-2 overflow-hidden shadow-sm border border-sky-200/50">
+          <Volume2 size={16} className="shrink-0 text-[#0284c7]" />
+          <div className="relative flex-1 overflow-hidden h-4">
+            <div className="absolute whitespace-nowrap animate-[marquee_15s_linear_infinite] text-[11.5px] font-extrabold tracking-wide">
+              Congratulations to participant *****1777 for inviting friends and earning spins! • Congrats to *****8921 for successfully activating plan! • Welcome new member *****4412 to Ravenearning network! • Get up to 10% daily commissions.
+            </div>
+          </div>
+        </div>
+
+        {/* Two Large Card Buttons (Side-by-side) */}
+        <div className="grid grid-cols-2 gap-3.5">
+          {/* Profit Card */}
+          <div
+            onClick={() => router.push("/dashboard/mining")}
+            className="bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] border border-sky-200/60 rounded-[20px] p-4 flex flex-col justify-between h-[155px] cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div>
+              <span className="text-[15px] font-black text-[#0284c7] flex items-center">
+                Profit
+                <ArrowRight size={13} className="ml-1" />
+              </span>
+              <p className="text-[10px] text-slate-500 font-bold mt-0.5 leading-none">
+                Earn daily returns
+              </p>
+            </div>
+            {/* Custom SVG Illustration for Profit */}
+            <div className="flex justify-end pr-1 pb-1">
+              <svg width="55" height="55" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="16" fill="rgba(2, 132, 199, 0.1)" />
+                <ellipse cx="22" cy="45" rx="8" ry="3" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+                <ellipse cx="22" cy="41" rx="8" ry="3" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+                <ellipse cx="22" cy="37" rx="8" ry="3" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+                <path d="M42 35 C42 35 34 32 30 36 C26 40 32 46 36 46 C40 46 48 40 48 35 Z" fill="#fed7aa" stroke="#c2410c" strokeWidth="1.5" />
+                <rect x="28" y="22" width="22" height="12" rx="2" transform="rotate(-15 28 22)" fill="#38bdf8" stroke="#0284c7" strokeWidth="1.5" />
+                <circle cx="37" cy="22" r="3" fill="#7dd3fc" />
+                <path d="M14 26 L22 18 L28 22 L38 12 M38 12 H32 M38 12 V18" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Transaction Log Card */}
+          <div
+            onClick={() => router.push("/dashboard/transactions")}
+            className="bg-gradient-to-br from-[#e0f2fe] to-[#bae6fd] border border-sky-300/50 rounded-[20px] p-4 flex flex-col justify-between h-[155px] cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div>
+              <span className="text-[14px] font-black text-[#0369a1] flex items-center leading-none">
+                TRANSACTION LOG
+                <ArrowRight size={13} className="ml-1 shrink-0" />
+              </span>
+              <p className="text-[10px] text-slate-500 font-bold mt-1 leading-none">
+                View history & records
+              </p>
+            </div>
+            {/* Custom SVG Illustration for Transaction Log */}
+            <div className="flex justify-end pr-1 pb-1">
+              <svg width="55" height="55" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="16" fill="rgba(59, 130, 246, 0.1)" />
+                {/* Clipboard body */}
+                <rect x="18" y="16" width="28" height="36" rx="4" fill="#ffffff" stroke="#0284c7" strokeWidth="2" />
+                {/* Clipboard top clip */}
+                <rect x="25" y="12" width="14" height="6" rx="2" fill="#0284c7" />
+                {/* Document lines */}
+                <line x1="24" y1="26" x2="40" y2="26" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <line x1="24" y1="32" x2="36" y2="32" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+                <line x1="24" y1="38" x2="38" y2="38" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+                {/* Badge circle with check */}
+                <circle cx="42" cy="44" r="8" fill="#10b981" />
+                <path d="M39 44 L41.5 46.5 L45.5 41.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* Banners: Lucky Wheel & Daily Claim */}
+        <div className="grid grid-cols-2 gap-3.5">
+          {/* Lucky Wheel */}
+          <div
+            onClick={() => router.push("/dashboard/spin")}
+            className="bg-gradient-to-r from-[#38bdf8] to-[#0284c7] text-white rounded-2xl p-4 flex justify-between items-center relative overflow-hidden shadow-sm h-[80px] cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div className="z-10">
+              <h4 className="text-[15px] font-black tracking-tight leading-none">Lucky Wheel</h4>
+              <p className="text-[9px] text-white/80 font-bold mt-1">Spin & Win Prizes</p>
+            </div>
+            {/* Spinning Wheel Graphic */}
+            <div className="absolute right-2.5 z-0 opacity-90">
+              <svg width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-[spin_18s_linear_infinite]">
+                <circle cx="24" cy="24" r="20" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
+                <circle cx="24" cy="24" r="16" fill="#ef4444" />
+                <path d="M24 4 L24 44 M4 24 H44" stroke="#fff" strokeWidth="1.5" />
+                <path d="M9.8 9.8 L38.2 38.2 M9.8 38.2 L38.2 9.8" stroke="#fff" strokeWidth="1.5" />
+                <circle cx="24" cy="24" r="4" fill="#fbbf24" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Daily Claim */}
+          <div
+            onClick={() => window.dispatchEvent(new Event('open-daily-checkin'))}
+            className="bg-gradient-to-r from-[#0284c7] to-[#1e40af] text-white rounded-2xl p-4 flex justify-between items-center relative overflow-hidden shadow-sm h-[80px] cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div className="z-10">
+              <h4 className="text-[15px] font-black tracking-tight leading-none">Daily Claim</h4>
+              <p className="text-[9px] text-white/80 font-bold mt-1">Check-in & Earn Rewards</p>
+            </div>
+            {/* Gift / Calendar Reward Graphic */}
+            <div className="absolute right-3.5 z-0 opacity-90">
+              <svg width="42" height="42" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Gift box */}
+                <rect x="10" y="18" width="28" height="22" rx="3" fill="#38bdf8" stroke="#ffffff" strokeWidth="1.5" />
+                {/* Box lid */}
+                <rect x="8" y="14" width="32" height="6" rx="2" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+                {/* Ribbon vertical */}
+                <rect x="22" y="14" width="4" height="26" fill="#ef4444" />
+                {/* Ribbon bow */}
+                <path d="M22 14 C18 8 12 12 22 14 Z" fill="#ef4444" />
+                <path d="M26 14 C30 8 36 12 26 14 Z" fill="#ef4444" />
+                {/* Sparkle */}
+                <path d="M38 8 L40 12 L44 14 L40 16 L38 20 L36 16 L32 14 L36 12 Z" fill="#fbbf24" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Player Section */}
+        <div className="relative rounded-[24px] overflow-hidden shadow-md group">
+          <img
+            src="https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=800&q=80"
+            alt="City Skyline Dusk"
+            className="w-full h-[180px] object-cover filter brightness-[0.7]"
+          />
+          {/* Cover gradient overlay */}
+          <div className="absolute inset-0 bg-black/30" />
+          {/* Centered play button at the bottom */}
+          <button
+            onClick={() => setIsVideoModalOpen(true)}
+            className="absolute bottom-5 left-1/2 -translate-x-1/2 w-12 h-8 bg-white hover:bg-gray-100 rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer z-10"
+          >
+            <Play size={18} fill="currentColor" className="text-gray-900 ml-0.5" />
+          </button>
+        </div>
+
+      </div>
+
+      {/* Floating WhatsApp Widget */}
+      <a
+        href={settings.whatsapp_support || "https://wa.me/33600000000"}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-20 right-4 z-40 w-12 h-12 bg-[#25d366] hover:bg-[#20ba5a] rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 cursor-pointer"
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0" className="text-white fill-current">
+          <path d="M12.004 2C6.48 2 2 6.48 2 12.004c0 1.848.502 3.652 1.458 5.234l-1.55 5.666 5.8-1.52A9.97 9.97 0 0 0 12.004 22c5.522 0 10.002-4.48 10.002-10.004C22.006 6.48 17.526 2 12.004 2zm5.726 13.916c-.246.696-1.226 1.296-1.688 1.348-.46.052-.906.246-2.924-.55-2.016-.798-3.324-2.846-3.426-2.982-.102-.136-.826-1.1-1.348-1.796-.52-.696-.264-1.206-.062-1.424.202-.218.448-.52.668-.78.22-.26.29-.44.44-.73.15-.29.074-.548-.036-.78-.11-.234-.99-2.384-1.358-3.272-.358-.864-.724-.748-1.002-.762l-.856-.01c-.296 0-.78.11-1.19.556-.41.446-1.562 1.528-1.562 3.722s1.598 4.31 1.82 4.606c.22.296 3.146 4.8 7.622 6.732.9.388 1.808.682 2.476.892 1.07.34 2.046.29 2.818.176.86-.128 2.64-.78 3.012-1.528.372-.748.372-1.392.26-1.528-.112-.136-.41-.218-.86-.44z" />
+        </svg>
+      </a>
+
+      {/* Video Modal Player */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+          <div className="bg-black border border-white/10 rounded-[24px] w-full max-w-[420px] overflow-hidden relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setIsVideoModalOpen(false)}
+              className="absolute top-3.5 right-3.5 z-10 w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+            <div className="relative aspect-video w-full">
+              <video
+                src="https://assets.mixkit.co/videos/preview/mixkit-venice-canal-at-sunset-40984-large.mp4"
+                controls
+                autoPlay
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
