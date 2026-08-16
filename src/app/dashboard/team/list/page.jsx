@@ -66,13 +66,13 @@ export default function TeamListPage() {
               <div key={user.id} className="bg-[#111827] rounded-[16px] px-4 py-3 flex items-center justify-between shadow-md border border-white/5">
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
-                  <div className="w-[48px] h-[48px] rounded-full bg-gradient-to-br from-[#0d9488] to-[#2563eb] flex items-center justify-center text-white font-bold text-[20px] shrink-0">
-                    {user.username.charAt(0).toUpperCase()}
+                  <div className="w-[48px] h-[48px] rounded-full bg-gradient-to-br from-[#0d9488] to-[#2563eb] flex items-center justify-center text-white font-bold text-[18px] shrink-0">
+                    {(user.phone || user.full_name || "M").charAt(0).toUpperCase()}
                   </div>
                   
                   {/* User Info */}
                   <div>
-                    <h3 className="text-white/90 font-bold text-[15px] -mb-0.5">{user.username}</h3>
+                    <h3 className="text-white/90 font-bold text-[14px] -mb-0.5">{user.phone || user.full_name || `Member #${user.id.slice(-4)}`}</h3>
                     <p className="text-gray-400 text-[12px] ">
                       Joined {new Date(user.joined_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </p>
@@ -87,14 +87,14 @@ export default function TeamListPage() {
                   <div className="flex items-baseline gap-2 -mb-0.5">
                     <span className="text-gray-400 text-[11px]">Balance:</span>
                     <span className="text-white/90 font-bold text-[14px]">
-                      ${Number(user.balance).toFixed(2)}
+                      R{Number(user.balance).toFixed(2)}
                     </span>
                   </div>
                   
                   <div className="flex items-baseline gap-2 -mb-0.5">
-                    <span className="text-gray-400 text-[11px]">Deposited:</span>
+                    <span className="text-gray-400 text-[11px]">Recharged:</span>
                     <span className="text-[#fbbf24] font-bold text-[13px]">
-                      ${Number(user.deposited_amount || 0).toFixed(2)}
+                      R{Number(user.deposited_amount || 0).toFixed(2)}
                     </span>
                   </div>
 

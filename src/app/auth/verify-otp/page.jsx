@@ -25,19 +25,19 @@ export default function VerifyOtpPage() {
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
-  const siteLogo = settings.platform_logo || null;
+  const siteLogo = settings.platform_logo || "/logo.jpeg";
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const verifyOtpMutation = usePost("/auth/verify-otp", null);
-  const resendOtpMutation = usePost("/auth/forgot-password", null);
+  const verifyOtpMutation = usePost("/auth/verify-otp", null, false);
+  const resendOtpMutation = usePost("/auth/resend-otp", null, false);
 
   if (!isMounted || isLoadingSettings) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999]">
-        <div className="w-12 h-12 border-4 border-gray-100 border-t-[#4f8cff] rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-gray-100 border-t-[#d97706] rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -63,19 +63,33 @@ export default function VerifyOtpPage() {
   };
 
   const onSubmit = (data) => {
-    const email = localStorage.getItem("resetEmail");
-    if (!email) {
-      toast.error("Session expired. Please request a new OTP.");
+    const fullOtp = otp.join("");
+    if (fullOtp.length < 4) {
+      toast.error("Please enter the full 4-digit OTP code");
       return;
     }
 
-    verifyOtpMutation.mutate({ ...data, email }, {
-      onSuccess: () => router.push("/auth/reset-password"),
-    });
+    const email = sessionStorage.getItem("resetPasswordEmail");
+    if (!email) {
+      toast.error("Session expired. Please go back and enter your email again.");
+      return;
+    }
+
+    verifyOtpMutation.mutate(
+      { email, otp: fullOtp },
+      {
+        onSuccess: (res) => {
+          if (res?.token) {
+            sessionStorage.setItem("resetPasswordToken", res.token);
+          }
+          router.push("/auth/reset-password");
+        },
+      }
+    );
   };
 
   const handleResend = () => {
-    const email = localStorage.getItem("resetEmail");
+    const email = sessionStorage.getItem("resetPasswordEmail");
     if (!email) {
       toast.error("Session expired. Please go back and enter your email again.");
       return;
@@ -91,17 +105,9 @@ export default function VerifyOtpPage() {
       {/* Left side (OTP Form) */}
       <div className="min-h-screen flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
         <div className="w-full max-w-sm text-center flex flex-col items-center">
-          {siteLogo ? (
-            <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-              <img src={siteLogo} alt="Logo" className="w-full h-full object-contain" />
-            </div>
-          ) : (
-            <div className="w-16 h-16 bg-gradient-to-br from-[#d97706] to-[#0f172a] rounded-full flex items-center justify-center shadow-sm mb-4">
-              <div className="text-white text-xs font-bold tracking-wider">
-                {siteName.substring(0, 4).toUpperCase()}
-              </div>
-            </div>
-          )}
+          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
+            <img src={siteLogo} alt="Logo" className="w-full h-full object-cover" />
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify OTP</h2>
           <p className="text-sm text-gray-500 mb-8">
             Enter the 4-digit code sent to your email to access {siteName}.

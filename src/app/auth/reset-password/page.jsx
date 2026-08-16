@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
-  const siteLogo = settings.platform_logo || null;
+  const siteLogo = settings.platform_logo || "/logo.jpeg";
 
   useEffect(() => {
     setIsMounted(true);
@@ -95,17 +95,9 @@ export default function ResetPasswordPage() {
       <div className="min-h-screen flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
         <div className="w-full max-w-sm">
           <div className="mb-10 flex flex-col items-center text-center">
-            {siteLogo ? (
-              <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-                <img src={siteLogo} alt="Logo" className="w-full h-full object-contain" />
-              </div>
-            ) : (
-              <div className="w-16 h-16 bg-gradient-to-br from-[#d97706] to-[#0f172a] rounded-full flex items-center justify-center shadow-sm mb-4">
-                <div className="text-white text-xs font-bold tracking-wider">
-                  {siteName.substring(0, 4).toUpperCase()}
-                </div>
-              </div>
-            )}
+            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
+              <img src={siteLogo} alt="Logo" className="w-full h-full object-cover" />
+            </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
               Reset Password
             </h1>

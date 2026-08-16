@@ -451,11 +451,11 @@ export default function TeamPage() {
                       >
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-full bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] font-bold text-[12px]">
-                            {(member.username || member.phone || "U").slice(0, 2).toUpperCase()}
+                            {(member.phone || member.full_name || "M").slice(0, 2).toUpperCase()}
                           </div>
                           <div>
                             <h4 className="text-white text-[13px] font-bold leading-tight">
-                              {member.phone || member.username || `User #${member.id}`}
+                              {member.phone || member.full_name || `Member #${member.id.slice(-4)}`}
                             </h4>
                             <div className="flex items-center gap-1 text-gray-400 text-[10.5px] mt-0.5">
                               <Calendar size={10} />

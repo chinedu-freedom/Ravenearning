@@ -1,22 +1,16 @@
 {
   "name": "Ravenearning",
   "short_name": "Ravenearning",
-  "description": "Ravenearning - The Premier Crypto Mining & Earnings Platform",
+  "description": "Ravenearning - Smart Mining & Earnings Platform",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#0b0f19",
-  "theme_color": "#4f8cff",
+  "theme_color": "#4fb3ff",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/logo.jpeg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     }
   ]

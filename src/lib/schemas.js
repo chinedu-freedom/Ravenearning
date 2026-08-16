@@ -19,8 +19,7 @@ export const otpSchema = z.object({
 
 export const signupSchema = z
   .object({
-    username: z.string().min(3, "Username must be at least 3 characters").optional(),
-    phone: z.string().min(6, "Enter a valid phone number"),
+    phone: z.string().min(5, "Enter a valid mobile phone number"),
     country_id: z.string().optional(),
     referred_by_code: z.string().optional(),
     password: z.string().min(6, "Password must be at least 6 characters"),

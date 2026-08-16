@@ -19,6 +19,10 @@ const poppins = Poppins({
 });
 
 export async function generateMetadata() {
+  const siteUrl = "https://ravenearning.vercel.app";
+  let siteName = "Ravenearning";
+  let siteTitle = "Ravenearning - Smart Mining & Earnings Platform";
+
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_URL;
     if (apiBase && apiBase.startsWith("http")) {
@@ -28,41 +32,57 @@ export async function generateMetadata() {
       });
       if (res.ok) {
         const data = await res.json();
-        const siteName = data?.settings?.site_name || "Ravenearning";
-        const siteTitle = data?.settings?.site_title || "The Ultimate Crypto Asset Mining & Earnings Platform";
-        return {
-          title: siteName,
-          description: siteTitle,
-          manifest: "/manifest.json",
-          icons: {
-            icon: "/logo.jpeg",
-            shortcut: "/logo.jpeg",
-            apple: "/logo.jpeg",
-          },
-          appleWebApp: {
-            capable: true,
-            statusBarStyle: "default",
-            title: siteName,
-          },
-        };
+        if (data?.settings?.site_name) siteName = data.settings.site_name;
+        if (data?.settings?.site_title) siteTitle = data.settings.site_title;
       }
     }
   } catch (error) {
-    // Ignore error and fallback to default
+    // Fallback to defaults
   }
+
   return {
-    title: "Ravenearning",
-    description: "The Ultimate Crypto Asset Mining & Earnings Platform",
+    metadataBase: new URL(siteUrl),
+    title: siteName,
+    description: siteTitle,
     manifest: "/manifest.json",
     icons: {
-      icon: "/logo.jpeg",
-      shortcut: "/logo.jpeg",
-      apple: "/logo.jpeg",
+      icon: [
+        { url: "/favicon.ico" },
+        { url: "/logo.jpeg", type: "image/jpeg" },
+        { url: "/icon.png", type: "image/png" },
+      ],
+      shortcut: ["/logo.jpeg"],
+      apple: [
+        { url: "/logo.jpeg" },
+        { url: "/apple-icon.png", type: "image/png" },
+      ],
+    },
+    openGraph: {
+      title: siteName,
+      description: siteTitle,
+      url: siteUrl,
+      siteName: siteName,
+      images: [
+        {
+          url: "/logo.jpeg",
+          width: 800,
+          height: 800,
+          alt: `${siteName} Logo`,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: siteName,
+      description: siteTitle,
+      images: ["/logo.jpeg"],
     },
     appleWebApp: {
       capable: true,
       statusBarStyle: "default",
-      title: "Ravenearning",
+      title: siteName,
     },
   };
 }
