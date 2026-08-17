@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Wallet, X, Loader2 } from "lucide-react";
+import { Wallet, X, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useFetchData } from "@/hooks/useApi";
 import { postData } from "@/config/apiHelpers";
@@ -15,8 +15,9 @@ export default function MiningPlansPage() {
   const { data: userRes } = useFetchData("/users/me", ["user"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
+  
   const plans = Array.isArray(plansRes?.data) 
-    ? [...plansRes.data].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+    ? [...plansRes.data].sort((a, b) => Number(a.min_investment || 0) - Number(b.min_investment || 0))
     : [];
   const router = useRouter();
 
@@ -41,7 +42,7 @@ export default function MiningPlansPage() {
       });
       
       if (data?.success) {
-        toast.success(data.message || "Plan activated successfully! Your investment is now running.");
+        toast.success(data.message || "Package activated successfully! Your investment is now running.");
         setSelectedPlan(null);
         setInvestmentAmount("");
         setTimeout(() => {
@@ -86,10 +87,10 @@ export default function MiningPlansPage() {
       <div className="px-5 pt-4 pb-1 flex justify-between items-center max-w-[480px] mx-auto w-full">
         <div>
           <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
-            Investment Plans
+            VIP Packages
           </h1>
           <p className="text-slate-500 text-[12.5px] font-medium mt-0.5">
-            Select a mining package
+            Select a Raven projector package
           </p>
         </div>
         <Link href="/dashboard/investments" className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200/80 shadow-xs">
@@ -102,13 +103,13 @@ export default function MiningPlansPage() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
             <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#4f8cff]" />
-            <p className="text-xs font-bold">Loading plans...</p>
+            <p className="text-xs font-bold">Loading packages...</p>
           </div>
         ) : plans.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-            <p className="text-sm font-bold">No plans available.</p>
+            <p className="text-sm font-bold">No packages available.</p>
           </div>
-        ) : plans.map((plan) => {
+        ) : plans.map((plan, index) => {
           const minInv = Number(plan.min_investment || 0);
           const dailyInc = (minInv * Number(plan.daily_income || 0)) / 100;
           const totalInc = dailyInc * Number(plan.duration || 0);
@@ -119,36 +120,39 @@ export default function MiningPlansPage() {
               {/* Upper Section: Flex Image + Details */}
               <div className="flex items-start gap-4">
                 {/* Left Product Image */}
-                <div className="w-[125px] h-[105px] rounded-[14px] overflow-hidden shrink-0 border border-slate-100 bg-slate-50 shadow-xs">
+                <div className="w-[125px] h-[115px] rounded-[14px] overflow-hidden shrink-0 border border-slate-100 bg-slate-50 shadow-xs relative">
                   <img
                     src={plan.image || defaultPlanImage}
                     alt={plan.name}
                     className="w-full h-full object-cover"
                   />
+                  <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-amber-400 text-amber-950 font-black text-[10px] tracking-wider uppercase shadow-xs">
+                    VIP{index + 1}
+                  </div>
                 </div>
 
                 {/* Right Details Column */}
-                <div className="flex-1 min-w-0 flex flex-col justify-between min-h-[105px]">
+                <div className="flex-1 min-w-0 flex flex-col justify-between min-h-[115px]">
                   <div>
-                    <h2 className="text-slate-900 font-bold text-[15px] tracking-tight leading-snug truncate">
+                    <h2 className="text-slate-900 font-extrabold text-[16px] tracking-tight leading-snug truncate">
                       {plan.name}
                     </h2>
-                    <p className="text-[#4f8cff] font-extrabold text-[15px] mt-1 leading-none">
+                    <p className="text-[#2563eb] font-black text-[16px] mt-1 leading-none">
                       {formatCurrency(minInv)}
                     </p>
                   </div>
 
                   <div className="space-y-1.5 mt-2">
                     <div className="flex justify-between items-center text-[12px]">
-                      <span className="text-slate-500 font-medium">Term:</span>
-                      <span className="text-slate-800 font-semibold">{plan.duration}-day</span>
+                      <span className="text-slate-500 font-medium">Duration:</span>
+                      <span className="text-slate-800 font-bold">{plan.duration}-DAYS</span>
                     </div>
                     <div className="flex justify-between items-center text-[12px]">
-                      <span className="text-slate-500 font-medium">Daily income:</span>
-                      <span className="text-slate-800 font-bold">{formatCurrency(dailyInc)}</span>
+                      <span className="text-slate-500 font-medium">Daily Income:</span>
+                      <span className="text-emerald-600 font-black">{formatCurrency(dailyInc)}</span>
                     </div>
                     <div className="flex justify-between items-center text-[12px]">
-                      <span className="text-slate-500 font-medium">Total income:</span>
+                      <span className="text-slate-500 font-medium">Total Revenue:</span>
                       <span className="text-slate-900 font-black">{formatCurrency(totalInc)}</span>
                     </div>
                   </div>
@@ -158,11 +162,10 @@ export default function MiningPlansPage() {
               {/* Bottom Full-Width BUY NOW Pill Button */}
               <button
                 onClick={() => handleMineClick(plan)}
-                className="w-full h-[42px] bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-bold tracking-wider text-[14px] uppercase rounded-full shadow-sm flex items-center justify-center transition-all cursor-pointer active:scale-[0.99]"
+                className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-extrabold py-3 rounded-full transition-all text-[13.5px] shadow-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
               >
-                BUY NOW
+                <span>ACTIVATE PACKAGE</span>
               </button>
-
             </div>
           );
         })}
@@ -170,15 +173,13 @@ export default function MiningPlansPage() {
 
       {/* Investment Modal */}
       {selectedPlan && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4">
-          <div
-            className="bg-white border border-slate-100 w-full max-w-[480px] rounded-t-[28px] sm:rounded-[28px] overflow-hidden flex flex-col animate-in slide-in-from-bottom-full duration-250 ease-out shadow-2xl"
-            style={{ maxHeight: '90vh' }}
-          >
-            {/* Drag Handle */}
-            <div className="w-full flex justify-center pt-3 pb-1">
-              <div className="w-12 h-1 bg-slate-200 rounded-full"></div>
-            </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onClick={closeModal} />
+
+          <div className="relative bg-white rounded-3xl max-w-sm w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            
+            {/* Modal Top Handle */}
+            <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mt-3 mb-1"></div>
 
             {/* Modal Header */}
             <div className="flex justify-between items-center px-5 pb-3 border-b border-slate-100">
@@ -188,7 +189,7 @@ export default function MiningPlansPage() {
                 </div>
                 <div>
                   <h3 className="font-extrabold text-slate-900 text-[15px] leading-tight">{selectedPlan.name}</h3>
-                  <p className="text-slate-500 text-[11px] font-medium mt-0.5">{selectedPlan.duration} days • {Number(selectedPlan.daily_income).toFixed(1)}% daily</p>
+                  <p className="text-slate-500 text-[11px] font-medium mt-0.5">{selectedPlan.duration} days ? {Number(selectedPlan.daily_income).toFixed(1)}% daily</p>
                 </div>
               </div>
               <button
@@ -211,7 +212,7 @@ export default function MiningPlansPage() {
                   <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Term</div>
                 </div>
                 <div className="text-center w-1/3">
-                  <div className="text-slate-900 font-extrabold text-[15px]">{(Number(selectedPlan.daily_income) * selectedPlan.duration).toFixed(1)}%</div>
+                  <div className="text-slate-900 font-extrabold text-[15px]">{(Number(selectedPlan.daily_income) * selectedPlan.duration).toFixed(0)}%</div>
                   <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Total Yield</div>
                 </div>
               </div>
@@ -228,15 +229,14 @@ export default function MiningPlansPage() {
               {/* Investment Amount */}
               <div>
                 <div className="flex justify-between items-end mb-2">
-                  <label className="text-slate-700 text-[12px] font-bold">Investment Amount</label>
-                  <span className="text-slate-400 text-[10px] font-medium">Min: {formatCurrency(Number(selectedPlan.min_investment))}</span>
+                  <label className="text-slate-700 text-[12px] font-bold">Package Price</label>
+                  <span className="text-slate-400 text-[10px] font-medium">Required: {formatCurrency(Number(selectedPlan.min_investment))}</span>
                 </div>
                 <input
                   type="number"
                   value={investmentAmount}
-                  onChange={(e) => setInvestmentAmount(e.target.value)}
-                  placeholder="Enter amount"
-                  className="w-full border border-slate-200 bg-slate-50 rounded-xl px-4 py-3 text-[15px] font-bold text-slate-900 focus:outline-none focus:border-[#4f8cff] focus:ring-1 focus:ring-[#4f8cff] transition-all"
+                  readOnly
+                  className="w-full border border-slate-200 bg-slate-100/70 rounded-xl px-4 py-3 text-[16px] font-black text-slate-900 focus:outline-none transition-all cursor-not-allowed"
                 />
               </div>
 
@@ -244,11 +244,11 @@ export default function MiningPlansPage() {
               <div className="space-y-3 pt-2">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                   <span className="text-slate-500 text-[12px] font-medium">Daily Income</span>
-                  <span className="text-[#4f8cff] text-[15px] font-extrabold">{formatCurrency(dailyIncome)}</span>
+                  <span className="text-emerald-600 text-[15px] font-extrabold">{formatCurrency(dailyIncome)}</span>
                 </div>
                 <div className="flex justify-between items-center pb-1">
-                  <span className="text-slate-500 text-[12px] font-medium">Total Expected Return</span>
-                  <span className="text-slate-900 text-[15px] font-black">{formatCurrency(totalReturn)}</span>
+                  <span className="text-slate-500 text-[12px] font-medium">Total Expected Revenue</span>
+                  <span className="text-[#2563eb] text-[15px] font-black">{formatCurrency(totalReturn)}</span>
                 </div>
               </div>
             </div>
@@ -260,7 +260,7 @@ export default function MiningPlansPage() {
                 disabled={isInvesting}
                 className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-extrabold py-3.5 rounded-full transition-all text-[15px] shadow-sm disabled:opacity-50 flex items-center justify-center cursor-pointer uppercase tracking-wider active:scale-[0.99]"
               >
-                {isInvesting ? <Loader2 className="w-5 h-5 animate-spin" /> : "CONFIRM PURCHASE"}
+                {isInvesting ? <Loader2 className="w-5 h-5 animate-spin" /> : "CONFIRM ACTIVATION"}
               </button>
             </div>
 
