@@ -16,6 +16,8 @@ export default function CustomerServicePage() {
     "https://t.me/ServeGREATLAND001";
 
   const groupTelegram =
+    settings.telegram_group ||
+    settings.telegram_group_chat ||
     settings.telegram_link ||
     settings.telegram_channel_link ||
     "https://t.me/GREATLANDGroup01";
@@ -92,6 +94,29 @@ export default function CustomerServicePage() {
             className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
             Customer Service
+          </button>
+        </div>
+
+        {/* Card 2: Official Telegram Group */}
+        <div className="bg-[#111827] rounded-[20px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
+          <div className="w-16 h-16 rounded-full bg-[#0284c7]/15 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] shadow-[0_0_20px_rgba(2,132,199,0.2)]">
+            <Users size={26} />
+          </div>
+
+          <h3 className="text-white text-[16px] font-bold tracking-tight">
+            Telegram Group
+          </h3>
+
+          <p className="text-gray-400 text-[12px] max-w-[280px] leading-relaxed">
+            Join the official Telegram group to connect with members and stay updated with platform announcements.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => handleOpenLink(groupTelegram)}
+            className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
+          >
+            Join Telegram Group
           </button>
         </div>
 

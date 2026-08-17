@@ -127,9 +127,9 @@ export default function HelpCenterPage() {
             <MessageCircle size={14} className="text-[#4f8cff] fill-[#4f8cff]/20" />
             <h3 className="text-white/90 text-[13px] font-bold">Contact Support</h3>
           </div>
-          <div>
+          <div className="grid grid-cols-1 gap-3">
             <button 
-              onClick={() => handleLink(settings.telegram_support)}
+              onClick={() => handleLink(settings.telegram_support || settings.telegram_support_link)}
               className="w-full cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex items-center gap-4 hover:bg-white/5 transition-colors"
             >
               <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-full flex items-center justify-center text-[#4f8cff] shrink-0">
@@ -138,6 +138,18 @@ export default function HelpCenterPage() {
               <div className="text-left flex-1">
                 <span className="text-white/90 text-[14px] font-bold block">Telegram Support</span>
                 <span className="text-gray-400 text-[11px]">Direct Customer Service</span>
+              </div>
+            </button>
+            <button 
+              onClick={() => handleLink(settings.telegram_group || settings.telegram_group_chat || settings.telegram_link)}
+              className="w-full cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex items-center gap-4 hover:bg-white/5 transition-colors"
+            >
+              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-full flex items-center justify-center text-[#4f8cff] shrink-0">
+                <Users size={20} className="text-[#4f8cff]" />
+              </div>
+              <div className="text-left flex-1">
+                <span className="text-white/90 text-[14px] font-bold block">Telegram Group</span>
+                <span className="text-gray-400 text-[11px]">Community Discussions</span>
               </div>
             </button>
           </div>
