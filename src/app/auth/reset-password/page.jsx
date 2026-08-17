@@ -67,8 +67,8 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    const email = localStorage.getItem("resetEmail");
-    if (!email) {
+    const phone = sessionStorage.getItem("resetPasswordPhone") || localStorage.getItem("resetEmail");
+    if (!phone) {
       toast.error("Session expired. Please request a new reset link.");
       router.push("/auth/forgot-password");
       return;
@@ -76,9 +76,10 @@ export default function ResetPasswordPage() {
 
     // ✅ usePost mutation
     resetPasswordMutation.mutate(
-      { email, newPassword: form.newPassword },
+      { phone, newPassword: form.newPassword },
       {
         onSuccess: () => {
+          sessionStorage.removeItem("resetPasswordPhone");
           localStorage.removeItem("resetEmail");
           toast.success("Password reset successfully");
           router.push("/"); // redirect to login

@@ -71,14 +71,14 @@ export default function VerifyOtpPage() {
       return;
     }
 
-    const email = sessionStorage.getItem("resetPasswordEmail");
-    if (!email) {
-      toast.error("Session expired. Please go back and enter your email again.");
+    const phone = sessionStorage.getItem("resetPasswordPhone") || sessionStorage.getItem("resetPasswordEmail");
+    if (!phone) {
+      toast.error("Session expired. Please go back and enter your phone number again.");
       return;
     }
 
     verifyOtpMutation.mutate(
-      { email, otp: fullOtp },
+      { phone, otp: fullOtp },
       {
         onSuccess: (res) => {
           if (res?.token) {
@@ -91,13 +91,13 @@ export default function VerifyOtpPage() {
   };
 
   const handleResend = () => {
-    const email = sessionStorage.getItem("resetPasswordEmail");
-    if (!email) {
-      toast.error("Session expired. Please go back and enter your email again.");
+    const phone = sessionStorage.getItem("resetPasswordPhone") || sessionStorage.getItem("resetPasswordEmail");
+    if (!phone) {
+      toast.error("Session expired. Please go back and enter your phone number again.");
       return;
     }
 
-    resendOtpMutation.mutate({ email }, {
+    resendOtpMutation.mutate({ phone }, {
       onSuccess: () => toast.success("OTP resent successfully"),
     });
   };
@@ -119,7 +119,7 @@ export default function VerifyOtpPage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify OTP</h2>
           <p className="text-sm text-gray-500 mb-8">
-            Enter the 4-digit code sent to your email to access {siteName}.
+            Enter the 4-digit code sent to your phone number to access {siteName}.
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

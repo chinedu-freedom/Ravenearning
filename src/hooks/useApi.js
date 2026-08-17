@@ -102,7 +102,7 @@ const getSuccessMessage = (method, endpoint, res) => {
     if (path.includes("/auth/login")) return "Logged in successfully!";
     if (path.includes("/auth/register")) return "Registration successful! Welcome.";
     if (path.includes("/auth/verify-otp")) return "OTP verified successfully!";
-    if (path.includes("/auth/forgot-password")) return "OTP sent successfully to your email!";
+    if (path.includes("/auth/forgot-password")) return "OTP sent successfully!";
     if (path.includes("/auth/reset-password")) return "Password reset successfully!";
     if (path.includes("/users/checkin")) return "Daily check-in claimed successfully!";
     if (path.includes("/users/withdraw")) return "Withdrawal request submitted successfully!";
@@ -110,9 +110,6 @@ const getSuccessMessage = (method, endpoint, res) => {
     if (path.includes("/users/treasure/claim")) return "Treasure code claimed successfully!";
     if (path.includes("/users/tasks/claim")) return "Task reward claimed successfully!";
     if (path.includes("/users/spin")) return "Lucky Spin completed successfully!";
-    if (path.includes("/users/me/send-verification")) return "Verification code sent to your email!";
-    if (path.includes("/users/me/verify-email")) return "Email verified successfully!";
-    if (path.includes("/auth/resend-verification")) return "Verification code resent successfully!";
     return "Request successful!";
   }
   
