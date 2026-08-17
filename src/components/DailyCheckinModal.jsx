@@ -273,7 +273,7 @@ function RewardCard({ reward, isNext, settings }) {
       <span className={`text-[11.5px] font-bold tracking-tight 
         ${isClaimed ? 'text-[#10b981]' : isAvailable ? 'text-[#38bdf8]' : 'text-gray-400'}
       `}>
-        +{settings?.currency_symbol || "$"}{parseFloat(reward.amount).toFixed(2)}
+        +{settings?.currency_symbol || "R"}{parseFloat(reward.amount).toFixed(2)}
       </span>
     </div>
   );

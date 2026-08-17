@@ -174,7 +174,7 @@ export default function TeamPage() {
             <div className="absolute top-[12%] right-[15%] w-3 h-[1px] bg-white/10 rotate-45" />
             <div className="absolute bottom-[20%] left-[8%] w-4 h-[1px] bg-white/10 rotate-45" />
             <div className="absolute bottom-[15%] right-[12%] w-5 h-[1px] bg-white/10 -rotate-45" />
-            <div className="absolute top-[22%] right-[8%] opacity-[0.04] text-[#38bdf8] text-[24px] font-bold">$</div>
+            <div className="absolute top-[22%] right-[8%] opacity-[0.04] text-[#38bdf8] text-[24px] font-bold">R</div>
           </div>
 
           <h3 className="text-white text-[16px] font-bold tracking-tight mb-1 relative z-10">

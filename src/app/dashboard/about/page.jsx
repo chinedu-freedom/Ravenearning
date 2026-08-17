@@ -117,7 +117,7 @@ export default function AboutPage() {
           <div className="divide-y divide-white/5">
             <div className="py-2.5 flex items-center justify-between text-[12.5px]">
               <span className="text-gray-400">Market Capitalisation</span>
-              <span className="text-white font-bold">$9.1bn</span>
+              <span className="text-white font-bold">R9.1bn</span>
             </div>
             <div className="py-2.5 flex items-center justify-between text-[12.5px]">
               <span className="text-gray-400">Shares Outstanding</span>
@@ -125,11 +125,11 @@ export default function AboutPage() {
             </div>
             <div className="py-2.5 flex items-center justify-between text-[12.5px]">
               <span className="text-gray-400">Net Cash Position</span>
-              <span className="text-[#38bdf8] font-bold">$1,208m</span>
+              <span className="text-[#38bdf8] font-bold">R1,208m</span>
             </div>
             <div className="py-2.5 flex items-center justify-between text-[12.5px]">
               <span className="text-gray-400">Total Available Liquidity</span>
-              <span className="text-[#38bdf8] font-black">$1,283m</span>
+              <span className="text-[#38bdf8] font-black">R1,283m</span>
             </div>
             <div className="py-2.5 flex items-center justify-between text-[12.5px]">
               <span className="text-gray-400">Total Processing Nominal</span>
