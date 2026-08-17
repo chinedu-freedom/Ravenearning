@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -103,7 +103,7 @@ export default function DashboardPage() {
         <div className="bg-[#111827] rounded-[24px] p-4 shadow-sm border border-white/5">
           <div className="grid grid-cols-4 gap-y-5 gap-x-2">
             {[
-              { label: "Recharge", icon: <span className="text-[24px]">💰</span>, action: () => router.push('/dashboard/wallet/deposit') },
+              { label: "Recharge", icon: <span className="text-[24px]">ðŸ’°</span>, action: () => router.push('/dashboard/wallet/deposit') },
               { 
                 label: "Withdraw", 
                 icon: (
@@ -116,10 +116,10 @@ export default function DashboardPage() {
                 ), 
                 action: () => router.push('/dashboard/wallet/withdraw') 
               },
-              { label: "Mine", icon: <span className="text-[24px]">⛏️</span>, action: () => router.push('/dashboard/mining') },
-              { label: "Active Mining", icon: <span className="text-[24px]">⚡</span>, action: () => router.push('/dashboard/investments') },
-              { label: "Bonus Code", icon: <span className="text-[24px]">🎁</span>, action: () => router.push('/dashboard/treasure') },
-              { label: "Referrals", icon: <span className="text-[24px]">👥</span>, action: () => router.push('/dashboard/team') },
+              { label: "Mine", icon: <span className="text-[24px]">â›ï¸</span>, action: () => router.push('/dashboard/mining') },
+              { label: "Active Mining", icon: <span className="text-[24px]">âš¡</span>, action: () => router.push('/dashboard/investments') },
+              { label: "Bonus Code", icon: <span className="text-[24px]">ðŸŽ</span>, action: () => router.push('/dashboard/treasure') },
+              { label: "Referrals", icon: <span className="text-[24px]">ðŸ‘¥</span>, action: () => router.push('/dashboard/team') },
               { 
                 label: "Support", 
                 icon: (
@@ -151,7 +151,7 @@ export default function DashboardPage() {
           <Volume2 size={16} className="shrink-0 text-[#0284c7]" />
           <div className="relative flex-1 overflow-hidden h-4">
             <div className="absolute whitespace-nowrap animate-[marquee_15s_linear_infinite] text-[11.5px] font-extrabold tracking-wide">
-              Congratulations to participant *****1777 for inviting friends and earning spins! • Congrats to *****8921 for successfully activating plan! • Welcome new member *****4412 to Ravenearning network! • Get up to 10% daily commissions.
+              Congratulations to participant *****1777 for inviting friends and earning spins! â€¢ Congrats to *****8921 for successfully activating plan! â€¢ Welcome new member *****4412 to Ravenearning network! â€¢ Get up to 10% daily commissions.
             </div>
           </div>
         </div>
@@ -221,52 +221,24 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Banners: Lucky Wheel & Daily Claim */}
-        <div className="grid grid-cols-2 gap-3.5">
-          {/* Lucky Wheel */}
+        {/* Banner: Lucky Wheel */}
+        <div>
           <div
             onClick={() => router.push("/dashboard/spin")}
-            className="bg-gradient-to-r from-[#38bdf8] to-[#0284c7] text-white rounded-2xl p-4 flex justify-between items-center relative overflow-hidden shadow-sm h-[80px] cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+            className="bg-gradient-to-r from-[#38bdf8] to-[#0284c7] text-white rounded-2xl p-4 flex justify-between items-center relative overflow-hidden shadow-sm h-[85px] cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
           >
             <div className="z-10">
-              <h4 className="text-[15px] font-black tracking-tight leading-none">Lucky Wheel</h4>
-              <p className="text-[9px] text-white/80 font-bold mt-1">Spin & Win Prizes</p>
+              <h4 className="text-[16px] font-black tracking-tight leading-none">Lucky Wheel</h4>
+              <p className="text-[11px] text-white/80 font-bold mt-1.5">Spin the wheel & win daily jackpot rewards!</p>
             </div>
             {/* Spinning Wheel Graphic */}
-            <div className="absolute right-2.5 z-0 opacity-90">
-              <svg width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-[spin_18s_linear_infinite]">
+            <div className="absolute right-4 z-0 opacity-90">
+              <svg width="52" height="52" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-[spin_18s_linear_infinite]">
                 <circle cx="24" cy="24" r="20" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
                 <circle cx="24" cy="24" r="16" fill="#ef4444" />
                 <path d="M24 4 L24 44 M4 24 H44" stroke="#fff" strokeWidth="1.5" />
                 <path d="M9.8 9.8 L38.2 38.2 M9.8 38.2 L38.2 9.8" stroke="#fff" strokeWidth="1.5" />
                 <circle cx="24" cy="24" r="4" fill="#fbbf24" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Daily Claim */}
-          <div
-            onClick={() => window.dispatchEvent(new Event('open-daily-checkin'))}
-            className="bg-gradient-to-r from-[#0284c7] to-[#1e40af] text-white rounded-2xl p-4 flex justify-between items-center relative overflow-hidden shadow-sm h-[80px] cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
-          >
-            <div className="z-10">
-              <h4 className="text-[15px] font-black tracking-tight leading-none">Daily Claim</h4>
-              <p className="text-[9px] text-white/80 font-bold mt-1">Check-in & Earn Rewards</p>
-            </div>
-            {/* Gift / Calendar Reward Graphic */}
-            <div className="absolute right-3.5 z-0 opacity-90">
-              <svg width="42" height="42" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Gift box */}
-                <rect x="10" y="18" width="28" height="22" rx="3" fill="#38bdf8" stroke="#ffffff" strokeWidth="1.5" />
-                {/* Box lid */}
-                <rect x="8" y="14" width="32" height="6" rx="2" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
-                {/* Ribbon vertical */}
-                <rect x="22" y="14" width="4" height="26" fill="#ef4444" />
-                {/* Ribbon bow */}
-                <path d="M22 14 C18 8 12 12 22 14 Z" fill="#ef4444" />
-                <path d="M26 14 C30 8 36 12 26 14 Z" fill="#ef4444" />
-                {/* Sparkle */}
-                <path d="M38 8 L40 12 L44 14 L40 16 L38 20 L36 16 L32 14 L36 12 Z" fill="#fbbf24" />
               </svg>
             </div>
           </div>
@@ -317,3 +289,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

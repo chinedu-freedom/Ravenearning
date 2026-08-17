@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -104,7 +104,7 @@ const getSuccessMessage = (method, endpoint, res) => {
     if (path.includes("/auth/verify-otp")) return "OTP verified successfully!";
     if (path.includes("/auth/forgot-password")) return "OTP sent successfully!";
     if (path.includes("/auth/reset-password")) return "Password reset successfully!";
-    if (path.includes("/users/checkin")) return "Daily check-in claimed successfully!";
+    
     if (path.includes("/users/withdraw")) return "Withdrawal request submitted successfully!";
     if (path.includes("/users/deposit")) return "Deposit request submitted successfully!";
     if (path.includes("/users/treasure/claim")) return "Treasure code claimed successfully!";

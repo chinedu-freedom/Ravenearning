@@ -1,7 +1,6 @@
-"use client";
+﻿"use client";
 
 import BottomNav from "@/components/BottomNav";
-import DailyCheckinModal from "@/components/DailyCheckinModal";
 import InstallGuideModal from "@/components/InstallGuideModal";
 import { useFetchData } from "@/hooks/useApi";
 import { usePathname } from "next/navigation";
@@ -9,11 +8,8 @@ import { usePathname } from "next/navigation";
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
   const isHome = pathname === "/dashboard";
-  const isAccount = pathname.startsWith("/dashboard/account");
-  const isTeam = pathname === "/dashboard/team";
 
   const { isLoading: isLoadingSettings, data: settingsResponse } = useFetchData("/settings", ["platform-settings"]);
-  const { isLoading: isLoadingProfile } = useFetchData("/users/me", ["user-profile"]);
 
   const settings = settingsResponse?.settings || {};
   const siteName = settings.site_name || "Ravenearning";
@@ -36,7 +32,6 @@ export default function DashboardLayout({ children }) {
           {children}
         </div>
 
-        <DailyCheckinModal />
         <InstallGuideModal />
 
       </div>
