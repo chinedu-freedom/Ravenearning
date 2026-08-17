@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -114,7 +114,7 @@ export default function AccountPage() {
           {/* User Info */}
           <div className="flex flex-col justify-center flex-1 min-w-0">
             <h2 className="text-[17px] font-bold text-white/90 tracking-tight leading-tight truncate">
-              {userProfile?.phone || userProfile?.full_name || "8158051119"}
+              {userProfile?.phone || "Customer"}
             </h2>
             <p className="text-[12px] text-gray-400 font-medium mt-1">
               ID: <span className="text-gray-300 font-semibold">{userProfile?.id || userProfile?.referral_code || "1263"}</span>

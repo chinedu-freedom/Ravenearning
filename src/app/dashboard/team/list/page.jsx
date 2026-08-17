@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -67,12 +67,12 @@ export default function TeamListPage() {
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
                   <div className="w-[48px] h-[48px] rounded-full bg-gradient-to-br from-[#0d9488] to-[#2563eb] flex items-center justify-center text-white font-bold text-[18px] shrink-0">
-                    {(user.phone || user.full_name || "M").charAt(0).toUpperCase()}
+                    {(user.phone || "M").charAt(0).toUpperCase()}
                   </div>
                   
                   {/* User Info */}
                   <div>
-                    <h3 className="text-white/90 font-bold text-[14px] -mb-0.5">{user.phone || user.full_name || `Member #${user.id.slice(-4)}`}</h3>
+                    <h3 className="text-white/90 font-bold text-[14px] -mb-0.5">{user.phone || `Member #${user.id.slice(-4)}`}</h3>
                     <p className="text-gray-400 text-[12px] ">
                       Joined {new Date(user.joined_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </p>

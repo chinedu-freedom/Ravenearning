@@ -1,32 +1,35 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, User, Smartphone, Share2, Calendar, Info, Loader2, Globe } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
+import {
+  ArrowLeft,
+  Smartphone,
+  Share2,
+  Calendar
+} from "lucide-react";
 
-export default function MyProfilePage() {
+export default function ProfilePage() {
   const router = useRouter();
-  const { data, isLoading } = useFetchData("/users/me", ["profile"]);
-  const user = data?.user || {};
+  const { data: userProfile, isLoading } = useFetchData("/users/me");
+  const user = userProfile?.user || {};
 
   return (
-    <div className="flex flex-col h-full bg-[#0b0f19] overflow-y-auto [&::-webkit-scrollbar]:hidden">
+    <div className="flex flex-col h-full bg-[#0b0f19] overflow-y-auto [&::-webkit-scrollbar]:hidden ">
       {/* Header */}
-      <div className="bg-[#111827] px-4 py-3.5 flex items-center sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <button 
-          onClick={() => router.push('/dashboard/settings')}
-          className="mr-3 text-gray-400 hover:text-white transition-colors cursor-pointer"
+      <div className="bg-[#111827] px-4 py-3 flex items-center gap-2.5 sticky top-0 z-20 shadow-sm border-b border-white/5">
+        <button
+          onClick={() => router.back()}
+          className="w-7 h-7 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center transition-colors text-gray-400 cursor-pointer"
         >
           <ArrowLeft size={16} />
         </button>
-        <h1 className="text-white/90 text-[15px] font-bold">My Profile</h1>
+        <h1 className="text-white/90 text-[15px] font-bold">Profile Details</h1>
       </div>
 
       <div className="px-4 py-4 max-w-[480px] mx-auto w-full space-y-4">
-        
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center p-8 bg-[#111827] rounded-[20px] border border-white/5 shadow-sm">
-             <Loader2 className="animate-spin text-[#4f8cff] mb-2" size={32} />
+          <div className="bg-[#111827] rounded-[16px] border border-white/5 p-6 text-center">
              <p className="text-gray-500 text-sm">Loading profile...</p>
           </div>
         ) : (
@@ -34,30 +37,12 @@ export default function MyProfilePage() {
             {/* Main Details Card */}
             <div className="bg-[#111827] rounded-[16px] border border-white/5 shadow-sm overflow-hidden">
               <div className="flex flex-col divide-y divide-white/5">
-                {/* Full Name */}
-                <div className="p-4">
-                  <div className="text-gray-400 text-[10px] font-medium tracking-wide uppercase mb-1.5">Full Name</div>
-                  <div className="flex items-center gap-3">
-                    <User size={16} className="text-[#4f8cff] fill-[#4f8cff]/20" />
-                    <span className="text-white/90 text-[14px]">{user.full_name || "N/A"}</span>
-                  </div>
-                </div>
-
                 {/* Phone Number */}
                 <div className="p-4">
                   <div className="text-gray-400 text-[10px] font-medium tracking-wide uppercase mb-1.5">Phone Number</div>
                   <div className="flex items-center gap-3">
                     <Smartphone size={16} className="text-[#4f8cff]" />
-                    <span className="text-white/90 text-[14px]">{user.phone || user.username || "N/A"}</span>
-                  </div>
-                </div>
-
-                {/* Country */}
-                <div className="p-4">
-                  <div className="text-gray-400 text-[10px] font-medium tracking-wide uppercase mb-1.5">Country</div>
-                  <div className="flex items-center gap-3">
-                    <Globe size={16} className="text-[#4f8cff] fill-[#4f8cff]/20" />
-                    <span className="text-white/90 text-[14px]">{user.country?.country_name || "N/A"}</span>
+                    <span className="text-white/90 text-[14px]">{user.phone || "N/A"}</span>
                   </div>
                 </div>
 
@@ -81,20 +66,12 @@ export default function MyProfilePage() {
               </div>
             </div>
 
-            {/* Info Banner */}
-            <div className="bg-blue-900/20 rounded-[12px] p-4 border border-[#4f8cff]/20 flex items-start gap-3">
-              <div className="mt-0.5 shrink-0">
-                <div className="w-[18px] h-[18px] bg-[#4f8cff] rounded-full flex items-center justify-center text-white">
-                  <Info size={12} strokeWidth={3} />
-                </div>
-              </div>
-              <p className="text-blue-200 text-[13px] leading-snug">
-                Profile information cannot be edited. Contact support if you need to make changes.
-              </p>
-            </div>
+            {/* Hint Notice */}
+            <p className="text-gray-500 text-[12px] text-center px-4">
+              Your account is secured by your phone number and security PIN.
+            </p>
           </>
         )}
-
       </div>
     </div>
   );

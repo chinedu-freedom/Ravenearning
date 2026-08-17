@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ function WithdrawContent() {
   const bankDetails = user?.bank_details;
   const bankName = bankDetails?.bank_name || "Capitec Bank";
   const accountNumber = bankDetails?.account_number || "1052847890";
-  const accountName = bankDetails?.account_name || user?.full_name || "Account Holder";
+  const accountName = bankDetails?.account_name || user?.phone || "Account Holder";
   const maskedAccount = accountNumber.length >= 4 
     ? `**** ${accountNumber.slice(-4)}`
     : `**** 7890`;
