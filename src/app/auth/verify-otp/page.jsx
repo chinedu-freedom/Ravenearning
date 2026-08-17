@@ -134,14 +134,14 @@ export default function VerifyOtpPage() {
                   value={digit}
                   onChange={(e) => handleChange(e.target.value, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 focus:ring-2 focus:ring-amber-500"
+                  className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 focus:ring-2 focus:ring-[#4fb3ff]"
                 />
               ))}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-amber-600 text-white hover:bg-amber-700 rounded-md py-3 font-medium transition-all"
+              className="w-full h-10 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-95 active:brightness-90 rounded-md text-sm font-medium transition-all shadow-sm cursor-pointer"
               disabled={verifyOtpMutation.isPending}
             >
               {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
@@ -156,9 +156,9 @@ export default function VerifyOtpPage() {
                 className={`font-medium cursor-pointer hover:underline ${
                   resendOtpMutation.isPending
                     ? "text-gray-400 cursor-not-allowed"
-                    : "text-amber-600"
+                    : "text-[#4fb3ff]"
                 }`}
-               className="cursor-pointer">
+              >
                 {resendOtpMutation.isPending ? "Resending..." : "Resend"}
               </button>
             </p>

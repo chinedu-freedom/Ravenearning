@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
             <Button
               type="submit"
               disabled={resetPasswordMutation.isPending}
-              className="w-full bg-amber-600 text-white hover:bg-amber-700 rounded-md py-3 font-medium transition-all disabled:opacity-70"
+              className="w-full h-10 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-95 active:brightness-90 rounded-md text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-70"
             >
               {resetPasswordMutation.isPending
                 ? "Resetting..."
@@ -144,7 +144,7 @@ export default function ResetPasswordPage() {
               Back to{" "}
               <Link
                 href="/"
-                className="text-amber-600 font-medium hover:underline cursor-pointer"
+                className="text-[#4fb3ff] font-medium hover:underline cursor-pointer"
               >
                 Login
               </Link>
