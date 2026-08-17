@@ -59,7 +59,7 @@ export default function HelpCenterPage() {
       id: 3,
       title: "Is my account secure?",
       desc: "Security measures we use...",
-      answer: "Yes, your account is highly secure. We use industry-standard encryption protocols, and you can further secure your account by verifying your email and setting up a secure withdrawal pin.",
+      answer: "Yes, your account is highly secure. We use industry-standard encryption protocols, and you can further secure your account by setting up a secure withdrawal pin.",
       icon: ShieldCheck,
       iconBg: "bg-[#ede9fe]",
       iconColor: "text-[#4f8cff]"
@@ -127,56 +127,18 @@ export default function HelpCenterPage() {
             <MessageCircle size={14} className="text-[#4f8cff] fill-[#4f8cff]/20" />
             <h3 className="text-white/90 text-[13px] font-bold">Contact Support</h3>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div>
             <button 
               onClick={() => handleLink(settings.telegram_support)}
-              className="cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex flex-col items-center text-center hover:bg-white/5 transition-colors"
+              className="w-full cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex items-center gap-4 hover:bg-white/5 transition-colors"
             >
-              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-full flex items-center justify-center text-[#4f8cff] mb-2.5">
+              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-full flex items-center justify-center text-[#4f8cff] shrink-0">
                 <Send size={20} className="fill-[#4f8cff] -ml-0.5" />
               </div>
-              <span className="text-white/90 text-[13px] font-bold mb-0.5">Telegram</span>
-              <span className="text-gray-400 text-[11px]">Fast response</span>
-            </button>
-            <button 
-              onClick={() => handleLink(settings.whatsapp_support)}
-              className="cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex flex-col items-center text-center hover:bg-white/5 transition-colors"
-            >
-              <div className="w-[42px] h-[42px] bg-green-900/20 rounded-full flex items-center justify-center text-[#16a34a] mb-2.5">
-                <Phone size={20} className="fill-[#16a34a]" />
+              <div className="text-left flex-1">
+                <span className="text-white/90 text-[14px] font-bold block">Telegram Support</span>
+                <span className="text-gray-400 text-[11px]">Direct Customer Service</span>
               </div>
-              <span className="text-white/90 text-[13px] font-bold mb-0.5">WhatsApp</span>
-              <span className="text-gray-400 text-[11px]">24/7 support</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Join Our Community */}
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <Users size={14} className="text-[#4f8cff] fill-[#4f8cff]/20" />
-            <h3 className="text-white/90 text-[13px] font-bold">Join Our Community</h3>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <button 
-              onClick={() => handleLink(settings.telegram_community)}
-              className="cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex flex-col items-center text-center hover:bg-white/5 transition-colors"
-            >
-              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-[14px] flex items-center justify-center text-[#4f8cff] mb-2.5">
-                <Send size={20} className="fill-[#4f8cff] -ml-0.5" />
-              </div>
-              <span className="text-white/90 text-[13px] font-bold mb-0.5">Channel</span>
-              <span className="text-gray-400 text-[11px]">News & Updates</span>
-            </button>
-            <button 
-              onClick={() => handleLink(settings.telegram_group)}
-              className="cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex flex-col items-center text-center hover:bg-white/5 transition-colors"
-            >
-              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-[14px] flex items-center justify-center text-[#4f8cff] mb-2.5">
-                <Users size={20} className="fill-[#4f8cff]" />
-              </div>
-              <span className="text-white/90 text-[13px] font-bold mb-0.5">Whatsapp Group</span>
-              <span className="text-gray-400 text-[11px]">Community</span>
             </button>
           </div>
         </div>

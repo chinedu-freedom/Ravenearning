@@ -3,7 +3,6 @@
 import BottomNav from "@/components/BottomNav";
 import DailyCheckinModal from "@/components/DailyCheckinModal";
 import InstallGuideModal from "@/components/InstallGuideModal";
-import TelegramModal from "@/components/TelegramModal";
 import { useFetchData } from "@/hooks/useApi";
 import { usePathname } from "next/navigation";
 
@@ -39,7 +38,6 @@ export default function DashboardLayout({ children }) {
 
         <DailyCheckinModal />
         <InstallGuideModal />
-        <TelegramModal />
 
       </div>
       <BottomNav />

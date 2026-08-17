@@ -121,13 +121,13 @@ export default function DashboardPage() {
               { label: "Bonus Code", icon: <span className="text-[24px]">🎁</span>, action: () => router.push('/dashboard/treasure') },
               { label: "Referrals", icon: <span className="text-[24px]">👥</span>, action: () => router.push('/dashboard/team') },
               { 
-                label: "Telegram Group", 
+                label: "Support", 
                 icon: (
                   <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#38bdf8]" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.02-2.22-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.08 5.61-5.07c.24-.22-.05-.34-.38-.13l-6.93 4.36-2.98-.93c-.65-.2-.66-.65.14-.96l11.64-4.48c.54-.2 1.01.12.84 1.01z"/>
                   </svg>
                 ), 
-                action: () => window.dispatchEvent(new Event('open-telegram-modal'))
+                action: () => router.push('/dashboard/account/service')
               },
             ].map((item, idx) => (
               <div 
@@ -291,18 +291,6 @@ export default function DashboardPage() {
         </div>
 
       </div>
-
-      {/* Floating WhatsApp Widget */}
-      <a
-        href={settings.whatsapp_support || "https://wa.me/33600000000"}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-20 right-4 z-40 w-12 h-12 bg-[#25d366] hover:bg-[#20ba5a] rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 cursor-pointer"
-      >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0" className="text-white fill-current">
-          <path d="M12.004 2C6.48 2 2 6.48 2 12.004c0 1.848.502 3.652 1.458 5.234l-1.55 5.666 5.8-1.52A9.97 9.97 0 0 0 12.004 22c5.522 0 10.002-4.48 10.002-10.004C22.006 6.48 17.526 2 12.004 2zm5.726 13.916c-.246.696-1.226 1.296-1.688 1.348-.46.052-.906.246-2.924-.55-2.016-.798-3.324-2.846-3.426-2.982-.102-.136-.826-1.1-1.348-1.796-.52-.696-.264-1.206-.062-1.424.202-.218.448-.52.668-.78.22-.26.29-.44.44-.73.15-.29.074-.548-.036-.78-.11-.234-.99-2.384-1.358-3.272-.358-.864-.724-.748-1.002-.762l-.856-.01c-.296 0-.78.11-1.19.556-.41.446-1.562 1.528-1.562 3.722s1.598 4.31 1.82 4.606c.22.296 3.146 4.8 7.622 6.732.9.388 1.808.682 2.476.892 1.07.34 2.046.29 2.818.176.86-.128 2.64-.78 3.012-1.528.372-.748.372-1.392.26-1.528-.112-.136-.41-.218-.86-.44z" />
-        </svg>
-      </a>
 
       {/* Video Modal Player */}
       {isVideoModalOpen && (

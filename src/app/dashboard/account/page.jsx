@@ -62,7 +62,7 @@ export default function AccountPage() {
   };
 
   const handleCustomerService = () => {
-    window.dispatchEvent(new Event("open-telegram-modal"));
+    router.push("/dashboard/account/service");
   };
 
   const currencySymbol = settings.currency_symbol || "R";

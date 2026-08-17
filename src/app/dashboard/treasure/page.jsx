@@ -6,17 +6,10 @@ import { useRouter } from "next/navigation";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 import Image from "next/image";
-import TelegramModal from "@/components/TelegramModal";
 
 export default function TreasurePage() {
   const router = useRouter();
   const [giftCode, setGiftCode] = useState("");
-  const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
-
-  useEffect(() => {
-    // Open the Telegram modal immediately when the page loads
-    setIsTelegramModalOpen(true);
-  }, []);
 
   const { data: historyData, isLoading } = useFetchData("/users/treasure/history", ["treasure-history"]);
   const claimMutation = usePost("/users/treasure/claim", "treasure-history");
@@ -236,8 +229,6 @@ export default function TreasurePage() {
         )}
 
       </div>
-
-      <TelegramModal isOpen={isTelegramModalOpen} setIsOpen={setIsTelegramModalOpen} />
     </div>
   );
 }
