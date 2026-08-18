@@ -18,16 +18,16 @@ import Link from "next/link";
 function WithdrawContent() {
   const router = useRouter();
 
-  const [amount, setAmount] = useState("2000");
+  const [amount, setAmount] = useState("100");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Fetch settings & current user profile
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
-  const minWithdrawal = Number(settings.min_withdrawal || 2000);
+  const minWithdrawal = Number(settings.min_withdrawal || 100);
   const maxWithdrawal = Number(settings.max_withdrawal || 5000000);
-  const feePercent = Number(settings.withdrawal_charge || 20);
+  const feePercent = Number(settings.withdrawal_charge || 15);
 
   const { data: userRes, refetch: refetchUser, isLoading: isLoadingUser } = useFetchData("/users/me", ["user-profile"]);
   const user = userRes?.user;
@@ -230,7 +230,7 @@ function WithdrawContent() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="2000"
+              placeholder="100"
               className="text-slate-900 font-bold text-[24px] font-mono outline-none w-full bg-transparent placeholder:text-slate-300"
             />
           </div>

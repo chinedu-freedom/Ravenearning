@@ -51,14 +51,14 @@ export default function TeamPage() {
   const teamData = teamRes?.data;
   const overview = teamData?.overview || { new_members_today: 0, new_earnings_today: 0, total_team: 0 };
   const levels = teamData?.levels || [
-    { level: 1, total_members: 0, valid_members: 0, commission_rate: 25, total_earnings: 0, total_deposits: 0 },
-    { level: 2, total_members: 0, valid_members: 0, commission_rate: 2, total_earnings: 0, total_deposits: 0 },
-    { level: 3, total_members: 0, valid_members: 0, commission_rate: 1, total_earnings: 0, total_deposits: 0 },
+    { level: 1, total_members: 0, valid_members: 0, commission_rate: 30, total_earnings: 0, total_deposits: 0 },
+    { level: 2, total_members: 0, valid_members: 0, commission_rate: 50, total_earnings: 0, total_deposits: 0 },
+    { level: 3, total_members: 0, valid_members: 0, commission_rate: 5, total_earnings: 0, total_deposits: 0 },
   ];
 
-  const l1 = levels[0] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 25 };
-  const l2 = levels[1] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 2 };
-  const l3 = levels[2] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 1 };
+  const l1 = levels[0] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 30 };
+  const l2 = levels[1] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 50 };
+  const l3 = levels[2] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 5 };
 
   const totalMembersCount = (l1.total_members || 0) + (l2.total_members || 0) + (l3.total_members || 0) || overview.total_team || 0;
   const totalTeamCommission = (l1.total_earnings || 0) + (l2.total_earnings || 0) + (l3.total_earnings || 0);
@@ -260,7 +260,7 @@ export default function TeamPage() {
                   <span className="text-[12px] font-black tracking-tight text-[#38bdf8]">LV1</span>
                 </div>
                 <div className="text-[15px] font-bold text-[#38bdf8]">
-                  {l1.commission_rate || 25}%{" "}
+                  {l1.commission_rate || 30}%{" "}
                   <span className="text-gray-400 text-[12px] font-normal">
                     Commission
                   </span>
@@ -306,7 +306,7 @@ export default function TeamPage() {
                   <span className="text-[12px] font-black tracking-tight text-white/90">LV2</span>
                 </div>
                 <div className="text-[15px] font-bold text-[#38bdf8]">
-                  {l2.commission_rate || 2}%{" "}
+                  {l2.commission_rate || 10}%{" "}
                   <span className="text-gray-400 text-[12px] font-normal">
                     Commission
                   </span>
@@ -352,7 +352,7 @@ export default function TeamPage() {
                   <span className="text-[12px] font-black tracking-tight text-white/90">LV3</span>
                 </div>
                 <div className="text-[15px] font-bold text-[#38bdf8]">
-                  {l3.commission_rate || 1}%{" "}
+                  {l3.commission_rate || 5}%{" "}
                   <span className="text-gray-400 text-[12px] font-normal">
                     Commission
                   </span>
@@ -537,3 +537,4 @@ export default function TeamPage() {
     </div>
   );
 }
+
