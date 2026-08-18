@@ -79,7 +79,7 @@ export default function MiningPlansPage() {
     return `${symbol} ${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 
-  const defaultPlanImage = "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&w=400&q=80";
+  const defaultPlanImage = "/logo.png";
 
   return (
     <div className="flex flex-col h-full bg-[#f0f4f8] overflow-y-auto [&::-webkit-scrollbar]:hidden relative select-none">
