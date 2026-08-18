@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Volume2, VolumeX, History, Gift, Ticket, HelpCircle, X } from "lucide-react";
@@ -150,7 +150,7 @@ export default function SpinPage() {
   const freeSpins = spinData?.userSpins?.free_spins_remaining || 0;
   const cost = Number(spinData?.settings?.cost_per_spin || 0);
 
-  // Dynamic segments from backend, strictly 9 divisions
+  // 😢namic segments from backend, strictly 9 divisions
   let basePrizes = spinData?.prizes || [];
   let displaySegments = [];
 
@@ -401,7 +401,7 @@ export default function SpinPage() {
                           transform: `translateX(-50%) rotate(${angle}deg)`,
                         }}
                       >
-                        <span className="text-[20px] filter drop-shadow-sm">🥲</span>
+                        <span className="text-[20px] filter drop-shadow-sm">ðŸ¥²</span>
                         <span className="text-[13px] text-[#ff3333] font-black mt-1.5 tracking-tight">Oops!</span>
                         <span className="text-[8px] text-[#475569] font-bold uppercase tracking-wider mt-1 whitespace-nowrap">Try Again</span>
                       </div>
@@ -463,10 +463,10 @@ export default function SpinPage() {
                   </div>
                   <div className="text-right">
                     <div className={`text-[15px] font-bold ${Number(win.reward_earned) > 0 ? 'text-[#16a34a]' : 'text-gray-500'}`}>
-                      {Number(win.reward_earned) > 0 ? `+${settings.currency_symbol || "$"}${Number(win.reward_earned).toFixed(2)}` : '0.00'}
+                      {Number(win.reward_earned) > 0 ? `+${settings.currency_symbol || "R"}${Number(win.reward_earned).toFixed(2)}` : '0.00'}
                     </div>
                     <div className="text-[12px] text-gray-400 mt-0.5">
-                      {win.spin_type === 'free' ? 'Free Spin' : `-${settings.currency_symbol || "$"}${cost.toFixed(2)}`}
+                      {win.spin_type === 'free' ? 'Free Spin' : `-${settings.currency_symbol || "R"}${cost.toFixed(2)}`}
                     </div>
                   </div>
                 </div>
@@ -511,7 +511,7 @@ export default function SpinPage() {
               className={`w-20 h-20 rounded-full flex items-center justify-center mb-5 text-[40px]`}
               style={{ background: resultData.isWin ? 'linear-gradient(135deg, rgba(22,163,74,0.2) 0%, rgba(34,197,94,0.1) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)' }}
             >
-              {resultData.isWin ? "🎉" : "😔"}
+              {resultData.isWin ? "ðŸŽ‰" : "ðŸ˜”"}
             </div>
             
             <h2 className="text-white/90 text-[24px] font-bold mb-2">
@@ -527,7 +527,7 @@ export default function SpinPage() {
                   {resultData.message}
                 </p>
                 <p className="text-[#4f8cff] text-[13px] mt-2 mb-4 flex items-center gap-1.5 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-[#4f8cff] text-white flex items-center justify-center text-[10px]">✓</span>
+                  <span className="w-4 h-4 rounded-full bg-[#4f8cff] text-white flex items-center justify-center text-[10px]">âœ“</span>
                   Added to withdrawable balance
                 </p>
               </div>
@@ -562,3 +562,4 @@ export default function SpinPage() {
     </div>
   );
 }
+
