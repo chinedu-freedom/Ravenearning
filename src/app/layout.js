@@ -58,26 +58,27 @@ export async function generateMetadata() {
       ],
     },
     openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: siteUrl,
       title: siteName,
       description: siteTitle,
-      url: siteUrl,
       siteName: siteName,
       images: [
         {
-          url: "/logo.jpeg",
+          url: `${siteUrl}/logo.png`,
           width: 800,
           height: 800,
           alt: `${siteName} Logo`,
+          type: "image/png",
         },
       ],
-      locale: "en_US",
-      type: "website",
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: siteName,
       description: siteTitle,
-      images: ["/logo.jpeg"],
+      images: [`${siteUrl}/logo.png`],
     },
     appleWebApp: {
       capable: true,
@@ -97,6 +98,13 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
     >
+      <head>
+        <meta property="og:image" content="https://ravenearning.vercel.app/logo.png" />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="800" />
+        <meta property="og:image:type" content="image/png" />
+        <link rel="image_src" href="https://ravenearning.vercel.app/logo.png" />
+      </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>
           {children}
