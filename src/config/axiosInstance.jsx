@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import axios from "axios";
 import { CookieManager } from "@/utils/cookie-utils";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001/api";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
