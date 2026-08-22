@@ -130,20 +130,22 @@ export default function AccountPage() {
             </label>
           </div>
 
-          {/* User Info - Phone Number with Copy Icon */}
-          <div className="flex items-center justify-between flex-1 min-w-0 pr-1">
-            <h2 className="text-[17px] font-bold text-white tracking-tight truncate">
-              ID: {displayPhone || "----"}
-            </h2>
-            {displayPhone && (
-              <button
-                onClick={handleCopyId}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-all cursor-pointer shrink-0 ml-2 active:scale-95 flex items-center justify-center"
-                title="Copy ID"
-              >
-                {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-              </button>
-            )}
+          {/* User Info - Phone Number with Small Copy Icon right after number */}
+          <div className="flex flex-col justify-center flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-[17px] font-bold text-white tracking-tight truncate">
+                ID: {displayPhone || "----"}
+              </h2>
+              {displayPhone && (
+                <button
+                  onClick={handleCopyId}
+                  className="p-1 rounded-md bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-all cursor-pointer inline-flex items-center justify-center shrink-0 active:scale-95"
+                  title="Copy ID"
+                >
+                  {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
