@@ -53,17 +53,13 @@ export default function ChangePasswordPage() {
       },
       {
         onSuccess: () => {
-          toast.success("Password changed successfully!");
           setOldPassword("");
           setNewPassword("");
           setConfirmPassword("");
           setTimeout(() => {
             router.push("/dashboard/account");
           }, 1000);
-        },
-        onError: (err) => {
-          toast.error(err.response?.data?.error || err.response?.data?.message || "Failed to change password");
-        },
+        }
       }
     );
   };

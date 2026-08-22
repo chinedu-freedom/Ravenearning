@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import BottomNav from "@/components/BottomNav";
 import InstallGuideModal from "@/components/InstallGuideModal";
+import DailyCheckinModal from "@/components/DailyCheckinModal";
 import { useFetchData } from "@/hooks/useApi";
 import { usePathname } from "next/navigation";
 
@@ -33,6 +34,7 @@ export default function DashboardLayout({ children }) {
         </div>
 
         <InstallGuideModal />
+        <DailyCheckinModal />
 
       </div>
       <BottomNav />

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import axios from "axios";
 import { CookieManager } from "@/utils/cookie-utils";
@@ -10,22 +10,31 @@ const axiosInstance = axios.create({
   withCredentials: false,
 });
 
-// Attach token if available
-if (typeof window !== "undefined") {
-  const token = CookieManager.get("sec-prd-token");
-  if (token) axiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`;
-}
+// Dynamic request interceptor to always send token
+axiosInstance.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const token = CookieManager.get("sec-prd-token") || localStorage.getItem("sec-prd-token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Global response interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if ((error?.response?.status === 401 || error?.response?.status === 403) && typeof window !== "undefined") {
+    if (error?.response?.status === 401 && typeof window !== "undefined") {
       CookieManager.remove("sec-prd-token");
+      try { localStorage.removeItem("sec-prd-token"); } catch(e) {}
       delete axiosInstance.defaults.headers.common.Authorization;
 
-      // Don't redirect if we're already on the login page
-      if (window.location.pathname !== "/" && window.location.pathname !== "/auth/login") {
+      // Don't redirect if we're already on the login page or auth pages
+      if (!window.location.pathname.startsWith("/auth") && window.location.pathname !== "/") {
         window.location.href = "/";
       }
     }

@@ -92,9 +92,6 @@ function RechargeContent() {
             id: `ORD-${Date.now().toString().slice(-6)}`
           });
           setShowPaymentModal(true);
-        },
-        onError: (err) => {
-          toast.error(err?.response?.data?.message || "Failed to initiate recharge order");
         }
       }
     );

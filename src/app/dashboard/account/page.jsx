@@ -1,19 +1,21 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, Upload } from "lucide-react";
+import { LogOut, Upload, User } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
 import axiosInstance, { clearAuthToken } from "@/config/axiosInstance";
 
+import PageLoader from "@/components/PageLoader";
+
 export default function AccountPage() {
   const router = useRouter();
   const { isInstallable, installPWA } = usePWA();
 
-  const { data: userProfileResponse } = useFetchData("/users/me", ["user-profile"]);
+  const { data: userProfileResponse, isLoading } = useFetchData("/users/me", ["user-profile"]);
   const userProfile = userProfileResponse?.user;
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
@@ -66,7 +68,7 @@ export default function AccountPage() {
   };
 
   const currencySymbol = settings.currency_symbol || "R";
-  const cashBalance = parseFloat(userProfile?.balance ?? 2000);
+  const cashBalance = parseFloat(userProfile?.balance ?? 0);
   const deviceIncome = parseFloat(userProfile?.statistics?.total_income ?? 0);
 
   const formatAmount = (num) => {
@@ -75,6 +77,10 @@ export default function AccountPage() {
       maximumFractionDigits: 2,
     });
   };
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   return (
     <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 select-none">
@@ -91,17 +97,18 @@ export default function AccountPage() {
 
       <div className="px-4 py-2 space-y-4 max-w-[480px] mx-auto w-full">
 
-        {/* User Profile Card */}
+        {/* Profile Card */}
         <div className="bg-[#111827] rounded-[20px] p-4 border border-white/5 shadow-md flex items-center gap-3.5">
           {/* Avatar badge */}
           <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#0f172a] p-[2px] shadow-sm flex items-center justify-center shrink-0 overflow-hidden group">
             <div className="w-full h-full rounded-full bg-[#111827] flex flex-col items-center justify-center text-center overflow-hidden">
               {profilePic ? (
                 <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
+              ) : settings?.site_logo ? (
+                <img src={settings.site_logo} alt="Logo" className="w-full h-full object-cover" />
               ) : (
-                <div className="flex flex-col items-center justify-center leading-none select-none">
-                  <span className="text-[#4f8cff] font-serif font-black text-[18px] tracking-tight">GL</span>
-                  <span className="text-[#6ee7ff] text-[6px] font-bold tracking-[0.14em] uppercase mt-0.5">GREATLAND</span>
+                <div className="flex items-center justify-center w-full h-full bg-[#1e293b]">
+                  <User className="w-7 h-7 text-[#4f8cff]" />
                 </div>
               )}
             </div>
@@ -111,14 +118,11 @@ export default function AccountPage() {
             </label>
           </div>
 
-          {/* User Info */}
+          {/* User Info - Phone Number Only */}
           <div className="flex flex-col justify-center flex-1 min-w-0">
-            <h2 className="text-[17px] font-bold text-white/90 tracking-tight leading-tight truncate">
-              {userProfile?.phone || "Customer"}
+            <h2 className="text-[17px] font-bold text-white tracking-tight truncate">
+              {userProfile?.phone ? (userProfile.phone.startsWith("27") ? userProfile.phone.substring(2) : userProfile.phone) : "----"}
             </h2>
-            <p className="text-[12px] text-gray-400 font-medium mt-1">
-              ID: <span className="text-gray-300 font-semibold">{userProfile?.id || userProfile?.referral_code || "1263"}</span>
-            </p>
           </div>
         </div>
 

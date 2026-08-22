@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ export default function TeamPage() {
 
   const { data: userRes } = useFetchData("/users/me", ["user-profile"]);
   const user = userRes?.user;
-  const invitationCode = user?.referral_code || user?.id || "------";
+  const invitationCode = user?.referral_code || "------";
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
@@ -68,7 +68,8 @@ export default function TeamPage() {
 
   useEffect(() => {
     if (invitationCode && invitationCode !== "------" && typeof window !== "undefined") {
-      setInvitationLink(`${window.location.origin}/auth/register?ref=${invitationCode}`);
+      const origin = window.location.origin;
+      setInvitationLink(`${origin}/auth/register?ref=${invitationCode}`);
     }
   }, [invitationCode]);
 

@@ -7,15 +7,17 @@ import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
 
+import PageLoader from "@/components/PageLoader";
+
 export default function DashboardPage() {
   const router = useRouter();
   const { isInstallable, installPWA } = usePWA();
 
   // Fetch backend settings & profile for support links and language details
-  const { data: settingsResponse } = useFetchData("/settings", ["platform-settings"]);
+  const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
 
-  const { data: userProfileResponse } = useFetchData("/users/me", ["user-profile"]);
+  const { data: userProfileResponse, isLoading: isLoadingProfile } = useFetchData("/users/me", ["user-profile"]);
   const userProfile = userProfileResponse?.user;
 
   // Carousel Slides
@@ -50,6 +52,10 @@ export default function DashboardPage() {
     }, 4000);
     return () => clearInterval(timer);
   }, [slides.length]);
+
+  if (isLoadingSettings || isLoadingProfile) {
+    return <PageLoader />;
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 pb-24">
@@ -121,120 +127,53 @@ export default function DashboardPage() {
 
       <div className="px-4 pt-3 pb-4 space-y-4">
 
-        {/* Action Grid (Matching Reference Screenshot) */}
+        {/* Action Grid */}
         <div className="bg-[#111827] rounded-[24px] p-4 shadow-sm border border-white/5">
           <div className="grid grid-cols-4 gap-y-5 gap-x-2">
             {[
               { 
-                label: "Deposit", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-amber-400/20 flex items-center justify-center">
-                    <span className="text-[20px]">💰</span>
-                  </div>
-                ), 
+                label: "Recharge", 
+                icon: <span className="text-[26px]">💰</span>, 
                 action: () => router.push('/dashboard/wallet/deposit') 
               },
               { 
                 label: "Withdraw", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
-                    <span className="text-[18px] text-white font-bold">↩</span>
-                  </div>
-                ), 
+                icon: <span className="text-[26px] text-white font-bold">↩</span>, 
                 action: () => router.push('/dashboard/wallet/withdraw') 
               },
               { 
                 label: "Mine", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">⛏️</span>
-                  </div>
-                ), 
+                icon: <span className="text-[26px]">⛏️</span>, 
                 action: () => router.push('/dashboard/mining') 
               },
               { 
                 label: "Active Mining", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">⚡</span>
-                  </div>
-                ), 
+                icon: <span className="text-[26px]">⚡</span>, 
                 action: () => router.push('/dashboard/investments') 
               },
               { 
                 label: "Daily Check-in", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">📅</span>
-                  </div>
-                ), 
-                action: () => router.push('/dashboard/spin') 
-              },
-              { 
-                label: "Transaction Log", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">📋</span>
-                  </div>
-                ), 
-                action: () => router.push('/dashboard/transactions') 
+                icon: <span className="text-[26px]">📅</span>, 
+                action: () => window.dispatchEvent(new Event('open-daily-checkin')) 
               },
               { 
                 label: "Bonus Code", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">🎁</span>
-                  </div>
-                ), 
+                icon: <span className="text-[26px]">🎁</span>, 
                 action: () => router.push('/dashboard/treasure') 
               },
               { 
-                label: "Download App", 
-                icon: (
-                  <div className="w-7 h-7 bg-[#0284c7] rounded-lg flex items-center justify-center shadow-sm">
-                    <ArrowDown size={18} className="text-white stroke-[3]" />
-                  </div>
-                ), 
-                action: () => {
-                  if (isInstallable) {
-                    installPWA();
-                  } else {
-                    toast.info("To install app, open browser menu and tap 'Add to Home Screen'");
-                  }
-                } 
-              },
-              { 
                 label: "Referrals", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">👥</span>
-                  </div>
-                ), 
+                icon: <span className="text-[26px]">👥</span>, 
                 action: () => router.push('/dashboard/team') 
               },
               { 
-                label: "Settings", 
+                label: "Support", 
                 icon: (
-                  <div className="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center border border-white/10">
-                    <span className="text-[18px]">⚙️</span>
-                  </div>
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#38bdf8]" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.02-2.22-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.08 5.61-5.07c.24-.22-.05-.34-.38-.13l-6.93 4.36-2.98-.93c-.65-.2-.66-.65.14-.96l11.64-4.48c.54-.2 1.01.12.84 1.01z"/>
+                  </svg>
                 ), 
-                action: () => router.push('/dashboard/settings') 
-              },
-              { 
-                label: "WhatsApp Group", 
-                icon: (
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <span className="text-[20px]">💬</span>
-                  </div>
-                ), 
-                action: () => {
-                  if (settings.telegram_group) {
-                    window.open(settings.telegram_group, '_blank');
-                  } else {
-                    router.push('/dashboard/account/service');
-                  }
-                } 
+                action: () => router.push('/dashboard/account/service')
               },
             ].map((item, idx) => (
               <div 

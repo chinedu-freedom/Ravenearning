@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -36,7 +37,8 @@ export default function InvitePage() {
 
   useEffect(() => {
     if (invitationCode && invitationCode !== "------" && typeof window !== "undefined") {
-      setInvitationLink(`${window.location.origin}/auth/register?ref=${invitationCode}`);
+      const origin = window.location.origin;
+      setInvitationLink(`${origin}/auth/register?ref=${invitationCode}`);
     }
   }, [invitationCode]);
 

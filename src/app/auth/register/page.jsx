@@ -73,12 +73,10 @@ function SignupForm() {
   }
 
   const onSubmit = (data) => {
-    const rawDigits = data.phone.replace(/[^0-9]/g, '');
-    const cleanDigits = rawDigits.startsWith('0') ? rawDigits.substring(1) : rawDigits;
-    const normalizedPhone = cleanDigits.startsWith('27') ? cleanDigits : `27${cleanDigits}`;
+    const userPhone = data.phone.trim();
 
     const payload = {
-      phone: normalizedPhone,
+      phone: userPhone,
       referred_by_code: data.referred_by_code?.trim() || undefined,
       password: data.password,
     };

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -100,13 +100,9 @@ function WithdrawContent() {
       },
       {
         onSuccess: () => {
-          toast.success("Withdrawal request submitted successfully!");
           setShowConfirmModal(false);
           refetchUser();
           router.push("/dashboard/account/withdrawal");
-        },
-        onError: (err) => {
-          toast.error(err?.response?.data?.message || "Failed to submit withdrawal request");
         }
       }
     );

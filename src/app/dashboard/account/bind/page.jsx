@@ -97,17 +97,12 @@ export default function BindAccountPage() {
         account_number: accountNumber.trim(),
       });
 
-      toast.success("Bank account linked successfully!");
       await refetchUser();
       setTimeout(() => {
         router.push("/dashboard/account");
       }, 1000);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || 
-        error.response?.data?.error || 
-        "Failed to link bank account. Please try again."
-      );
+      // Handled by usePost hook
     } finally {
       setIsSubmitting(false);
     }
