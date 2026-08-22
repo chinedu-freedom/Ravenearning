@@ -111,8 +111,11 @@ export default function MiningPlansPage() {
           </div>
         ) : plans.map((plan, index) => {
           const minInv = Number(plan.min_investment || 0);
-          const dailyInc = (minInv * Number(plan.daily_income || 0)) / 100;
-          const totalInc = dailyInc * Number(plan.duration || 0);
+          let dailyInc = Number(plan.daily_income || 0);
+          if (dailyInc <= 1 && dailyInc > 0) {
+            dailyInc = Number((minInv * dailyInc).toFixed(2));
+          }
+          const totalInc = plan.total_revenue ? Number(plan.total_revenue) : Number((dailyInc * Number(plan.duration || 0)).toFixed(2));
 
           return (
             <div key={plan.id} className="bg-white rounded-[18px] p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col gap-4">
@@ -198,7 +201,9 @@ export default function MiningPlansPage() {
                 </div>
                 <div>
                   <h3 className="font-extrabold text-slate-900 text-[15px] leading-tight">{selectedPlan.name}</h3>
-                  <p className="text-slate-500 text-[11px] font-medium mt-0.5">{selectedPlan.duration} days ? {Number(selectedPlan.daily_income).toFixed(1)}% daily</p>
+                  <p className="text-slate-500 text-[11px] font-medium mt-0.5">
+                    {selectedPlan.duration} days • {formatCurrency(selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0))}/day
+                  </p>
                 </div>
               </div>
               <button
@@ -213,16 +218,20 @@ export default function MiningPlansPage() {
 
               <div className="flex justify-between items-center py-3.5 bg-slate-50 rounded-2xl border border-slate-100 px-4">
                 <div className="text-center w-1/3">
-                  <div className="text-[#4f8cff] font-extrabold text-[15px]">{Number(selectedPlan.daily_income).toFixed(1)}%</div>
-                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Daily Rate</div>
+                  <div className="text-[#4f8cff] font-extrabold text-[14px]">
+                    {formatCurrency(selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0))}
+                  </div>
+                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Daily Income</div>
                 </div>
                 <div className="text-center w-1/3 border-x border-slate-200/80">
-                  <div className="text-slate-800 font-extrabold text-[15px]">{selectedPlan.duration} days</div>
+                  <div className="text-slate-800 font-extrabold text-[14px]">{selectedPlan.duration} days</div>
                   <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Term</div>
                 </div>
                 <div className="text-center w-1/3">
-                  <div className="text-slate-900 font-extrabold text-[15px]">{(Number(selectedPlan.daily_income) * selectedPlan.duration).toFixed(0)}%</div>
-                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Total Yield</div>
+                  <div className="text-slate-900 font-extrabold text-[14px]">
+                    {formatCurrency(selectedPlan.total_revenue ? Number(selectedPlan.total_revenue) : (selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0)) * Number(selectedPlan.duration || 0))}
+                  </div>
+                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Total Revenue</div>
                 </div>
               </div>
 

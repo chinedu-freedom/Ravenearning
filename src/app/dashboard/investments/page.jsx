@@ -113,7 +113,7 @@ export default function MyInvestmentsPage() {
                     <div className="bg-white/5 p-2 rounded-lg">
                       <div className="text-gray-400 text-[10px] mb-1">Expected Return</div>
                       <div className="text-green-400 font-bold text-[13px]">
-                         {inv.plan?.daily_income ? `${inv.plan.daily_income}% Daily` : 'Variable'}
+                        {inv.daily_profit ? `${settings.currency_symbol || "R"}${Number(inv.daily_profit).toFixed(2)}/Day` : inv.plan?.daily_income ? `${settings.currency_symbol || "R"}${Number(inv.plan.daily_income).toFixed(2)}/Day` : 'N/A'}
                       </div>
                     </div>
                   </div>
