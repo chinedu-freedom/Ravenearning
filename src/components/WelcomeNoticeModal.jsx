@@ -44,15 +44,15 @@ export default function WelcomeNoticeModal() {
       {/* Modal Dialog Card */}
       <div className="relative bg-white rounded-[24px] max-w-[380px] w-full shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200 flex flex-col border border-slate-100 font-['Poppins',sans-serif]">
         
-        {/* Top Bright Orange Banner */}
-        <div className="bg-[#f97316] text-white p-5 pt-6 text-center flex flex-col items-center justify-center relative">
+        {/* Top Website Brand Blue Banner */}
+        <div className="bg-gradient-to-r from-[#4f8cff] via-[#3b82f6] to-[#2563eb] text-white p-5 pt-6 text-center flex flex-col items-center justify-center relative shadow-sm">
           <h2 className="text-3xl font-black tracking-wider uppercase drop-shadow-xs">
             {siteName}
           </h2>
 
           <button
             onClick={handleTelegramClick}
-            className="mt-2.5 inline-flex items-center gap-1 text-[13px] font-medium text-amber-100 hover:text-white transition-colors cursor-pointer"
+            className="mt-2.5 inline-flex items-center gap-1 text-[13px] font-medium text-blue-100 hover:text-white transition-colors cursor-pointer"
           >
             <span>Click to subscribe to the Telegram channel</span>
             <ChevronRight className="w-4 h-4" />
@@ -91,7 +91,7 @@ export default function WelcomeNoticeModal() {
         <div className="p-4 pt-1 pb-5 flex justify-center">
           <button
             onClick={handleDismiss}
-            className="w-[85%] bg-[#f97316] hover:bg-[#ea580c] text-white font-black py-3 rounded-full text-[15px] transition-all shadow-md active:scale-95 cursor-pointer uppercase tracking-wider text-center"
+            className="w-[85%] bg-gradient-to-r from-[#4f8cff] to-[#2563eb] hover:opacity-95 text-white font-black py-3 rounded-full text-[15px] transition-all shadow-md active:scale-95 cursor-pointer uppercase tracking-wider text-center"
           >
             OK
           </button>
