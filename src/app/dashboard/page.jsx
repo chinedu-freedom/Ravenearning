@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Volume2, ArrowRight, Play, X, Landmark, Wallet, Mail, BarChart2 } from "lucide-react";
+import { Volume2, ArrowRight, Play, X, Landmark, Wallet, Mail, BarChart2, ArrowDownLeft, ArrowUpRight, Pickaxe, Zap, Gift, Users, Headphones } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
@@ -46,44 +46,66 @@ export default function DashboardPage() {
   // Auto play carousel slider
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveSlide(prev => (prev + 1) % slides.length);
-    }, 4500);
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, 4000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
   return (
-    <div className="flex flex-col h-full bg-[#f0f4f8] overflow-y-auto pb-2 [&::-webkit-scrollbar]:hidden relative select-none">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 pb-24">
       
-      {/* Image Carousel Banner */}
-      <div className="px-4 pt-3 pb-1">
-        <div className="relative h-[180px] w-full rounded-[24px] overflow-hidden shadow-md bg-[#111827]">
+      {/* Top Banner / Hero Carousel */}
+      <div className="relative bg-[#0f172a] text-white px-4 pt-5 pb-6 overflow-hidden">
+        {/* PWA Install Banner if applicable */}
+        {isInstallable && (
+          <div className="mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-3 rounded-xl flex items-center justify-between shadow-lg border border-white/10">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                <Wallet className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-xs font-bold leading-tight">Install Ravenearning App</p>
+                <p className="text-[10px] text-blue-100 mt-0.5">Quick access & instant notifications</p>
+              </div>
+            </div>
+            <button
+              onClick={installPWA}
+              className="bg-white text-blue-600 text-xs font-extrabold px-3 py-1.5 rounded-lg shadow-sm hover:bg-blue-50 transition-colors"
+            >
+              Install
+            </button>
+          </div>
+        )}
+
+        <div className="relative rounded-2xl overflow-hidden shadow-xl border border-white/10 bg-slate-900/60 aspect-[21/9]">
           {slides.map((slide, idx) => (
             <div
               key={slide.id}
               className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                idx === activeSlide ? "opacity-100" : "opacity-0 pointer-events-none"
+                idx === activeSlide ? "opacity-100 z-10" : "opacity-0 z-0"
               }`}
             >
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover filter brightness-[0.65]"
               />
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-              {/* Slide text */}
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h2 className="text-[17px] font-black leading-tight tracking-tight shadow-sm">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-4">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#4f8cff]">
+                  Ravenearning Official
+                </span>
+                <h2 className="text-base font-black text-white leading-tight mt-0.5">
                   {slide.title}
                 </h2>
-                <p className="text-[11px] text-white/90 font-medium mt-0.5 tracking-wide leading-none">
+                <p className="text-[11px] text-slate-300 font-medium line-clamp-1 mt-0.5">
                   {slide.subtitle}
                 </p>
               </div>
             </div>
           ))}
-          {/* Indicator dots */}
-          <div className="absolute bottom-3 right-4 flex gap-1.5 z-10 items-center">
+
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-2.5 right-3 z-20 flex gap-1.5">
             {slides.map((_, idx) => (
               <button
                 key={idx}
@@ -99,31 +121,20 @@ export default function DashboardPage() {
 
       <div className="px-4 pt-3 pb-4 space-y-4">
 
-        {/* Action Grid (Matching eonassetsmining) */}
+        {/* Action Grid */}
         <div className="bg-[#111827] rounded-[24px] p-4 shadow-sm border border-white/5">
           <div className="grid grid-cols-4 gap-y-5 gap-x-2">
             {[
-              { label: "Recharge", icon: <span className="text-[24px]">ðŸ’°</span>, action: () => router.push('/dashboard/wallet/deposit') },
-              { 
-                label: "Withdraw", 
-                icon: (
-                  <svg className="w-6 h-6 text-white my-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="17 1 21 5 17 9" />
-                    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-                    <polyline points="7 23 3 19 7 15" />
-                    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-                  </svg>
-                ), 
-                action: () => router.push('/dashboard/wallet/withdraw') 
-              },
-              { label: "Mine", icon: <span className="text-[24px]">â›ï¸</span>, action: () => router.push('/dashboard/mining') },
-              { label: "Active Mining", icon: <span className="text-[24px]">âš¡</span>, action: () => router.push('/dashboard/investments') },
-              { label: "Bonus Code", icon: <span className="text-[24px]">ðŸŽ</span>, action: () => router.push('/dashboard/treasure') },
-              { label: "Referrals", icon: <span className="text-[24px]">ðŸ‘¥</span>, action: () => router.push('/dashboard/team') },
+              { label: "Recharge", icon: <ArrowDownLeft className="w-5 h-5 text-emerald-400" />, action: () => router.push('/dashboard/wallet/deposit') },
+              { label: "Withdraw", icon: <ArrowUpRight className="w-5 h-5 text-rose-400" />, action: () => router.push('/dashboard/wallet/withdraw') },
+              { label: "Mine", icon: <Pickaxe className="w-5 h-5 text-amber-400" />, action: () => router.push('/dashboard/mining') },
+              { label: "Active Mining", icon: <Zap className="w-5 h-5 text-cyan-400" />, action: () => router.push('/dashboard/investments') },
+              { label: "Bonus Code", icon: <Gift className="w-5 h-5 text-purple-400" />, action: () => router.push('/dashboard/treasure') },
+              { label: "Referrals", icon: <Users className="w-5 h-5 text-blue-400" />, action: () => router.push('/dashboard/team') },
               { 
                 label: "Support", 
                 icon: (
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#38bdf8]" xmlns="http://www.w3.org/2000/svg">
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#38bdf8]" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.02-2.22-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.08 5.61-5.07c.24-.22-.05-.34-.38-.13l-6.93 4.36-2.98-.93c-.65-.2-.66-.65.14-.96l11.64-4.48c.54-.2 1.01.12.84 1.01z"/>
                   </svg>
                 ), 
@@ -138,7 +149,7 @@ export default function DashboardPage() {
                 <div className="h-8 flex items-center justify-center select-none group-hover:scale-115 transition-transform duration-200">
                   {item.icon}
                 </div>
-                <span className="text-[10px] text-white/80 font-medium text-center leading-tight">
+                <span className="text-[10px] text-white/90 font-semibold text-center leading-tight">
                   {item.label}
                 </span>
               </div>
@@ -151,7 +162,7 @@ export default function DashboardPage() {
           <Volume2 size={16} className="shrink-0 text-[#0284c7]" />
           <div className="relative flex-1 overflow-hidden h-4">
             <div className="absolute whitespace-nowrap animate-[marquee_15s_linear_infinite] text-[11.5px] font-extrabold tracking-wide">
-              Congratulations to participant *****1777 for inviting friends and earning spins! â€¢ Congrats to *****8921 for successfully activating plan! â€¢ Welcome new member *****4412 to Ravenearning network! â€¢ Get up to 10% daily commissions.
+              Congratulations to participant *****1777 for inviting friends and earning spins! • Congrats to *****8921 for successfully activating plan! • Welcome new member *****4412 to Ravenearning network! • Get up to 10% daily commissions.
             </div>
           </div>
         </div>

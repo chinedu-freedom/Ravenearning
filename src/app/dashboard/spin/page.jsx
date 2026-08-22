@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Volume2, VolumeX, History, Gift, Ticket, HelpCircle, X } from "lucide-react";
@@ -401,7 +401,7 @@ export default function SpinPage() {
                           transform: `translateX(-50%) rotate(${angle}deg)`,
                         }}
                       >
-                        <span className="text-[20px] filter drop-shadow-sm">ðŸ¥²</span>
+                        <span className="text-[20px] filter drop-shadow-sm">😢</span>
                         <span className="text-[13px] text-[#ff3333] font-black mt-1.5 tracking-tight">Oops!</span>
                         <span className="text-[8px] text-[#475569] font-bold uppercase tracking-wider mt-1 whitespace-nowrap">Try Again</span>
                       </div>
@@ -511,7 +511,7 @@ export default function SpinPage() {
               className={`w-20 h-20 rounded-full flex items-center justify-center mb-5 text-[40px]`}
               style={{ background: resultData.isWin ? 'linear-gradient(135deg, rgba(22,163,74,0.2) 0%, rgba(34,197,94,0.1) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)' }}
             >
-              {resultData.isWin ? "ðŸŽ‰" : "ðŸ˜”"}
+              {resultData.isWin ? "🎉" : "😢"}
             </div>
             
             <h2 className="text-white/90 text-[24px] font-bold mb-2">
