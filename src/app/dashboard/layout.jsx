@@ -3,6 +3,7 @@
 import BottomNav from "@/components/BottomNav";
 import InstallGuideModal from "@/components/InstallGuideModal";
 import DailyCheckinModal from "@/components/DailyCheckinModal";
+import WelcomeNoticeModal from "@/components/WelcomeNoticeModal";
 import { useFetchData } from "@/hooks/useApi";
 import { usePathname } from "next/navigation";
 
@@ -35,6 +36,7 @@ export default function DashboardLayout({ children }) {
 
         <InstallGuideModal />
         <DailyCheckinModal />
+        <WelcomeNoticeModal />
 
       </div>
       <BottomNav />

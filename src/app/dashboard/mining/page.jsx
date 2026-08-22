@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -159,13 +159,22 @@ export default function MiningPlansPage() {
                 </div>
               </div>
 
-              {/* Bottom Full-Width BUY NOW Pill Button */}
-              <button
-                onClick={() => handleMineClick(plan)}
-                className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-extrabold py-3 rounded-full transition-all text-[13.5px] shadow-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
-              >
-                <span>ACTIVATE PACKAGE</span>
-              </button>
+              {/* Bottom Full-Width BUY NOW / Sold Out Pill Button */}
+              {plan.is_sold_out ? (
+                <button
+                  disabled
+                  className="w-full bg-[#94a3b8] text-white font-black py-3 rounded-full text-[13.5px] uppercase tracking-wider flex items-center justify-center cursor-not-allowed shadow-none"
+                >
+                  <span>Sold Out</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleMineClick(plan)}
+                  className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-extrabold py-3 rounded-full transition-all text-[13.5px] shadow-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                >
+                  <span>ACTIVATE PACKAGE</span>
+                </button>
+              )}
             </div>
           );
         })}

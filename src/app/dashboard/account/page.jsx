@@ -121,7 +121,7 @@ export default function AccountPage() {
           {/* User Info - Phone Number Only */}
           <div className="flex flex-col justify-center flex-1 min-w-0">
             <h2 className="text-[17px] font-bold text-white tracking-tight truncate">
-              {userProfile?.phone ? (userProfile.phone.startsWith("27") ? userProfile.phone.substring(2) : userProfile.phone) : "----"}
+              ID: {userProfile?.phone ? (userProfile.phone.startsWith("27") ? userProfile.phone.substring(2) : userProfile.phone) : "----"}
             </h2>
           </div>
         </div>
