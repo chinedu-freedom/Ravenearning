@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, Upload, User } from "lucide-react";
+import { LogOut, Upload, User, Copy, Check } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
@@ -22,6 +22,21 @@ export default function AccountPage() {
   const settings = settingsRes?.settings || {};
 
   const [profilePic, setProfilePic] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const displayPhone = userProfile?.phone
+    ? userProfile.phone.startsWith("27")
+      ? userProfile.phone.substring(2)
+      : userProfile.phone
+    : "";
+
+  const handleCopyId = () => {
+    if (!displayPhone) return;
+    navigator.clipboard.writeText(displayPhone);
+    setCopied(true);
+    toast.success("ID copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     if (userProfile?.profile_image && !profilePic) {
@@ -88,11 +103,8 @@ export default function AccountPage() {
       {/* Page Title Header */}
       <div className="px-5 pt-4 pb-1">
         <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
-          My
+          Account Center
         </h1>
-        <p className="text-slate-500 text-[12.5px] font-medium mt-0.5">
-          Account center
-        </p>
       </div>
 
       <div className="px-4 py-2 space-y-4 max-w-[480px] mx-auto w-full">
@@ -118,11 +130,20 @@ export default function AccountPage() {
             </label>
           </div>
 
-          {/* User Info - Phone Number Only */}
-          <div className="flex flex-col justify-center flex-1 min-w-0">
+          {/* User Info - Phone Number with Copy Icon */}
+          <div className="flex items-center justify-between flex-1 min-w-0 pr-1">
             <h2 className="text-[17px] font-bold text-white tracking-tight truncate">
-              ID: {userProfile?.phone ? (userProfile.phone.startsWith("27") ? userProfile.phone.substring(2) : userProfile.phone) : "----"}
+              ID: {displayPhone || "----"}
             </h2>
+            {displayPhone && (
+              <button
+                onClick={handleCopyId}
+                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-all cursor-pointer shrink-0 ml-2 active:scale-95 flex items-center justify-center"
+                title="Copy ID"
+              >
+                {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+              </button>
+            )}
           </div>
         </div>
 
