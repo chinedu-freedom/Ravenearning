@@ -30,7 +30,7 @@ export default function WelcomeNoticeModal() {
   if (!isOpen) return null;
 
   const siteName = settings.site_name || "Ravenearning";
-  const regBonus = Number(settings.registration_bonus || 0);
+  const regBonus = Number(settings.registration_bonus ?? 100);
   const refComm = Number(settings.level1_commission || 30);
 
   return (
@@ -62,7 +62,7 @@ export default function WelcomeNoticeModal() {
         {/* Content List Body */}
         <div className="p-5 text-slate-700 text-[12.5px] leading-relaxed space-y-2.5 max-h-[60vh] overflow-y-auto [&::-webkit-scrollbar]:hidden">
           <p className="font-semibold text-slate-800">
-            1. Invest ZAR300, withdraw ZAR75 daily immediately.
+            1. Invest in ZAR and earn daily cash income.
           </p>
           <p className="font-semibold text-slate-800">
             2. Registration Bonus: ZAR{regBonus}.
