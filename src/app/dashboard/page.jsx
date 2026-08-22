@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Volume2, ArrowRight, Play, X, Landmark, Wallet, Mail, BarChart2, ArrowDownLeft, ArrowUpRight, Pickaxe, Zap, Gift, Users, Headphones } from "lucide-react";
+import { Volume2, ArrowRight, Play, X, Landmark, Wallet, Mail, BarChart2, ArrowDown, Calendar, FileText, Gift, Users, Settings, MessageSquare } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
@@ -121,24 +121,120 @@ export default function DashboardPage() {
 
       <div className="px-4 pt-3 pb-4 space-y-4">
 
-        {/* Action Grid */}
+        {/* Action Grid (Matching Reference Screenshot) */}
         <div className="bg-[#111827] rounded-[24px] p-4 shadow-sm border border-white/5">
           <div className="grid grid-cols-4 gap-y-5 gap-x-2">
             {[
-              { label: "Recharge", icon: <ArrowDownLeft className="w-5 h-5 text-emerald-400" />, action: () => router.push('/dashboard/wallet/deposit') },
-              { label: "Withdraw", icon: <ArrowUpRight className="w-5 h-5 text-rose-400" />, action: () => router.push('/dashboard/wallet/withdraw') },
-              { label: "Mine", icon: <Pickaxe className="w-5 h-5 text-amber-400" />, action: () => router.push('/dashboard/mining') },
-              { label: "Active Mining", icon: <Zap className="w-5 h-5 text-cyan-400" />, action: () => router.push('/dashboard/investments') },
-              { label: "Bonus Code", icon: <Gift className="w-5 h-5 text-purple-400" />, action: () => router.push('/dashboard/treasure') },
-              { label: "Referrals", icon: <Users className="w-5 h-5 text-blue-400" />, action: () => router.push('/dashboard/team') },
               { 
-                label: "Support", 
+                label: "Deposit", 
                 icon: (
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#38bdf8]" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.02-2.22-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.08 5.61-5.07c.24-.22-.05-.34-.38-.13l-6.93 4.36-2.98-.93c-.65-.2-.66-.65.14-.96l11.64-4.48c.54-.2 1.01.12.84 1.01z"/>
-                  </svg>
+                  <div className="w-8 h-8 rounded-full bg-amber-400/20 flex items-center justify-center">
+                    <span className="text-[20px]">💰</span>
+                  </div>
                 ), 
-                action: () => router.push('/dashboard/account/service')
+                action: () => router.push('/dashboard/wallet/deposit') 
+              },
+              { 
+                label: "Withdraw", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
+                    <span className="text-[18px] text-white font-bold">↩</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/wallet/withdraw') 
+              },
+              { 
+                label: "Mine", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">⛏️</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/mining') 
+              },
+              { 
+                label: "Active Mining", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">⚡</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/investments') 
+              },
+              { 
+                label: "Daily Check-in", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">📅</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/spin') 
+              },
+              { 
+                label: "Transaction Log", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">📋</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/transactions') 
+              },
+              { 
+                label: "Bonus Code", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">🎁</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/treasure') 
+              },
+              { 
+                label: "Download App", 
+                icon: (
+                  <div className="w-7 h-7 bg-[#0284c7] rounded-lg flex items-center justify-center shadow-sm">
+                    <ArrowDown size={18} className="text-white stroke-[3]" />
+                  </div>
+                ), 
+                action: () => {
+                  if (isInstallable) {
+                    installPWA();
+                  } else {
+                    toast.info("To install app, open browser menu and tap 'Add to Home Screen'");
+                  }
+                } 
+              },
+              { 
+                label: "Referrals", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">👥</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/team') 
+              },
+              { 
+                label: "Settings", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center border border-white/10">
+                    <span className="text-[18px]">⚙️</span>
+                  </div>
+                ), 
+                action: () => router.push('/dashboard/settings') 
+              },
+              { 
+                label: "WhatsApp Group", 
+                icon: (
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <span className="text-[20px]">💬</span>
+                  </div>
+                ), 
+                action: () => {
+                  if (settings.telegram_group) {
+                    window.open(settings.telegram_group, '_blank');
+                  } else {
+                    router.push('/dashboard/account/service');
+                  }
+                } 
               },
             ].map((item, idx) => (
               <div 
