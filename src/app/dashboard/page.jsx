@@ -58,7 +58,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 pb-24">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 pb-6">
       
       {/* Top Banner / Hero Carousel */}
       <div className="relative bg-[#0f172a] text-white px-4 pt-5 pb-6 overflow-hidden">
@@ -299,12 +299,12 @@ export default function DashboardPage() {
           />
           {/* Cover gradient overlay */}
           <div className="absolute inset-0 bg-black/30" />
-          {/* Centered play button at the bottom */}
+          {/* Centered play button in the middle */}
           <button
             onClick={() => setIsVideoModalOpen(true)}
-            className="absolute bottom-5 left-1/2 -translate-x-1/2 w-12 h-8 bg-white hover:bg-gray-100 rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer z-10"
+            className="absolute inset-0 m-auto w-14 h-10 bg-white hover:bg-gray-100 rounded-2xl flex items-center justify-center shadow-xl transition-transform hover:scale-110 active:scale-95 cursor-pointer z-10"
           >
-            <Play size={18} fill="currentColor" className="text-gray-900 ml-0.5" />
+            <Play size={20} fill="currentColor" className="text-gray-900 ml-0.5" />
           </button>
         </div>
 
