@@ -88,11 +88,8 @@ function RechargeContent() {
       {
         onSuccess: (res) => {
           if (res?.payUrl) {
-            toast.success("Opening Quick Pay checkout...");
             window.location.href = res.payUrl;
-            return;
           }
-          toast.success("Deposit submitted successfully!");
         }
       }
     );
