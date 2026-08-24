@@ -79,7 +79,7 @@ function RechargeContent() {
       return;
     }
 
-    // Submit deposit request
+    // Direct submit deposit request & redirect to Quick Pay online checkout
     submitDeposit(
       {
         amount: numAmount,
@@ -88,17 +88,11 @@ function RechargeContent() {
       {
         onSuccess: (res) => {
           if (res?.payUrl) {
-            toast.success("Redirecting to Quick Pay checkout...");
-            setTimeout(() => {
-              window.location.href = res.payUrl;
-            }, 500);
+            toast.success("Opening Quick Pay checkout...");
+            window.location.href = res.payUrl;
             return;
           }
-          setOrderData(res?.deposit || {
-            amount: numAmount,
-            id: `ORD-${Date.now().toString().slice(-6)}`
-          });
-          setShowPaymentModal(true);
+          toast.success("Deposit submitted successfully!");
         }
       }
     );
@@ -289,136 +283,7 @@ function RechargeContent() {
 
       </div>
 
-      {/* Payment Order Details Modal */}
-      {showPaymentModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-[24px] max-w-[420px] w-full p-6 shadow-2xl border border-slate-100 relative space-y-5 animate-in zoom-in-95 duration-200">
-            
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-full bg-[#03254c]/10 text-[#03254c] flex items-center justify-center">
-                  <Building2 size={20} />
-                </div>
-                <div>
-                  <h3 className="text-slate-900 font-bold text-[16px] leading-tight">
-                    Official Bank Transfer
-                  </h3>
-                  <p className="text-slate-500 text-[11.5px]">
-                    Direct bank payment channel
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowPaymentModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
 
-            {/* Amount Banner */}
-            <div className="bg-[#f0f6ff] border border-blue-100 rounded-[14px] p-4 text-center">
-              <div className="text-slate-500 text-[11px] font-medium">
-                Amount to Transfer
-              </div>
-              <div className="text-[#03254c] text-[28px] font-black tracking-tight mt-0.5">
-                {currencySymbol} {formatAmount(amount)}
-              </div>
-            </div>
-
-            {/* Account Details Box */}
-            <div className="space-y-3 text-[13px]">
-              
-              {/* Receiving Bank */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center justify-between">
-                <div>
-                  <span className="text-slate-400 text-[10.5px] block font-medium">
-                    Bank Name
-                  </span>
-                  <span className="text-slate-900 font-bold text-[13.5px]">
-                    Capitec Bank / Standard Bank
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleCopy("Capitec Bank", "bank")}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-600 cursor-pointer"
-                  title="Copy Bank"
-                >
-                  {copiedField === "bank" ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
-                </button>
-              </div>
-
-              {/* Account Number */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center justify-between">
-                <div>
-                  <span className="text-slate-400 text-[10.5px] block font-medium">
-                    Account Number
-                  </span>
-                  <span className="text-slate-900 font-bold text-[15px] font-mono">
-                    1052849102
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleCopy("1052849102", "account")}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-600 cursor-pointer"
-                  title="Copy Account Number"
-                >
-                  {copiedField === "account" ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
-                </button>
-              </div>
-
-              {/* Beneficiary Name */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center justify-between">
-                <div>
-                  <span className="text-slate-400 text-[10.5px] block font-medium">
-                    Account Name
-                  </span>
-                  <span className="text-slate-900 font-bold text-[13.5px]">
-                    Omni Platform Ltd
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleCopy("Omni Platform Ltd", "name")}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-600 cursor-pointer"
-                  title="Copy Name"
-                >
-                  {copiedField === "name" ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
-                </button>
-              </div>
-
-            </div>
-
-            {/* Instruction Notice */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900 text-[11.5px] leading-relaxed">
-              ⚠️ Please ensure the exact amount is transferred. Once transferred, tap the button below to confirm.
-            </div>
-
-            {/* Modal Actions */}
-            <div className="space-y-2 pt-1">
-              <button
-                type="button"
-                onClick={handleConfirmPaid}
-                className="w-full bg-[#03254c] hover:bg-[#021d3c] active:scale-[0.99] text-white font-bold py-3.5 rounded-xl text-[14.5px] shadow-md shadow-blue-950/20 cursor-pointer transition-all"
-              >
-                I Have Made Payment
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowPaymentModal(false)}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-[13px] transition-all cursor-pointer"
-              >
-                Cancel
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
 
     </div>
   );
