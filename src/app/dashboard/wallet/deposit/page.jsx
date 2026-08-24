@@ -204,31 +204,7 @@ function RechargeContent() {
           </p>
         </div>
 
-        {/* Payment Method Section */}
-        <div className="pt-2">
-          <h2 className="text-slate-900 text-[16px] font-bold tracking-tight mb-3">
-            Payment method
-          </h2>
 
-          <div
-            onClick={() => setSelectedMethod("bank")}
-            className="bg-white border-2 border-[#03254c] rounded-[16px] p-4 relative flex flex-col justify-between w-[160px] cursor-pointer shadow-xs hover:shadow-md transition-all"
-          >
-            <div className="flex items-center justify-between">
-              <CreditCard size={22} className="text-slate-800" strokeWidth={1.8} />
-              <CheckCircle2 size={18} className="text-[#03254c] fill-[#03254c] text-white" />
-            </div>
-
-            <div className="mt-3">
-              <h4 className="text-slate-900 font-bold text-[13.5px] leading-tight">
-                Online Gateway
-              </h4>
-              <p className="text-slate-500 text-[11px] mt-0.5">
-                Instant automatic payment
-              </p>
-            </div>
-          </div>
-        </div>
 
         {/* Continue Action Button */}
         <div className="pt-2">
