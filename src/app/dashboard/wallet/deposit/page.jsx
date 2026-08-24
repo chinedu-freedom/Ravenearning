@@ -83,10 +83,17 @@ function RechargeContent() {
     submitDeposit(
       {
         amount: numAmount,
-        paymentMethod: "Official Recharge (Direct Bank Transfer)"
+        paymentMethod: "Quick Pay Online Gateway"
       },
       {
         onSuccess: (res) => {
+          if (res?.payUrl) {
+            toast.success("Redirecting to Quick Pay checkout...");
+            setTimeout(() => {
+              window.location.href = res.payUrl;
+            }, 500);
+            return;
+          }
           setOrderData(res?.deposit || {
             amount: numAmount,
             id: `ORD-${Date.now().toString().slice(-6)}`
