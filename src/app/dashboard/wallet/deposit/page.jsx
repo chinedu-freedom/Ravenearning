@@ -227,10 +227,10 @@ function RechargeContent() {
 
             <div className="mt-3">
               <h4 className="text-slate-900 font-bold text-[13.5px] leading-tight">
-                Official Recharge
+                Online Gateway
               </h4>
               <p className="text-slate-500 text-[11px] mt-0.5">
-                Direct bank transfer
+                Instant automatic payment
               </p>
             </div>
           </div>
