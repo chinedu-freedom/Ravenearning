@@ -21,8 +21,8 @@ export default function WithdrawalRecordPage() {
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
 
-  // Fetch transactions
-  const { data: txRes, isLoading } = useFetchData("/transactions", ["transactions"]);
+  // Fetch user transactions
+  const { data: txRes, isLoading } = useFetchData("/users/transactions", ["user-transactions"]);
   const transactions = txRes?.transactions || txRes?.data || [];
 
   const formatAmount = (num) => {

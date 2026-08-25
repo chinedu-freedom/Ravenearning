@@ -21,8 +21,8 @@ export default function RechargeRecordPage() {
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
 
-  // Fetch transactions
-  const { data: txRes, isLoading } = useFetchData("/transactions", ["transactions"]);
+  // Fetch user transactions
+  const { data: txRes, isLoading } = useFetchData("/users/transactions", ["user-transactions"]);
   const transactions = txRes?.transactions || txRes?.data || [];
 
   const formatAmount = (num) => {
@@ -52,11 +52,11 @@ export default function RechargeRecordPage() {
       })
       .map((t) => ({
         id: t.id || Math.random().toString(),
-        title: "Recharge success",
+        title: t.description || "Recharge Success",
         date: formatDate(t.created_at || t.timestamp),
         amount: parseFloat(t.amount) || 0,
         status: (t.status || "completed").toLowerCase(),
-        orderId: t.reference || t.id || `REC-${Date.now()}`
+        orderId: t.reference || t.reference_id || t.id || `REC-${Date.now()}`
       }));
   }, [transactions]);
 
