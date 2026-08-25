@@ -1,46 +1,43 @@
 "use client";
 
 import { useEffect } from "react";
-import confetti from "canvas-confetti";
 import { Gift, Sparkles, X } from "lucide-react";
 
 export default function RewardClaimModal({ isOpen, onClose, amount, currencySymbol = "R", title = "Reward Claimed!" }) {
   useEffect(() => {
     if (isOpen) {
-      // Fire confetti burst explosion
-      const duration = 2.5 * 1000;
-      const animationEnd = Date.now() + duration;
+      // Dynamically import canvas-confetti safely
+      import("canvas-confetti").then((module) => {
+        const confetti = module.default || module;
+        const duration = 2.5 * 1000;
+        const animationEnd = Date.now() + duration;
 
-      const randomInRange = (min, max) => Math.random() * (max - min) + min;
-
-      // Initial center burst
-      confetti({
-        particleCount: 90,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors: ["#4f8cff", "#2563eb", "#6ee7ff", "#10b981", "#3b82f6", "#f59e0b"]
-      });
-
-      const interval = setInterval(() => {
-        const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-
-        const particleCount = 50 * (timeLeft / duration);
+        const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
         confetti({
-          particleCount,
-          startVelocity: 30,
-          spread: 360,
-          ticks: 60,
-          origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 },
-          colors: ["#4f8cff", "#2563eb", "#6ee7ff", "#10b981"]
+          particleCount: 90,
+          spread: 100,
+          origin: { y: 0.6 },
+          colors: ["#4f8cff", "#2563eb", "#6ee7ff", "#10b981", "#3b82f6", "#f59e0b"]
         });
-      }, 250);
 
-      return () => clearInterval(interval);
+        const interval = setInterval(() => {
+          const timeLeft = animationEnd - Date.now();
+          if (timeLeft <= 0) return clearInterval(interval);
+
+          const particleCount = 50 * (timeLeft / duration);
+          confetti({
+            particleCount,
+            startVelocity: 30,
+            spread: 360,
+            ticks: 60,
+            origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 },
+            colors: ["#4f8cff", "#2563eb", "#6ee7ff", "#10b981"]
+          });
+        }, 250);
+      }).catch((err) => {
+        console.warn("Confetti module notice:", err);
+      });
     }
   }, [isOpen]);
 
