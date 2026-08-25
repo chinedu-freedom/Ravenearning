@@ -150,43 +150,32 @@ export default function SpinPage() {
   const freeSpins = spinData?.userSpins?.free_spins_remaining || 0;
   const cost = Number(spinData?.settings?.cost_per_spin || 0);
 
-  // 😢namic segments from backend, strictly 9 divisions
+  // Dynamic segments from backend: 8 equal slices
   let basePrizes = spinData?.prizes || [];
   let displaySegments = [];
 
-  for (let i = 0; i < 9; i++) {
-    if (i < 8) {
-      if (basePrizes[i]) {
-        displaySegments.push({
-          label: basePrizes[i].name,
-          color: i % 2 === 0 ? "#fefefe" : "#fdf6e3",
-          id: basePrizes[i].id,
-          value: Number(basePrizes[i].value),
-          originalIndex: i
-        });
-      } else {
-        displaySegments.push({
-          label: "0.00",
-          color: i % 2 === 0 ? "#fefefe" : "#fdf6e3",
-          id: `empty-${i}`,
-          value: 0,
-          originalIndex: i
-        });
-      }
-    } else {
-      // 9th segment is constant 'Try again' (or the 9th configured prize if it exists)
+  for (let i = 0; i < 8; i++) {
+    if (basePrizes[i]) {
       displaySegments.push({
-        label: basePrizes[8] ? basePrizes[8].name : "Try again",
-        color: "#fefefe", // 8 is even index, so #fefefe
-        id: basePrizes[8] ? basePrizes[8].id : "try-again",
-        value: basePrizes[8] ? Number(basePrizes[8].value) : 0,
-        originalIndex: 8
+        label: basePrizes[i].name,
+        color: i % 2 === 0 ? "#fefefe" : "#fdf6e3",
+        id: basePrizes[i].id,
+        value: Number(basePrizes[i].value),
+        originalIndex: i
+      });
+    } else {
+      displaySegments.push({
+        label: "0.00",
+        color: i % 2 === 0 ? "#fefefe" : "#fdf6e3",
+        id: `empty-${i}`,
+        value: 0,
+        originalIndex: i
       });
     }
   }
 
   const segments = displaySegments;
-  const segmentDegree = 360 / 9; // Exactly 40 degrees
+  const segmentDegree = 360 / 8; // Exactly 45 degrees for 8 slices
 
   // Build the conic-gradient string
   const gradientStops = segments.map((seg, i) => {
