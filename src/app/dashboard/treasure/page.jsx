@@ -29,7 +29,7 @@ export default function TreasurePage() {
     claimMutation.mutate({ code: giftCode.trim() }, {
       onSuccess: (res) => {
         setGiftCode("");
-        const claimedAmount = res?.amount || res?.reward?.amount || res?.bonus || res?.claimedAmount || 100;
+        const claimedAmount = res?.reward_amount ?? res?.amount ?? res?.reward?.amount ?? res?.bonus ?? 20;
         setClaimedModalData({
           isOpen: true,
           amount: claimedAmount,
