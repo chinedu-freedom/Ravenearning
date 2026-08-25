@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Gift, Check, Coins, Lock, Loader2 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
+import RewardClaimModal from "@/components/RewardClaimModal";
 
 export default function DailyCheckinModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [claimedModalData, setClaimedModalData] = useState({ isOpen: false, amount: 0 });
   const { data, isLoading, refetch } = useFetchData('/users/daily-checkin', ['daily-checkin']);
   const claimMutation = usePost('/users/daily-checkin/claim', ['daily-checkin'], false, { showToast: false });
   const { data: settingsRes } = useFetchData('/settings', ['platform-settings']);
@@ -129,11 +131,10 @@ export default function DailyCheckinModal() {
       const result = await claimMutation.mutateAsync({});
       if (result?.success || result?.message) {
         confettiRef.current?.launch(150);
-        toast.success(result?.message || "Daily reward claimed!");
         await refetch();
-        setTimeout(() => {
-          handleOpenChange(false);
-        }, 2200);
+        const claimedAmt = result?.amount || result?.rewardAmount || 10;
+        setClaimedModalData({ isOpen: true, amount: claimedAmt });
+        handleOpenChange(false);
       }
     } catch (error) {
       toast.error("Claim Failed", {
@@ -217,6 +218,13 @@ export default function DailyCheckinModal() {
         ref={confettiCanvasRef} 
         className="pointer-events-none fixed inset-0 z-[150] w-full h-full" 
         style={{ display: 'none' }}
+      />
+      <RewardClaimModal
+        isOpen={claimedModalData.isOpen}
+        onClose={() => setClaimedModalData({ isOpen: false, amount: 0 })}
+        amount={claimedModalData.amount}
+        currencySymbol={settings?.currency_symbol || "R"}
+        title="Daily Reward Claimed!"
       />
     </>
   );

@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 import Image from "next/image";
+import RewardClaimModal from "@/components/RewardClaimModal";
 
 export default function TreasurePage() {
   const router = useRouter();
   const [giftCode, setGiftCode] = useState("");
+  const [claimedModalData, setClaimedModalData] = useState({ isOpen: false, amount: 0, title: "Gift Code Claimed!" });
 
   const { data: historyData, isLoading } = useFetchData("/users/treasure/history", ["treasure-history"]);
   const claimMutation = usePost("/users/treasure/claim", "treasure-history");
@@ -25,8 +27,14 @@ export default function TreasurePage() {
       return;
     }
     claimMutation.mutate({ code: giftCode.trim() }, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         setGiftCode("");
+        const claimedAmount = res?.amount || res?.reward?.amount || res?.bonus || res?.claimedAmount || 100;
+        setClaimedModalData({
+          isOpen: true,
+          amount: claimedAmount,
+          title: "Gift Code Claimed!"
+        });
       }
     });
   };
@@ -226,6 +234,14 @@ export default function TreasurePage() {
         )}
 
       </div>
+
+      <RewardClaimModal
+        isOpen={claimedModalData.isOpen}
+        onClose={() => setClaimedModalData({ isOpen: false, amount: 0, title: "Gift Code Claimed!" })}
+        amount={claimedModalData.amount}
+        currencySymbol={settings.currency_symbol || "R"}
+        title={claimedModalData.title}
+      />
     </div>
   );
 }
