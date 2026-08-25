@@ -204,31 +204,33 @@ export default function DashboardPage() {
 
         {/* Two Large Card Buttons (Side-by-side) */}
         <div className="grid grid-cols-2 gap-3.5">
-          {/* Profit Card */}
+          {/* Contact Support Card */}
           <div
-            onClick={() => router.push("/dashboard/mining")}
+            onClick={() => router.push("/dashboard/account/service")}
             className="bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] border border-sky-200/60 rounded-[20px] p-4 flex flex-col justify-between h-[155px] cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
           >
             <div>
-              <span className="text-[15px] font-black text-[#0284c7] flex items-center">
-                Profit
-                <ArrowRight size={13} className="ml-1" />
+              <span className="text-[14px] font-black text-[#0284c7] flex items-center leading-none">
+                CONTACT SUPPORT
+                <ArrowRight size={13} className="ml-1 shrink-0" />
               </span>
-              <p className="text-[10px] text-slate-500 font-bold mt-0.5 leading-none">
-                Earn daily returns
+              <p className="text-[10px] text-slate-500 font-bold mt-1 leading-none">
+                24/7 Telegram Helpdesk
               </p>
             </div>
-            {/* Custom SVG Illustration for Profit */}
+            {/* Custom SVG Illustration for Contact Support */}
             <div className="flex justify-end pr-1 pb-1">
               <svg width="55" height="55" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="64" height="64" rx="16" fill="rgba(2, 132, 199, 0.1)" />
-                <ellipse cx="22" cy="45" rx="8" ry="3" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
-                <ellipse cx="22" cy="41" rx="8" ry="3" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
-                <ellipse cx="22" cy="37" rx="8" ry="3" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
-                <path d="M42 35 C42 35 34 32 30 36 C26 40 32 46 36 46 C40 46 48 40 48 35 Z" fill="#fed7aa" stroke="#c2410c" strokeWidth="1.5" />
-                <rect x="28" y="22" width="22" height="12" rx="2" transform="rotate(-15 28 22)" fill="#38bdf8" stroke="#0284c7" strokeWidth="1.5" />
-                <circle cx="37" cy="22" r="3" fill="#7dd3fc" />
-                <path d="M14 26 L22 18 L28 22 L38 12 M38 12 H32 M38 12 V18" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                {/* Headset arc */}
+                <path d="M18 34 C18 24.0589 24.268 16 32 16 C39.732 16 46 24.0589 46 34" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
+                {/* Left earpad */}
+                <rect x="15" y="32" width="7" height="13" rx="3.5" fill="#38bdf8" stroke="#0284c7" strokeWidth="1.5" />
+                {/* Right earpad */}
+                <rect x="42" y="32" width="7" height="13" rx="3.5" fill="#38bdf8" stroke="#0284c7" strokeWidth="1.5" />
+                {/* Microphone wire & tip */}
+                <path d="M22 41 C22 47 28 47 34 47" stroke="#0284c7" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="35" cy="47" r="2.5" fill="#10b981" />
               </svg>
             </div>
           </div>
