@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
 
 // Helper functions
 export const setAuthToken = (token, keepMeLoggedIn = false) => {
-  const expires = keepMeLoggedIn ? 30 : 7; // 30 days or 7 days default
+  const expires = keepMeLoggedIn ? 1 : 1 / 24; // 1 day if Remember Me checked, 1 hour (1/24 day) standard
   CookieManager.set("sec-prd-token", token, {
     expires,
     path: "/",
