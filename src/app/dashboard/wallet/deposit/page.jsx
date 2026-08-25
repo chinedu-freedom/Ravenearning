@@ -60,7 +60,7 @@ function RechargeContent() {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const { mutate: submitDeposit, isPending } = usePost("/users/deposit");
+  const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
   const handleContinue = () => {
     const numAmount = Number(amount);
