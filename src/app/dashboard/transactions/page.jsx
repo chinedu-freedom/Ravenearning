@@ -96,7 +96,13 @@ export default function TransactionsPage() {
 
     return {
       id: tx.id,
-      title: tx.description || tx.type,
+      title: (() => {
+        const d = (tx.description || "").toLowerCase();
+        const t = (tx.type || "").toLowerCase();
+        if (d.includes('deposit') || t.includes('deposit') || d.includes('quick pay') || d.includes('gateway') || d.includes('direct bank')) return "Deposit";
+        if (d.includes('withdraw') || t.includes('withdraw')) return "Withdrawal";
+        return tx.description || tx.type || "Transaction";
+      })(),
       date: new Date(tx.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }),
       amount: amountStr,
       status: tx.status || "SUCCESS",

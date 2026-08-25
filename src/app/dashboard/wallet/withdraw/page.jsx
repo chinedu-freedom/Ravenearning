@@ -93,7 +93,7 @@ function WithdrawContent() {
     submitWithdrawal(
       {
         amount: numAmount,
-        method: `Bank Transfer (${bankName})`,
+        method: bankName || "Bank Account",
         bank_name: bankName,
         account_number: accountNumber,
         account_name: accountName

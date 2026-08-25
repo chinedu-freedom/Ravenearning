@@ -83,7 +83,7 @@ function RechargeContent() {
     submitDeposit(
       {
         amount: numAmount,
-        paymentMethod: "Quick Pay Online Gateway"
+        paymentMethod: "Online Deposit"
       },
       {
         onSuccess: (res) => {

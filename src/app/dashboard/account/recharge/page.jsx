@@ -52,7 +52,7 @@ export default function RechargeRecordPage() {
       })
       .map((t) => ({
         id: t.id || Math.random().toString(),
-        title: t.description || "Recharge Success",
+        title: "Deposit",
         date: formatDate(t.created_at || t.timestamp),
         amount: parseFloat(t.amount) || 0,
         status: (t.status || "completed").toLowerCase(),
