@@ -215,7 +215,7 @@ export default function DashboardPage() {
                 <ArrowRight size={13} className="ml-1 shrink-0" />
               </span>
               <p className="text-[10px] text-slate-500 font-bold mt-1 leading-none">
-                24/7 Telegram Helpdesk
+                24/7 WhatsApp Helpdesk
               </p>
             </div>
             {/* Custom SVG Illustration for Contact Support */}
