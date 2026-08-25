@@ -209,12 +209,13 @@ export default function TransactionsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-full whitespace-nowrap text-[12px] font-bold transition-all ${isActive
-                    ? 'bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] text-white shadow-[0_4px_10px_rgba(79,140,255,0.25)]'
-                    : 'bg-[#111827] text-gray-400 border border-white/5 hover:bg-white/5'
-                  }`}
+                className={`cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-full whitespace-nowrap text-[12px] font-bold transition-all ${
+                  isActive
+                    ? 'bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] text-white shadow-[0_4px_10px_rgba(79,140,255,0.25)] border border-[#4f8cff]/50'
+                    : 'bg-[#111827] text-gray-300 border border-white/10 hover:bg-[#1e293b] hover:text-white hover:border-[#4f8cff]/40'
+                }`}
               >
-                <Icon size={14} className={isActive ? "text-white" : "text-gray-400"} />
+                <Icon size={14} className={isActive ? "text-white" : "text-gray-400 group-hover:text-white"} />
                 {tab.label}
               </button>
             )
