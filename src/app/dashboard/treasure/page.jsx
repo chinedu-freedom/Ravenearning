@@ -153,10 +153,7 @@ export default function TreasurePage() {
               </div>
               <h3 className="font-bold text-slate-900 text-[15px]">Recent rewards</h3>
             </div>
-            <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Live Feed
-            </span>
+
           </div>
 
           <div className="bg-[#111827] rounded-[16px] border border-white/5 shadow-sm overflow-hidden">
