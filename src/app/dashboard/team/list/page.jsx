@@ -100,8 +100,7 @@ export default function TeamListPage() {
 
                   <div className="flex items-baseline gap-2 -mb-0.5">
                     <span className="text-gray-400 text-[11px]">Invested:</span>
-                    <span className="text-[#34d399] font-bold text-[13px]">
-                      ${Number(user.invested_amount || 0).toFixed(2)}
+                    <span className="text-[#34d399] font-bold text-[13px]">R {Number(user.invested_amount || 0).toFixed(2)}
                     </span>
                   </div>
                 </div>

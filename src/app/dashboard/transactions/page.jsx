@@ -84,7 +84,7 @@ export default function TransactionsPage() {
       }
     }
 
-    const baseSymbol = settings.currency_symbol || "$";
+    const baseSymbol = settings.currency_symbol || "R";
     const amountVal = parseFloat(tx.amount) || 0;
     let amountStr = "";
     
