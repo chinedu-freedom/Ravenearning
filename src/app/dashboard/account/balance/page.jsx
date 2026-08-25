@@ -26,8 +26,8 @@ export default function BalancePage() {
   const user = userRes?.user;
   const currentBalance = user?.balance || user?.wallet_balance || 0;
 
-  // Fetch transactions
-  const { data: txRes, isLoading } = useFetchData("/transactions", ["transactions"]);
+  // Fetch user transactions
+  const { data: txRes, isLoading } = useFetchData("/users/transactions", ["user-transactions"]);
   const transactions = txRes?.transactions || txRes?.data || [];
 
   const formatAmount = (num) => {

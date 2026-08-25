@@ -60,6 +60,10 @@ export default function BindAccountPage() {
       setRealname(user.bank_details.account_name || user.bank_details.realname || "");
       setSelectedBank(user.bank_details.bank_name || "");
       setAccountNumber(user.bank_details.account_number || "");
+    } else if (user) {
+      setRealname(user.bank_account_name || user.full_name || "");
+      setSelectedBank(user.bank_name || "");
+      setAccountNumber(user.bank_account_number || "");
     }
   }, [user]);
 
