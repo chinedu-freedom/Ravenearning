@@ -247,7 +247,7 @@ export default function TransactionsPage() {
                     }
                     router.push(`/dashboard/transactions/receipt?${params.toString()}`);
                   }}
-                  className="bg-[#111827] rounded-[14px] p-3 border border-white/5 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:bg-white/5 active:scale-[0.99] transition-all"
+                  className="bg-[#111827] rounded-[14px] p-3 border border-white/5 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:bg-[#1e293b] active:scale-[0.99] transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center ${tx.iconBg.replace('bg-', 'bg-').replace('100', '900/20')} ${tx.iconColor.replace('500', '400')}`}>

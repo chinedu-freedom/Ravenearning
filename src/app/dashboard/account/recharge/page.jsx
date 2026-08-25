@@ -144,7 +144,7 @@ export default function RechargeRecordPage() {
               return (
                 <div
                   key={item.id}
-                  className="bg-[#111827] border border-white/5 rounded-[18px] p-4 shadow-sm space-y-3 hover:border-white/10 transition-all"
+                  className="bg-[#111827] border border-white/5 rounded-[18px] p-4 shadow-sm space-y-3 hover:bg-[#1e293b] hover:border-white/10 transition-all"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
