@@ -28,7 +28,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error?.response?.status === 401 && typeof window !== "undefined") {
+    if ((error?.response?.status === 401 || error?.response?.status === 403) && typeof window !== "undefined") {
       CookieManager.remove("sec-prd-token");
       try { localStorage.removeItem("sec-prd-token"); } catch(e) {}
       delete axiosInstance.defaults.headers.common.Authorization;
