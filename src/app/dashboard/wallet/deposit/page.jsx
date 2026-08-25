@@ -18,13 +18,13 @@ import {
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 
-const PRESET_AMOUNTS = [5000, 10000, 30000];
+const PRESET_AMOUNTS = [300, 800, 1500];
 
 function RechargeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [amount, setAmount] = useState("5000");
+  const [amount, setAmount] = useState("300");
   const [selectedMethod, setSelectedMethod] = useState("bank");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
@@ -182,7 +182,7 @@ function RechargeContent() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="5000"
+              placeholder="300"
               className="bg-transparent text-slate-900 font-bold text-[16px] outline-none flex-1 placeholder:text-slate-400 font-mono"
             />
             {amount && (
