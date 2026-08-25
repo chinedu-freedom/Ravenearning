@@ -12,7 +12,8 @@ export const CookieManager = {
     }
 
     const path = options.path ? `; path=${options.path}` : "; path=/";
-    const secure = options.secure ? "; secure" : "";
+    const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
+    const secure = options.secure && isHttps ? "; secure" : "";
     const sameSite = options.sameSite ? `; samesite=${options.sameSite}` : "";
 
     document.cookie = `${name}=${encodeURIComponent(value)}${expires}${path}${secure}${sameSite}`;
