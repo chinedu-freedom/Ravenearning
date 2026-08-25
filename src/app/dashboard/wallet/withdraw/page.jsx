@@ -112,10 +112,6 @@ function WithdrawContent() {
           setPassword("");
           refetchUser();
           router.push("/dashboard/account/withdrawal");
-        },
-        onError: (error) => {
-          const msg = error?.response?.data?.message || error?.response?.data?.error || "Failed to process withdrawal request";
-          toast.error(msg);
         }
       }
     );

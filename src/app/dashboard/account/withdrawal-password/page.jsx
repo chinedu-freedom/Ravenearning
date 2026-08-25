@@ -19,7 +19,7 @@ export default function WithdrawalPasswordPage() {
 
   const updatePinMutation = usePut("/users/me/payment");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!newPassword) {
@@ -37,20 +37,19 @@ export default function WithdrawalPasswordPage() {
       return;
     }
 
-    try {
-      await updatePinMutation.mutateAsync({
+    updatePinMutation.mutate(
+      {
         currentPassword: currentPassword.trim(),
         newPassword: newPassword.trim(),
-      });
-
-      toast.success("Withdrawal password set successfully! 🎉");
-      setTimeout(() => {
-        router.push("/dashboard/account");
-      }, 1000);
-    } catch (error) {
-      const errMsg = error?.response?.data?.message || error?.response?.data?.error || "Failed to update withdrawal password";
-      toast.error(errMsg);
-    }
+      },
+      {
+        onSuccess: () => {
+          setTimeout(() => {
+            router.push("/dashboard/account");
+          }, 1000);
+        }
+      }
+    );
   };
 
   return (
