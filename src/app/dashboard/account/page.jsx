@@ -268,8 +268,8 @@ export default function AccountPage() {
                 <circle cx="12" cy="16" r="1" fill="currentColor" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Login Pass
+            <span className="text-[10px] font-medium text-white/90 mt-2 leading-tight">
+              Login Password
             </span>
           </Link>
 
@@ -284,8 +284,8 @@ export default function AccountPage() {
                 <circle cx="12" cy="12" r="2" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Withdraw Pass
+            <span className="text-[10px] font-medium text-white/90 mt-2 leading-tight">
+              Withdrawal Password
             </span>
           </Link>
 
