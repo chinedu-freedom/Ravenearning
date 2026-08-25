@@ -70,8 +70,18 @@ export default function MiningPlansPage() {
 
   // Calculations
   const amount = parseFloat(investmentAmount) || (selectedPlan ? Number(selectedPlan.min_investment) : 0);
-  const dailyIncome = selectedPlan ? (amount * Number(selectedPlan.daily_income)) / 100 : 0;
-  const totalReturn = selectedPlan ? (dailyIncome * selectedPlan.duration) : 0;
+  const rawDailyInc = selectedPlan ? Number(selectedPlan.daily_income || 0) : 0;
+  const unitDailyInc = selectedPlan 
+    ? (rawDailyInc <= 1 ? Number(selectedPlan.min_investment || 0) * rawDailyInc : rawDailyInc) 
+    : 0;
+  const quantity = selectedPlan && Number(selectedPlan.min_investment) > 0 
+    ? Math.max(1, Math.round(amount / Number(selectedPlan.min_investment))) 
+    : 1;
+
+  const dailyIncome = unitDailyInc * quantity;
+  const totalReturn = selectedPlan 
+    ? (selectedPlan.total_revenue ? Number(selectedPlan.total_revenue) * quantity : dailyIncome * Number(selectedPlan.duration || 0)) 
+    : 0;
 
   // Format currency helper
   const formatCurrency = (val) => {
