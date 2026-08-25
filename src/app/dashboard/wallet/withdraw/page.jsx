@@ -112,6 +112,10 @@ function WithdrawContent() {
           setPassword("");
           refetchUser();
           router.push("/dashboard/account/withdrawal");
+        },
+        onError: (error) => {
+          const msg = error?.response?.data?.message || error?.response?.data?.error || "Failed to process withdrawal request";
+          toast.error(msg);
         }
       }
     );
@@ -335,10 +339,10 @@ function WithdrawContent() {
               </div>
             </div>
 
-            {/* Account Password Confirmation Input */}
+            {/* Withdrawal Password Confirmation Input */}
             <div className="space-y-1.5 text-left pt-1">
               <label className="text-slate-700 text-[12px] font-bold block">
-                Account Login Password
+                Withdrawal Password
               </label>
               <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-[#03254c] transition-all">
                 <Lock size={16} className="text-slate-400 shrink-0" />
@@ -346,7 +350,7 @@ function WithdrawContent() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter login password"
+                  placeholder="Enter withdrawal password"
                   className="bg-transparent outline-none text-slate-900 text-[13px] w-full placeholder:text-slate-400"
                 />
               </div>

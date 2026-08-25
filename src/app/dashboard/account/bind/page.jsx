@@ -212,10 +212,10 @@ export default function BindAccountPage() {
             </div>
           </div>
 
-          {/* Login Password Confirmation Field */}
+          {/* Withdrawal Password Confirmation Field */}
           <div className="space-y-1.5">
             <label className="text-[13px] font-semibold text-white/90 block">
-              Login Password
+              Withdrawal Password
             </label>
             <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
               <Lock size={18} className="text-[#38bdf8] shrink-0" />
@@ -223,7 +223,7 @@ export default function BindAccountPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter login password to confirm"
+                placeholder="Enter withdrawal password to confirm"
                 className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
               />
             </div>

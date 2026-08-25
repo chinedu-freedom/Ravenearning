@@ -253,7 +253,7 @@ export default function AccountPage() {
 
         </div>
 
-        {/* Second Grid Card (Change Password, About us, Download App, Customer Service) */}
+        {/* Second Grid Card (Change Password, Withdrawal Password, About us, Download App) */}
         <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-4 items-center divide-x divide-white/5">
 
           {/* Change Password */}
@@ -269,7 +269,23 @@ export default function AccountPage() {
               </svg>
             </div>
             <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Change Password
+              Login Pass
+            </span>
+          </Link>
+
+          {/* Withdrawal Password */}
+          <Link
+            href="/dashboard/account/withdrawal-password"
+            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
+          >
+            <div className="w-9 h-9 rounded-[10px] bg-sky-900/20 border border-white/5 flex items-center justify-center text-[#38bdf8] group-hover:scale-105 transition-transform">
+              <svg className="w-5 h-5 text-[#38bdf8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 2l-2 2m-2-2l2 2M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
+            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
+              Withdraw Pass
             </span>
           </Link>
 
