@@ -12,7 +12,8 @@ import {
   X, 
   Check, 
   ShieldCheck,
-  Info
+  Info,
+  Lock
 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -46,6 +47,7 @@ export default function BindAccountPage() {
   const [realname, setRealname] = useState("");
   const [selectedBank, setSelectedBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+  const [password, setPassword] = useState("");
   const [showBankModal, setShowBankModal] = useState(false);
   const [bankSearch, setBankSearch] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -92,6 +94,10 @@ export default function BindAccountPage() {
       toast.error("Account number should be at least 10 digits");
       return;
     }
+    if (!password.trim()) {
+      toast.error("Please enter your account login password to confirm");
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -99,6 +105,7 @@ export default function BindAccountPage() {
         account_name: realname.trim(),
         bank_name: selectedBank,
         account_number: accountNumber.trim(),
+        password: password.trim()
       });
 
       await refetchUser();
@@ -200,6 +207,23 @@ export default function BindAccountPage() {
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
                 placeholder="Enter your bank account number"
+                className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+              />
+            </div>
+          </div>
+
+          {/* Login Password Confirmation Field */}
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-semibold text-white/90 block">
+              Login Password
+            </label>
+            <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
+              <Lock size={18} className="text-[#38bdf8] shrink-0" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter login password to confirm"
                 className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
               />
             </div>

@@ -9,7 +9,8 @@ import {
   Building2,
   ChevronRight,
   Loader2,
-  X
+  X,
+  Lock
 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ function WithdrawContent() {
   const router = useRouter();
 
   const [amount, setAmount] = useState("100");
+  const [password, setPassword] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Fetch settings & current user profile
@@ -90,17 +92,24 @@ function WithdrawContent() {
   };
 
   const handleConfirmSubmit = () => {
+    if (!password.trim()) {
+      toast.error("Please enter your account login password to confirm withdrawal");
+      return;
+    }
+
     submitWithdrawal(
       {
         amount: numAmount,
         method: bankName || "Bank Account",
         bank_name: bankName,
         account_number: accountNumber,
-        account_name: accountName
+        account_name: accountName,
+        password: password.trim()
       },
       {
         onSuccess: () => {
           setShowConfirmModal(false);
+          setPassword("");
           refetchUser();
           router.push("/dashboard/account/withdrawal");
         }
@@ -323,6 +332,23 @@ function WithdrawContent() {
                     {maskedAccount}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Account Password Confirmation Input */}
+            <div className="space-y-1.5 text-left pt-1">
+              <label className="text-slate-700 text-[12px] font-bold block">
+                Account Login Password
+              </label>
+              <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-[#03254c] transition-all">
+                <Lock size={16} className="text-slate-400 shrink-0" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter login password"
+                  className="bg-transparent outline-none text-slate-900 text-[13px] w-full placeholder:text-slate-400"
+                />
               </div>
             </div>
 
