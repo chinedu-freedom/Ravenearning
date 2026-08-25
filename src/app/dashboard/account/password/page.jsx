@@ -9,7 +9,7 @@ import {
   ShieldCheck, 
   Loader2 
 } from "lucide-react";
-import { usePost } from "@/hooks/useApi";
+import { usePut } from "@/hooks/useApi";
 import { toast } from "sonner";
 
 export default function ChangePasswordPage() {
@@ -23,7 +23,7 @@ export default function ChangePasswordPage() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { mutate: changePassword, isPending } = usePost("/users/change-password");
+  const { mutate: changePassword, isPending } = usePut("/users/me/password");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,9 +47,8 @@ export default function ChangePasswordPage() {
 
     changePassword(
       {
-        old_password: oldPassword,
-        new_password: newPassword,
-        confirm_password: confirmPassword,
+        currentPassword: oldPassword,
+        newPassword: newPassword,
       },
       {
         onSuccess: () => {

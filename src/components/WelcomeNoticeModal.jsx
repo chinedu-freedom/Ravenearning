@@ -22,7 +22,7 @@ export default function WelcomeNoticeModal() {
   };
 
   const handleTelegramClick = () => {
-    const telegramUrl = settings.telegram_support || "https://t.me/ravenearning_official";
+    const telegramUrl = settings.telegram_support || "https://t.me/ravenearning780";
     window.open(telegramUrl, "_blank", "noopener,noreferrer");
     handleDismiss();
   };

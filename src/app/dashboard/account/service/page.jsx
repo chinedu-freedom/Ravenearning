@@ -12,15 +12,16 @@ export default function CustomerServicePage() {
 
   const supportTelegram =
     settings.telegram_support_link ||
+    settings.telegram_support ||
     settings.telegram_channel_link ||
-    "https://t.me/ServeGREATLAND001";
+    "https://t.me/ravenearning780";
 
   const groupTelegram =
     settings.telegram_group ||
     settings.telegram_group_chat ||
     settings.telegram_link ||
     settings.telegram_channel_link ||
-    "https://t.me/GREATLANDGroup01";
+    "https://t.me/ravenearning780";
 
   const handleOpenLink = (url) => {
     if (url) {
