@@ -361,9 +361,10 @@ function WithdrawContent() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 hover:text-slate-600 shrink-0"
+                  className="text-slate-400 hover:text-[#03254c] shrink-0 p-1 cursor-pointer transition-colors"
+                  title={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
