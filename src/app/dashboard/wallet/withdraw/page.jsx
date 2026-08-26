@@ -61,6 +61,12 @@ function WithdrawContent() {
   const { mutate: submitWithdrawal, isPending } = usePost("/users/withdraw");
 
   const handleOpenConfirm = () => {
+    if (!user?.has_withdrawal_pin) {
+      toast.error("Please set your withdrawal password first");
+      router.push("/dashboard/account/withdrawal-password");
+      return;
+    }
+
     if (!hasLinkedBank) {
       toast.error("Please link your bank account first");
       router.push("/dashboard/account/bind");

@@ -9,11 +9,9 @@ import { toast } from "sonner";
 export default function WithdrawalPasswordPage() {
   const router = useRouter();
 
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -39,7 +37,6 @@ export default function WithdrawalPasswordPage() {
 
     updatePinMutation.mutate(
       {
-        currentPassword: currentPassword.trim(),
         newPassword: newPassword.trim(),
       },
       {
@@ -90,30 +87,6 @@ export default function WithdrawalPasswordPage() {
 
         {/* Form Card */}
         <form onSubmit={handleSubmit} className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-4">
-          
-          {/* Current Login Password (Optional / Identity Check) */}
-          <div className="space-y-1.5">
-            <label className="text-[13px] font-semibold text-white/90 block">
-              Current Login Password <span className="text-gray-400 font-normal text-[11px]">(to verify identity)</span>
-            </label>
-            <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-              <Lock size={18} className="text-[#38bdf8] shrink-0" />
-              <input
-                type={showCurrent ? "text" : "password"}
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Enter current login password"
-                className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
-              />
-              <button
-                type="button"
-                onClick={() => setShowCurrent(!showCurrent)}
-                className="text-gray-400 hover:text-white"
-              >
-                {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
 
           {/* New Withdrawal Password */}
           <div className="space-y-1.5">

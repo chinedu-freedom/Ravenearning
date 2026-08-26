@@ -79,6 +79,12 @@ export default function BindAccountPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user?.has_withdrawal_pin) {
+      toast.error("Please set your withdrawal password first");
+      router.push("/dashboard/account/withdrawal-password");
+      return;
+    }
+
     if (!realname.trim()) {
       toast.error("Please enter cardholder name");
       return;
