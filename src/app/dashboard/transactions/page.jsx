@@ -30,10 +30,10 @@ export default function TransactionsPage() {
 
   const getTransactionMeta = (type) => {
     const t = (type || "").toLowerCase();
-    if (t.includes('deposit')) return { category: 'Deposits', icon: Download, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
-    if (t.includes('withdraw')) return { category: 'Withdrawals', icon: Upload, iconBg: "bg-red-100", iconColor: "text-red-500" };
+    if (t.includes('deposit') || t.includes('admin_credit')) return { category: 'Deposits', icon: Download, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
+    if (t.includes('withdraw') || t.includes('admin_debit')) return { category: 'Withdrawals', icon: Upload, iconBg: "bg-red-100", iconColor: "text-red-500" };
     if (t.includes('commission') || t.includes('referral')) return { category: 'Commission', icon: Gift, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
-    if (t.includes('reward') || t.includes('gift') || t.includes('bonus') || t.includes('spin') || t.includes('task') || t.includes('checkin') || t.includes('admin_credit')) return { category: 'Rewards', icon: Gift, iconBg: "bg-green-100", iconColor: "text-green-500" };
+    if (t.includes('reward') || t.includes('gift') || t.includes('bonus') || t.includes('spin') || t.includes('task') || t.includes('checkin')) return { category: 'Rewards', icon: Gift, iconBg: "bg-green-100", iconColor: "text-green-500" };
     if (t.includes('invest') || t.includes('plan')) return { category: 'Investments', icon: BarChart2, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
     return { category: 'Others', icon: FileText, iconBg: "bg-gray-100", iconColor: "text-gray-500" };
   };
@@ -99,9 +99,28 @@ export default function TransactionsPage() {
       title: (() => {
         const d = (tx.description || "").toLowerCase();
         const t = (tx.type || "").toLowerCase();
-        if (d.includes('deposit') || t.includes('deposit') || d.includes('quick pay') || d.includes('gateway') || d.includes('direct bank')) return "Deposit";
-        if (d.includes('withdraw') || t.includes('withdraw')) return "Withdrawal";
-        return tx.description || tx.type || "Transaction";
+        if (
+          d.includes('deposit') || 
+          t.includes('deposit') || 
+          t.includes('admin_credit') || 
+          d.includes('manual credit') || 
+          d.includes('credit') || 
+          d.includes('quick pay') || 
+          d.includes('gateway') || 
+          d.includes('direct bank')
+        ) return "Deposit";
+        if (
+          d.includes('withdraw') || 
+          t.includes('withdraw') || 
+          t.includes('admin_debit') || 
+          d.includes('manual debit') || 
+          d.includes('debit')
+        ) return "Withdrawal";
+        if (t.includes('commission') || t.includes('referral') || d.includes('commission')) return "Referral Commission";
+        if (t.includes('spin') || d.includes('spin')) return "Lucky Spin Prize";
+        if (t.includes('checkin') || d.includes('check-in') || d.includes('checkin')) return "Daily Check-in Reward";
+        if (t.includes('invest') || t.includes('plan') || d.includes('invest')) return "VIP Plan Activation";
+        return tx.description || tx.type || "Deposit";
       })(),
       date: new Date(tx.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }),
       amount: amountStr,
