@@ -10,7 +10,9 @@ import {
   ChevronRight,
   Loader2,
   X,
-  Lock
+  Lock,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -21,6 +23,7 @@ function WithdrawContent() {
 
   const [amount, setAmount] = useState("100");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Fetch settings & current user profile
@@ -99,7 +102,7 @@ function WithdrawContent() {
 
   const handleConfirmSubmit = () => {
     if (!password.trim()) {
-      toast.error("Please enter your account login password to confirm withdrawal");
+      toast.error("Please enter your withdrawal password to confirm withdrawal");
       return;
     }
 
@@ -349,12 +352,19 @@ function WithdrawContent() {
               <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-[#03254c] transition-all">
                 <Lock size={16} className="text-slate-400 shrink-0" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter withdrawal password"
                   className="bg-transparent outline-none text-slate-900 text-[13px] w-full placeholder:text-slate-400"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-slate-400 hover:text-slate-600 shrink-0"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 

@@ -13,7 +13,9 @@ import {
   Check, 
   ShieldCheck,
   Info,
-  Lock
+  Lock,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -49,6 +51,7 @@ export default function BindAccountPage() {
   const [selectedBank, setSelectedBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [showBankModal, setShowBankModal] = useState(false);
   const [bankSearch, setBankSearch] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -102,7 +105,7 @@ export default function BindAccountPage() {
       return;
     }
     if (!password.trim()) {
-      toast.error("Please enter your account login password to confirm");
+      toast.error("Please enter your withdrawal password to confirm");
       return;
     }
 
@@ -227,12 +230,19 @@ export default function BindAccountPage() {
             <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
               <Lock size={18} className="text-[#38bdf8] shrink-0" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter withdrawal password to confirm"
                 className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-gray-400 hover:text-white shrink-0"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </div>
 
