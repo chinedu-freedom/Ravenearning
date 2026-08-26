@@ -19,26 +19,27 @@ import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 
 const SOUTH_AFRICAN_BANKS = [
-  "ABSA Bank",
-  "African Bank",
-  "Albaraka Bank",
-  "Bank of Athens (Grobank)",
-  "Bidvest Bank",
+  // Major South African Banks (Most Popular First)
   "Capitec Bank",
-  "Discovery Bank",
   "First National Bank (FNB)",
-  "Grindrod Bank",
-  "HBZ Bank",
-  "Investec Bank",
-  "Mercantile Bank",
+  "Standard Bank",
+  "ABSA Bank",
   "Nedbank",
+  "TymeBank",
+  "Discovery Bank",
+  "African Bank",
+  "Bank Zero",
+  "Investec Bank",
+  "Access Bank South Africa",
+  "Bidvest Bank",
   "Old Mutual Money Account",
   "Postbank",
   "Sasfin Bank",
-  "Standard Bank",
-  "TymeBank",
+  "Albaraka Bank",
+  "Grindrod Bank",
+  "HBZ Bank",
+  "Habib Overseas Bank",
   "Ubank",
-  "VBS Mutual Bank",
 ];
 
 export default function BindAccountPage() {
