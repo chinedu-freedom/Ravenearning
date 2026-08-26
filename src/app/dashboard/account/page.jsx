@@ -84,7 +84,7 @@ export default function AccountPage() {
 
   const currencySymbol = settings.currency_symbol || "R";
   const cashBalance = parseFloat(userProfile?.balance ?? 0);
-  const deviceIncome = parseFloat(userProfile?.statistics?.total_income ?? 0);
+  const deviceIncome = parseFloat(userProfile?.withdrawable_balance ?? 0);
 
   const formatAmount = (num) => {
     return Number(num || 0).toLocaleString(undefined, {
