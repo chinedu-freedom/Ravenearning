@@ -70,18 +70,18 @@ export default function CustomerServicePage() {
           </div>
         </div>
 
-        {/* Card 1: 1-on-1 Customer Service */}
+        {/* Card 1: 1-on-1 Telegram Support */}
         <div className="bg-[#111827] rounded-[20px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
           <div className="w-16 h-16 rounded-full bg-[#0284c7]/15 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] shadow-[0_0_20px_rgba(2,132,199,0.2)]">
             <Send size={26} className="translate-x-0.5 -translate-y-0.5" />
           </div>
 
           <h3 className="text-white text-[16px] font-bold tracking-tight">
-            Customer Service
+            Telegram Support
           </h3>
 
           <p className="text-gray-400 text-[12px] max-w-[280px] leading-relaxed">
-            If you have any questions or need help, please contact customer service.
+            Contact official 1-on-1 Telegram customer service for assistance.
           </p>
 
           <div className="inline-flex items-center gap-1.5 text-gray-400 text-[11px] font-medium bg-[#0b0f19] px-2.5 py-1 rounded-lg border border-white/5">
@@ -94,11 +94,36 @@ export default function CustomerServicePage() {
             onClick={() => handleOpenLink(supportTelegram)}
             className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
-            Customer Service
+            Contact Telegram Support
           </button>
         </div>
 
-        {/* Card 2: Official Telegram Group */}
+        {/* Card 2: Official WhatsApp Group */}
+        <div className="bg-[#111827] rounded-[20px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
+          <div className="w-16 h-16 rounded-full bg-emerald-900/20 border border-emerald-500/30 flex items-center justify-center text-[#25D366] shadow-[0_0_20px_rgba(37,211,102,0.2)]">
+            <svg className="w-7 h-7 text-[#25D366]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347z"/>
+            </svg>
+          </div>
+
+          <h3 className="text-white text-[16px] font-bold tracking-tight">
+            WhatsApp Group
+          </h3>
+
+          <p className="text-gray-400 text-[12px] max-w-[280px] leading-relaxed">
+            Join our official WhatsApp group for community updates, help, and discussion.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => handleOpenLink(settings.whatsapp_group || settings.whatsapp_link || "https://chat.whatsapp.com/ravenearning")}
+            className="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
+          >
+            Join WhatsApp Group
+          </button>
+        </div>
+
+        {/* Card 3: Official Telegram Group */}
         <div className="bg-[#111827] rounded-[20px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
           <div className="w-16 h-16 rounded-full bg-[#0284c7]/15 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] shadow-[0_0_20px_rgba(2,132,199,0.2)]">
             <Users size={26} />

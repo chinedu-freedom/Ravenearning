@@ -334,7 +334,7 @@ export default function AccountPage() {
               </svg>
             </div>
             <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Customer Service
+              Telegram Support
             </span>
           </Link>
 
