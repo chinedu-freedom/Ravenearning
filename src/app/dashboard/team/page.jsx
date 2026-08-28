@@ -61,6 +61,7 @@ export default function TeamPage() {
   const l3 = levels[2] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 5 };
 
   const totalMembersCount = (l1.total_members || 0) + (l2.total_members || 0) + (l3.total_members || 0) || overview.total_team || 0;
+  const totalActiveMembersCount = (l1.valid_members || 0) + (l2.valid_members || 0) + (l3.valid_members || 0);
   const totalTeamCommission = (l1.total_earnings || 0) + (l2.total_earnings || 0) + (l3.total_earnings || 0);
   const totalTeamRecharge = (l1.total_deposits || 0) + (l2.total_deposits || 0) + (l3.total_deposits || 0);
 
