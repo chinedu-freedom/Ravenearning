@@ -22,9 +22,17 @@ export default function MiningPlansPage() {
     : [];
   const router = useRouter();
 
-  const categories = Array.from(new Set(plans.map(p => p.category || "VIP Series")));
+  const isActivityEnabled = Boolean(settings?.activity_series_enabled);
+
+  const categories = Array.from(new Set(
+    plans
+      .map(p => p.category || "VIP Series")
+      .filter(cat => cat !== "Activity Series" || isActivityEnabled)
+  ));
   if (!categories.includes("VIP Series")) categories.unshift("VIP Series");
-  if (!categories.includes("Activity Series")) categories.push("Activity Series");
+  if (isActivityEnabled && !categories.includes("Activity Series")) {
+    categories.push("Activity Series");
+  }
 
   const filteredPlans = plans.filter(p => (p.category || "VIP Series") === activeCategory);
 
