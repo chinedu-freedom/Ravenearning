@@ -34,12 +34,12 @@ body {
 }
 
 @keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-.animate-\[marquee_15s_linear_infinite\] {
-  animation: marquee 15s linear infinite;
+.animate-marquee {
+  animation: marquee 25s linear infinite;
 }
 
 @keyframes scrollVertical {

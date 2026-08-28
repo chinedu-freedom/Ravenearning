@@ -193,11 +193,16 @@ export default function DashboardPage() {
         </div>
 
         {/* Announcement Bar */}
-        <div className="bg-[#f0f9ff] text-[#0369a1] px-4 py-2.5 rounded-xl flex items-center gap-2 overflow-hidden shadow-sm border border-sky-200/50">
+        <div className="bg-[#f0f9ff] text-[#0369a1] px-3.5 py-2.5 rounded-xl flex items-center gap-2 overflow-hidden shadow-sm border border-sky-200/50">
           <Volume2 size={16} className="shrink-0 text-[#0284c7]" />
-          <div className="relative flex-1 overflow-hidden h-4">
-            <div className="absolute whitespace-nowrap animate-[marquee_15s_linear_infinite] text-[11.5px] font-extrabold tracking-wide">
-              Congratulations to participant *****1777 for inviting friends and earning spins! • Congrats to *****8921 for successfully activating plan! • Welcome new member *****4412 to Ravenearning network! • Get up to 10% daily commissions.
+          <div className="relative flex-1 overflow-hidden h-4 flex items-center">
+            <div className="flex whitespace-nowrap animate-marquee text-[11.5px] font-extrabold tracking-wide">
+              <span className="inline-block pr-6">
+                Congratulations to participant *****1777 for inviting friends and earning spins! • Congrats to *****8921 for successfully activating plan! • Welcome new member *****4412 to Ravenearning network! • Get up to 10% daily commissions.
+              </span>
+              <span className="inline-block pr-6">
+                Congratulations to participant *****1777 for inviting friends and earning spins! • Congrats to *****8921 for successfully activating plan! • Welcome new member *****4412 to Ravenearning network! • Get up to 10% daily commissions.
+              </span>
             </div>
           </div>
         </div>
