@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, Upload, User, Copy, Check } from "lucide-react";
+import { LogOut, User, Copy, Check } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
@@ -21,7 +21,6 @@ export default function AccountPage() {
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
 
-  const [profilePic, setProfilePic] = useState(null);
   const [copied, setCopied] = useState(false);
 
   const displayPhone = userProfile?.phone
@@ -36,36 +35,6 @@ export default function AccountPage() {
     setCopied(true);
     toast.success("ID copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  useEffect(() => {
-    if (userProfile?.profile_image && !profilePic) {
-      setProfilePic(userProfile.profile_image);
-    }
-  }, [userProfile?.profile_image, profilePic]);
-
-  const handleProfilePicChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error("Image must be less than 2MB");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Data = reader.result;
-        setProfilePic(base64Data);
-        try {
-          const loadingToast = toast.loading("Uploading profile picture...");
-          await axiosInstance.put("/users/profile-image", { profile_image: base64Data });
-          toast.success("Profile picture updated", { id: loadingToast });
-        } catch (error) {
-          toast.error("Failed to update profile picture");
-          console.error(error);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleLogout = () => {
@@ -111,23 +80,15 @@ export default function AccountPage() {
 
         {/* Profile Card */}
         <div className="bg-[#111827] rounded-[20px] p-4 border border-white/5 shadow-md flex items-center gap-3.5">
-          {/* Avatar badge */}
-          <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#0f172a] p-[2px] shadow-sm flex items-center justify-center shrink-0 overflow-hidden group">
-            <div className="w-full h-full rounded-full bg-[#111827] flex flex-col items-center justify-center text-center overflow-hidden">
-              {profilePic ? (
-                <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
-              ) : settings?.site_logo ? (
-                <img src={settings.site_logo} alt="Logo" className="w-full h-full object-cover" />
-              ) : (
-                <div className="flex items-center justify-center w-full h-full bg-[#1e293b]">
-                  <User className="w-7 h-7 text-[#4f8cff]" />
-                </div>
-              )}
+          {/* Website Logo Badge (Non-editable) */}
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#0f172a] p-[2px] shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-full h-full rounded-full bg-[#111827] flex items-center justify-center overflow-hidden p-1">
+              <img
+                src={settings?.platform_logo || settings?.site_logo || "/logo.png"}
+                alt="Website Logo"
+                className="w-full h-full object-contain rounded-full"
+              />
             </div>
-            <label className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-              <Upload size={14} className="text-white" />
-              <input type="file" accept="image/*" className="hidden" onChange={handleProfilePicChange} />
-            </label>
           </div>
 
           {/* User Info - Phone Number with Small Copy Icon right after number */}
