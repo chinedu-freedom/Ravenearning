@@ -16,10 +16,17 @@ export default function MiningPlansPage() {
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   
+  const [activeCategory, setActiveCategory] = useState("VIP Series");
   const plans = Array.isArray(plansRes?.data) 
     ? [...plansRes.data].sort((a, b) => Number(a.min_investment || 0) - Number(b.min_investment || 0))
     : [];
   const router = useRouter();
+
+  const categories = Array.from(new Set(plans.map(p => p.category || "VIP Series")));
+  if (!categories.includes("VIP Series")) categories.unshift("VIP Series");
+  if (!categories.includes("Activity Series")) categories.push("Activity Series");
+
+  const filteredPlans = plans.filter(p => (p.category || "VIP Series") === activeCategory);
 
   const balances = {
     main: Number(userRes?.user?.balance || 0) + Number(userRes?.user?.withdrawable_balance || 0)
@@ -108,6 +115,29 @@ export default function MiningPlansPage() {
         </Link>
       </div>
 
+      {/* Series / Category Filter Pills */}
+      <div className="px-5 pt-3 pb-1 max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={`flex-1 py-2.5 px-4 rounded-xl text-[13px] font-black transition-all cursor-pointer border text-center whitespace-nowrap ${
+                  isActive
+                    ? "bg-gradient-to-r from-[#4f8cff] to-[#2563eb] text-white border-blue-500 shadow-sm scale-[1.01]"
+                    : "bg-white text-slate-600 border-slate-200/80 hover:bg-slate-50"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Plans List */}
       <div className="px-4 pt-2 pb-24 space-y-4 max-w-[480px] mx-auto w-full">
         {isLoading ? (
@@ -115,11 +145,11 @@ export default function MiningPlansPage() {
             <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#4f8cff]" />
             <p className="text-xs font-bold">Loading packages...</p>
           </div>
-        ) : plans.length === 0 ? (
+        ) : filteredPlans.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-            <p className="text-sm font-bold">No packages available.</p>
+            <p className="text-sm font-bold">No packages available in {activeCategory}.</p>
           </div>
-        ) : plans.map((plan, index) => {
+        ) : filteredPlans.map((plan, index) => {
           const minInv = Number(plan.min_investment || 0);
           let dailyInc = Number(plan.daily_income || 0);
           if (dailyInc <= 1 && dailyInc > 0) {
