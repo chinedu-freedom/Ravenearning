@@ -152,7 +152,7 @@ export default function TeamPage() {
             </div>
           </div>
 
-          {/* Recharge Volume */}
+          {/* Active Members */}
           <div className="flex flex-col items-center px-1">
             <div className="w-10 h-10 rounded-full bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] mb-2 shadow-sm">
               <TrendingUp size={18} />
@@ -161,7 +161,7 @@ export default function TeamPage() {
               Recharge Volume
             </div>
             <div className="text-[#38bdf8] text-[16px] font-black mt-0.5 tracking-tight">
-              {currencySymbol}{formatAmount(totalTeamRecharge)}
+              {totalActiveMembersCount}
             </div>
           </div>
 
@@ -281,11 +281,9 @@ export default function TeamPage() {
               </div>
 
               <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Recharge
-                </span>
+                <span className="text-gray-400 text-[11px] font-medium block">Active Members</span>
                 <span className="text-white text-[14px] font-bold mt-0.5 block">
-                  {currencySymbol}{formatAmount(l1.total_deposits || 0)}
+                  {l1.valid_members || 0}
                 </span>
               </div>
 
@@ -327,11 +325,9 @@ export default function TeamPage() {
               </div>
 
               <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Recharge
-                </span>
+                <span className="text-gray-400 text-[11px] font-medium block">Active Members</span>
                 <span className="text-white text-[14px] font-bold mt-0.5 block">
-                  {currencySymbol}{formatAmount(l2.total_deposits || 0)}
+                  {l2.valid_members || 0}
                 </span>
               </div>
 
@@ -373,11 +369,9 @@ export default function TeamPage() {
               </div>
 
               <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Recharge
-                </span>
+                <span className="text-gray-400 text-[11px] font-medium block">Active Members</span>
                 <span className="text-white text-[14px] font-bold mt-0.5 block">
-                  {currencySymbol}{formatAmount(l3.total_deposits || 0)}
+                  {l3.valid_members || 0}
                 </span>
               </div>
 
