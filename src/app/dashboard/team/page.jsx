@@ -197,7 +197,9 @@ export default function TeamPage() {
                   viewBox={`0 0 140 140`}
                 />
               ) : (
-                <QrCode size={140} strokeWidth={1} className="text-[#0f172a]/20" />
+                <div className="w-[140px] h-[140px] bg-slate-100 animate-pulse rounded-xl flex items-center justify-center">
+                  <QrCode size={40} className="text-slate-300 animate-pulse" />
+                </div>
               )}
             </div>
           </div>
