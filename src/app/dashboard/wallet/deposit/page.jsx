@@ -13,7 +13,10 @@ import {
   Check,
   Loader2,
   Building2,
-  Wallet
+  Wallet,
+  Upload,
+  Globe,
+  QrCode
 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -24,8 +27,11 @@ function RechargeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [amount, setAmount] = useState("300");
-  const [selectedMethod, setSelectedMethod] = useState("bank");
+    const [amount, setAmount] = useState("300");
+  const [selectedMethod, setSelectedMethod] = useState("bank"); // "bank" | "usdt"
+  const [usdtNetwork, setUsdtNetwork] = useState("TRC20"); // "TRC20" | "BEP20"
+  const [txHash, setTxHash] = useState("");
+  const [proofBase64, setProofBase64] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
   const [orderData, setOrderData] = useState(null);
@@ -62,6 +68,28 @@ function RechargeContent() {
 
   const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
+    const usdtRate = Number(settings.usdt_rate_zar || 18.50);
+  const calculatedUsdt = (Number(amount || 0) / (usdtRate > 0 ? usdtRate : 18.50)).toFixed(2);
+  const activeUsdtAddress = usdtNetwork === "BEP20" 
+    ? (settings.usdt_bep20_address || "0x71C7656EC7ab88b098defB751B7401B5f6d8976F")
+    : (settings.usdt_trc20_address || "TYD8x9kL4mN2pQ3vR5sT7uW1xY8zA9bC3d");
+
+  const handleProofChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size must be under 5MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProofBase64(reader.result);
+        toast.success("Receipt uploaded successfully");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleContinue = () => {
     const numAmount = Number(amount);
     if (!amount || isNaN(numAmount) || numAmount <= 0) {
@@ -79,6 +107,25 @@ function RechargeContent() {
       return;
     }
 
+    if (selectedMethod === "usdt") {
+      submitDeposit(
+        {
+          amount: numAmount,
+          paymentMethod: `USDT (${usdtNetwork} Manual)`,
+          tx_hash: txHash,
+          proof_image_url: proofBase64
+        },
+        {
+          onSuccess: (res) => {
+            toast.success(res?.message || "USDT Manual Deposit submitted! Admin will verify and credit your balance.");
+            refetchUser();
+            router.push("/dashboard/account/recharge");
+          }
+        }
+      );
+      return;
+    }
+
     // Direct submit deposit request & redirect to Quick Pay online checkout
     submitDeposit(
       {
@@ -89,6 +136,8 @@ function RechargeContent() {
         onSuccess: (res) => {
           if (res?.payUrl) {
             window.location.href = res.payUrl;
+          } else {
+            toast.success("Recharge request initiated!");
           }
         }
       }
@@ -140,6 +189,175 @@ function RechargeContent() {
             <span>Instant credit after confirmation</span>
           </div>
         </div>
+
+                {/* Payment Channel Selector */}
+        <div className="pt-1">
+          <h2 className="text-slate-900 text-[16px] font-bold tracking-tight mb-3">
+            Select Payment Method
+          </h2>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {/* QuickPay Bank / Card Option */}
+            <div
+              onClick={() => setSelectedMethod("bank")}
+              className={`p-4 rounded-[16px] border cursor-pointer transition-all flex flex-col justify-between ${
+                selectedMethod === "bank"
+                  ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
+                  : "bg-white/80 border-slate-200 text-slate-600 hover:bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#03254c] flex items-center justify-center font-bold">
+                  <CreditCard size={19} />
+                </div>
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                  selectedMethod === "bank" ? "border-[#03254c] bg-[#03254c]" : "border-slate-300"
+                }`}>
+                  {selectedMethod === "bank" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                </div>
+              </div>
+              <div>
+                <span className="font-bold text-[14px] text-slate-900 block leading-tight">
+                  Online Gateway
+                </span>
+                <span className="text-[11px] text-slate-500 font-medium">
+                  Instant Card / Bank (ZAR)
+                </span>
+              </div>
+            </div>
+
+            {/* Manual USDT Deposit Option */}
+            <div
+              onClick={() => setSelectedMethod("usdt")}
+              className={`p-4 rounded-[16px] border cursor-pointer transition-all flex flex-col justify-between ${
+                selectedMethod === "usdt"
+                  ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
+                  : "bg-white/80 border-slate-200 text-slate-600 hover:bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                  <Globe size={19} />
+                </div>
+                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                  selectedMethod === "usdt" ? "border-[#03254c] bg-[#03254c]" : "border-slate-300"
+                }`}>
+                  {selectedMethod === "usdt" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                </div>
+              </div>
+              <div>
+                <span className="font-bold text-[14px] text-slate-900 block leading-tight">
+                  USDT (Manual)
+                </span>
+                <span className="text-[11px] text-amber-600 font-bold">
+                  1 USDT = {currencySymbol} {usdtRate.toFixed(2)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* USDT Manual Payment Details Card */}
+        {selectedMethod === "usdt" && (
+          <div className="bg-white border border-amber-200 rounded-[20px] p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <span className="text-slate-500 text-[11px] font-medium block">Equivalent USDT Required</span>
+                <span className="text-amber-600 font-black text-[22px] font-mono leading-tight">
+                  {calculatedUsdt} USDT
+                </span>
+              </div>
+              <div className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-[11.5px] font-bold border border-amber-200">
+                Rate: 1 USDT = {currencySymbol} {usdtRate.toFixed(2)}
+              </div>
+            </div>
+
+            {/* Network Selector */}
+            <div>
+              <label className="text-slate-800 font-bold text-[13px] block mb-2">
+                Select Crypto Network
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {["TRC20", "BEP20"].map((net) => (
+                  <button
+                    key={net}
+                    type="button"
+                    onClick={() => setUsdtNetwork(net)}
+                    className={`py-2 px-3 rounded-xl border text-[13px] font-bold transition-all cursor-pointer ${
+                      usdtNetwork === net
+                        ? "bg-[#03254c] text-white border-[#03254c]"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
+                  >
+                    USDT-{net}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Deposit Address Box */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+              <span className="text-slate-500 text-[11px] font-semibold block">
+                Official USDT ({usdtNetwork}) Receiving Address
+              </span>
+              <div className="flex items-center justify-between bg-white border border-slate-200 rounded-lg p-2.5">
+                <span className="font-mono text-[12px] font-bold text-slate-800 truncate pr-2">
+                  {activeUsdtAddress}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(activeUsdtAddress, "usdt_addr")}
+                  className="bg-[#03254c] hover:bg-[#021d3c] text-white text-[11px] font-bold px-2.5 py-1.5 rounded-md flex items-center gap-1 shrink-0 cursor-pointer"
+                >
+                  {copiedField === "usdt_addr" ? <Check size={12} /> : <Copy size={12} />}
+                  <span>{copiedField === "usdt_addr" ? "Copied" : "Copy"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Transaction Hash / TxID Input */}
+            <div>
+              <label className="text-slate-800 font-bold text-[13px] block mb-1.5">
+                Transaction Hash / TxID (Optional)
+              </label>
+              <input
+                type="text"
+                value={txHash}
+                onChange={(e) => setTxHash(e.target.value)}
+                placeholder="Paste blockchain transaction hash / TxID"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13px] font-mono text-slate-900 outline-none focus:border-[#03254c]"
+              />
+            </div>
+
+            {/* Payment Receipt / Screenshot Upload */}
+            <div>
+              <label className="text-slate-800 font-bold text-[13px] block mb-1.5">
+                Upload Proof of Transfer / Receipt (Optional)
+              </label>
+              <label className="flex items-center justify-center gap-2 bg-slate-50 border-2 border-dashed border-slate-200 hover:border-[#03254c] rounded-xl p-4 cursor-pointer transition-all">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProofChange}
+                  className="hidden"
+                />
+                {proofBase64 ? (
+                  <div className="flex items-center gap-3">
+                    <img src={proofBase64} alt="Receipt proof" className="w-10 h-10 rounded-lg object-cover border border-slate-300" />
+                    <span className="text-[12px] font-bold text-emerald-600 flex items-center gap-1">
+                      <CheckCircle2 size={15} /> Receipt attached!
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-slate-600 text-[13px] font-bold">
+                    <Upload size={16} className="text-[#03254c]" />
+                    <span>Click to upload transfer screenshot</span>
+                  </div>
+                )}
+              </label>
+            </div>
+          </div>
+        )}
 
         {/* Select Amount Section */}
         <div className="pt-1">
