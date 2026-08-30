@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { 
   ArrowLeft, 
   User, 
@@ -351,9 +352,17 @@ export default function BindWalletPage() {
 
           {/* Withdrawal Password Confirmation Field */}
           <div className="space-y-1.5 pt-1">
-            <label className="text-[13px] font-semibold text-white/90 block">
-              Withdrawal Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-[13px] font-semibold text-white/90 block">
+                Withdrawal Password
+              </label>
+              <Link
+                href="/dashboard/account/withdrawal-password"
+                className="text-[11.5px] font-bold text-[#38bdf8] hover:underline hover:text-sky-300 transition-colors"
+              >
+                Set / Update Password
+              </Link>
+            </div>
             <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
               <Lock size={18} className="text-[#38bdf8] shrink-0" />
               <input

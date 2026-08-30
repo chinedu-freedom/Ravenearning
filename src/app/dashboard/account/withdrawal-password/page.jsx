@@ -3,15 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Lock, ShieldCheck, KeyRound, Loader2, Eye, EyeOff } from "lucide-react";
-import { usePut } from "@/hooks/useApi";
+import { useFetchData, usePut } from "@/hooks/useApi";
 import { toast } from "sonner";
 
 export default function WithdrawalPasswordPage() {
   const router = useRouter();
 
+  const { data: userRes, isLoading: isLoadingUser } = useFetchData("/users/me", ["user-profile"]);
+  const user = userRes?.user;
+  const hasExistingPin = Boolean(user?.has_withdrawal_pin || user?.withdrawal_pin);
+
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -19,6 +25,11 @@ export default function WithdrawalPasswordPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (hasExistingPin && !currentPassword) {
+      toast.error("Please enter your current withdrawal password");
+      return;
+    }
 
     if (!newPassword) {
       toast.error("Please enter a new withdrawal password");
@@ -35,12 +46,18 @@ export default function WithdrawalPasswordPage() {
       return;
     }
 
+    const payload = {
+      newPassword: newPassword.trim(),
+    };
+    if (hasExistingPin) {
+      payload.currentPassword = currentPassword.trim();
+    }
+
     updatePinMutation.mutate(
-      {
-        newPassword: newPassword.trim(),
-      },
+      payload,
       {
         onSuccess: () => {
+          toast.success("Withdrawal password updated successfully!");
           setTimeout(() => {
             router.push("/dashboard/account");
           }, 1000);
@@ -61,7 +78,7 @@ export default function WithdrawalPasswordPage() {
           <ArrowLeft size={16} />
         </button>
         <h1 className="text-white/90 text-[16px] font-bold">
-          Withdrawal Password
+          {hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"}
         </h1>
         <div className="w-9" />
       </div>
@@ -78,20 +95,48 @@ export default function WithdrawalPasswordPage() {
           </div>
 
           <h2 className="text-white text-[20px] font-bold tracking-tight mb-1">
-            Withdrawal Password
+            {hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"}
           </h2>
           <p className="text-sky-100 text-[12.5px] leading-relaxed">
-            Set or update your dedicated password required for binding bank details and withdrawing funds.
+            {hasExistingPin 
+              ? "Enter your current password below to update your withdrawal password." 
+              : "Set your dedicated withdrawal password required for binding bank details and withdrawing funds."}
           </p>
         </div>
 
         {/* Form Card */}
         <form onSubmit={handleSubmit} className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-4">
 
+          {/* Current Withdrawal Password (ONLY if user already set one!) */}
+          {hasExistingPin && (
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-semibold text-white/90 block">
+                Current Withdrawal Password
+              </label>
+              <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
+                <Lock size={18} className="text-[#38bdf8] shrink-0" />
+                <input
+                  type={showCurrent ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current withdrawal password"
+                  className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrent(!showCurrent)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* New Withdrawal Password */}
           <div className="space-y-1.5">
             <label className="text-[13px] font-semibold text-white/90 block">
-              New Withdrawal Password
+              {hasExistingPin ? "New Withdrawal Password" : "Withdrawal Password"}
             </label>
             <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
               <KeyRound size={18} className="text-[#38bdf8] shrink-0" />
@@ -115,7 +160,7 @@ export default function WithdrawalPasswordPage() {
           {/* Confirm New Withdrawal Password */}
           <div className="space-y-1.5">
             <label className="text-[13px] font-semibold text-white/90 block">
-              Confirm New Withdrawal Password
+              Confirm {hasExistingPin ? "New " : ""}Withdrawal Password
             </label>
             <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
               <KeyRound size={18} className="text-[#38bdf8] shrink-0" />
@@ -123,7 +168,7 @@ export default function WithdrawalPasswordPage() {
                 type={showConfirm ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Re-enter new withdrawal password"
+                placeholder="Re-enter withdrawal password"
                 className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
               />
               <button
@@ -145,7 +190,7 @@ export default function WithdrawalPasswordPage() {
             {updatePinMutation.isPending ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              "Save Withdrawal Password"
+              hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"
             )}
           </button>
 
