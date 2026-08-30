@@ -381,9 +381,52 @@ function RechargeContent() {
           )}
         </div>
 
+        {/* Continue Action Button */}
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={handleContinue}
+            disabled={isPending}
+            className="w-full bg-[#03254c] hover:bg-[#021d3c] active:scale-[0.99] transition-all text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-md shadow-blue-950/15 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-75"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
+                <span>Processing...</span>
+              </>
+            ) : (
+              <span>Continue to Payment</span>
+            )}
+          </button>
+        </div>
+
+        {/* Recharge Notes Card */}
+        <div className="bg-[#f0f6ff] border border-blue-100 rounded-[16px] p-5 mt-4 space-y-3">
+          <div className="flex items-center gap-2 text-[#03254c] font-bold text-[14px]">
+            <Info size={17} className="shrink-0" />
+            <span>Recharge notes</span>
+          </div>
+
+          <div className="text-slate-600 text-[12px] leading-relaxed space-y-2.5 pl-0.5">
+            <p>
+              1. Minimum recharge amount is <span className="font-semibold text-slate-800">{currencySymbol} {minDeposit.toLocaleString()}</span>.
+            </p>
+            <p>
+              2. The payment amount must match the recharge request amount; otherwise, the funds will not be deposited into your account.
+            </p>
+            <p>
+              3. For Bank Deposit, you will be redirected to the secure automatic payment gateway.
+            </p>
+            <p>
+              4. After payment confirmation, the funds will be directly deposited into your account balance.
+            </p>
+            <p>
+              5. Recharge service is available 24/7.
+            </p>
+          </div>
+        </div>
+
       </div>
-
-
 
     </div>
   );
