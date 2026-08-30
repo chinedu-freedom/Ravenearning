@@ -21,13 +21,13 @@ import {
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 
-const PRESET_AMOUNTS = [300, 800, 1500];
+const PRESET_AMOUNTS = [350, 900, 2000];
 
 function RechargeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-    const [amount, setAmount] = useState("300");
+    const [amount, setAmount] = useState("350");
   const [selectedMethod, setSelectedMethod] = useState("bank"); // "bank" | "usdt"
 
   const handleSwitchMethod = (method) => {
@@ -35,7 +35,7 @@ function RechargeContent() {
     if (method === "usdt") {
       setAmount("20");
     } else {
-      setAmount("300");
+      setAmount("350");
     }
   };
   const [usdtNetwork, setUsdtNetwork] = useState("TRC20"); // "TRC20" | "BEP20"
@@ -77,7 +77,7 @@ function RechargeContent() {
   const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
       const usdtRate = Number(settings.usdt_rate_zar || 18.50);
-  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [300, 800, 1500];
+  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [350, 900, 2000];
   const activeUsdtAddress = usdtNetwork === "BEP20"
     ? (settings.usdt_bep20_address || "0x71C7656EC7ab88b098defB751B7401B5f6d8976F")
     : (settings.usdt_trc20_address || "TYD8x9kL4mN2pQ3vR5sT7uW1xY8zA9bC3d");
@@ -351,7 +351,7 @@ function RechargeContent() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder={selectedMethod === "usdt" ? "20" : "300"}
+              placeholder={selectedMethod === "usdt" ? "20" : "350"}
               className="bg-transparent text-slate-900 font-bold text-[16px] outline-none flex-1 placeholder:text-slate-400 font-mono"
             />
             {amount && (
