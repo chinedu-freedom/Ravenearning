@@ -29,6 +29,15 @@ function RechargeContent() {
 
     const [amount, setAmount] = useState("300");
   const [selectedMethod, setSelectedMethod] = useState("bank"); // "bank" | "usdt"
+
+  const handleSwitchMethod = (method) => {
+    setSelectedMethod(method);
+    if (method === "usdt") {
+      setAmount("20");
+    } else {
+      setAmount("300");
+    }
+  };
   const [usdtNetwork, setUsdtNetwork] = useState("TRC20"); // "TRC20" | "BEP20"
     const [proofBase64, setProofBase64] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -67,55 +76,27 @@ function RechargeContent() {
 
   const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
-    const usdtRate = Number(settings.usdt_rate_zar || 18.50);
-  const calculatedUsdt = (Number(amount || 0) / (usdtRate > 0 ? usdtRate : 18.50)).toFixed(2);
-  const activeUsdtAddress = usdtNetwork === "BEP20" 
-    ? (settings.usdt_bep20_address || "0x71C7656EC7ab88b098defB751B7401B5f6d8976F")
-    : (settings.usdt_trc20_address || "TYD8x9kL4mN2pQ3vR5sT7uW1xY8zA9bC3d");
-
-  const handleProofChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size must be under 5MB");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProofBase64(reader.result);
-        toast.success("Receipt uploaded successfully");
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+      const usdtRate = Number(settings.usdt_rate_zar || 18.50);
+  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [300, 800, 1500];
 
   const handleContinue = () => {
-    const numAmount = Number(amount);
-    if (!amount || isNaN(numAmount) || numAmount <= 0) {
-      toast.error("Please enter a valid recharge amount");
-      return;
-    }
-
-    if (numAmount < minDeposit) {
-      toast.error(`Minimum recharge amount is ${currencySymbol} ${minDeposit.toLocaleString()}`);
-      return;
-    }
-
-    if (numAmount > maxDeposit) {
-      toast.error(`Maximum recharge amount is ${currencySymbol} ${maxDeposit.toLocaleString()}`);
+    const rawNum = Number(amount);
+    if (!amount || isNaN(rawNum) || rawNum <= 0) {
+      toast.error("Please enter a valid deposit amount");
       return;
     }
 
     if (selectedMethod === "usdt") {
+      const zarEquivalent = rawNum * (usdtRate > 0 ? usdtRate : 18.50);
+
       submitDeposit(
         {
-          amount: numAmount,
-          paymentMethod: `USDT (${usdtNetwork} Manual)`,
-                    proof_image_url: proofBase64
+          amount: zarEquivalent,
+          paymentMethod: `USDT (${usdtNetwork} Deposit)`
         },
         {
           onSuccess: (res) => {
-            toast.success(res?.message || "USDT Manual Deposit submitted! Admin will verify and credit your balance.");
+            toast.success(res?.message || "USDT Deposit submitted! Admin will verify and credit your balance.");
             refetchUser();
             router.push("/dashboard/account/recharge");
           }
@@ -124,10 +105,20 @@ function RechargeContent() {
       return;
     }
 
+    if (rawNum < minDeposit) {
+      toast.error(`Minimum recharge amount is ${currencySymbol} ${minDeposit.toLocaleString()}`);
+      return;
+    }
+
+    if (rawNum > maxDeposit) {
+      toast.error(`Maximum recharge amount is ${currencySymbol} ${maxDeposit.toLocaleString()}`);
+      return;
+    }
+
     // Direct submit deposit request & redirect to Quick Pay online checkout
     submitDeposit(
       {
-        amount: numAmount,
+        amount: rawNum,
         paymentMethod: "Online Deposit"
       },
       {
@@ -197,7 +188,7 @@ function RechargeContent() {
           <div className="grid grid-cols-2 gap-3">
             {/* QuickPay Bank / Card Option */}
             <div
-              onClick={() => setSelectedMethod("bank")}
+              onClick={() => handleSwitchMethod("bank")}
               className={`p-4 rounded-[16px] border cursor-pointer transition-all flex flex-col justify-between ${
                 selectedMethod === "bank"
                   ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
@@ -226,7 +217,7 @@ function RechargeContent() {
 
             {/* Manual USDT Deposit Option */}
             <div
-              onClick={() => setSelectedMethod("usdt")}
+              onClick={() => handleSwitchMethod("usdt")}
               className={`p-4 rounded-[16px] border cursor-pointer transition-all flex flex-col justify-between ${
                 selectedMethod === "usdt"
                   ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
@@ -258,17 +249,7 @@ function RechargeContent() {
         {/* USDT Manual Payment Details Card */}
         {selectedMethod === "usdt" && (
           <div className="bg-white border border-amber-200 rounded-[20px] p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <span className="text-slate-500 text-[11px] font-medium block">Equivalent USDT Required</span>
-                <span className="text-amber-600 font-black text-[22px] font-mono leading-tight">
-                  {calculatedUsdt} USDT
-                </span>
-              </div>
-              <div className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-[11.5px] font-bold border border-amber-200">
-                Rate: 1 USDT = {currencySymbol} {usdtRate.toFixed(2)}
-              </div>
-            </div>
+
 
             {/* Network Selector */}
             <div>
@@ -315,45 +296,26 @@ function RechargeContent() {
 
 
 
-            {/* Payment Receipt / Screenshot Upload */}
-            <div>
-              <label className="text-slate-800 font-bold text-[13px] block mb-1.5">
-                Upload Proof of Transfer / Receipt (Optional)
-              </label>
-              <label className="flex items-center justify-center gap-2 bg-slate-50 border-2 border-dashed border-slate-200 hover:border-[#03254c] rounded-xl p-4 cursor-pointer transition-all">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleProofChange}
-                  className="hidden"
-                />
-                {proofBase64 ? (
-                  <div className="flex items-center gap-3">
-                    <img src={proofBase64} alt="Receipt proof" className="w-10 h-10 rounded-lg object-cover border border-slate-300" />
-                    <span className="text-[12px] font-bold text-emerald-600 flex items-center gap-1">
-                      <CheckCircle2 size={15} /> Receipt attached!
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 text-slate-600 text-[13px] font-bold">
-                    <Upload size={16} className="text-[#03254c]" />
-                    <span>Click to upload transfer screenshot</span>
-                  </div>
-                )}
-              </label>
-            </div>
+
           </div>
         )}
 
-        {/* Select Amount Section */}
+                {/* Select Amount Section */}
         <div className="pt-1">
-          <h2 className="text-slate-900 text-[16px] font-bold tracking-tight mb-3">
-            Select amount
-          </h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-slate-900 text-[16px] font-bold tracking-tight">
+              Select amount ({selectedMethod === "usdt" ? "USDT" : "Rand"})
+            </h2>
+            {selectedMethod === "usdt" && (
+              <span className="text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                1 USDT = {currencySymbol} {usdtRate.toFixed(2)}
+              </span>
+            )}
+          </div>
 
           {/* 3 Preset Amount Buttons */}
           <div className="grid grid-cols-3 gap-2.5">
-            {PRESET_AMOUNTS.map((preset) => {
+            {presets.map((preset) => {
               const isSelected = amount === preset.toString();
               return (
                 <button
@@ -367,7 +329,7 @@ function RechargeContent() {
                   }`}
                 >
                   <span>
-                    {currencySymbol}{preset.toLocaleString()}
+                    {selectedMethod === "usdt" ? `${preset} USDT` : `${currencySymbol}${preset.toLocaleString()}`}
                   </span>
                   {isSelected && (
                     <div className="absolute bottom-0 left-0 right-0 h-[3.5px] bg-[#f59e0b] rounded-full" />
@@ -379,14 +341,14 @@ function RechargeContent() {
 
           {/* Custom Amount Input Box */}
           <div className="bg-white border border-slate-200 rounded-[12px] px-4 py-3 flex items-center shadow-2xs mt-3 focus-within:border-[#03254c] focus-within:ring-1 focus-within:ring-[#03254c] transition-all">
-            <span className="text-slate-800 font-bold text-[17px] mr-2 shrink-0">
-              {currencySymbol}
+            <span className="text-slate-800 font-bold text-[16px] mr-2 shrink-0">
+              {selectedMethod === "usdt" ? "USDT" : currencySymbol}
             </span>
             <input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="300"
+              placeholder={selectedMethod === "usdt" ? "20" : "300"}
               className="bg-transparent text-slate-900 font-bold text-[16px] outline-none flex-1 placeholder:text-slate-400 font-mono"
             />
             {amount && (
@@ -400,62 +362,20 @@ function RechargeContent() {
               </button>
             )}
           </div>
-          <p className="text-slate-400 text-[12px] mt-2 font-normal">
-            Enter a custom amount or select from the options above.
-          </p>
-        </div>
 
-
-
-        {/* Continue Action Button */}
-        <div className="pt-2">
-          <button
-            type="button"
-            onClick={handleContinue}
-            disabled={isPending}
-            className="w-full bg-[#03254c] hover:bg-[#021d3c] active:scale-[0.99] transition-all text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-md shadow-blue-950/15 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-75"
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin text-white" />
-                <span>Processing...</span>
-              </>
-            ) : (
-              <span>Continue</span>
-            )}
-          </button>
-        </div>
-
-        {/* Recharge Notes Card */}
-        <div className="bg-[#f0f6ff] border border-blue-100 rounded-[16px] p-5 mt-4 space-y-3">
-          <div className="flex items-center gap-2 text-[#03254c] font-bold text-[14px]">
-            <Info size={17} className="shrink-0" />
-            <span>Recharge notes</span>
-          </div>
-
-          <div className="text-slate-600 text-[12px] leading-relaxed space-y-2.5 pl-0.5">
-            <p>
-              1. Minimum recharge amount is <span className="font-semibold text-slate-800">{currencySymbol} {minDeposit.toLocaleString()}</span>.
+          {/* Dynamic Conversion Display for USDT */}
+          {selectedMethod === "usdt" ? (
+            <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-3 mt-2.5 flex items-center justify-between">
+              <span className="text-slate-600 text-[12px] font-medium">Converted Rand Value:</span>
+              <span className="text-amber-700 font-black text-[15px] font-mono">
+                {currencySymbol} {formatAmount(Number(amount || 0) * (usdtRate > 0 ? usdtRate : 18.50))}
+              </span>
+            </div>
+          ) : (
+            <p className="text-slate-400 text-[12px] mt-2 font-normal">
+              Enter a custom amount or select from the options above.
             </p>
-            <p>
-              2. The payment amount must match the recharge request amount; otherwise, the funds will not be deposited into your account.
-            </p>
-            <p>
-              3. Each recharge requires a new payment request and a specified receiving account.
-            </p>
-            <p>
-              4. After payment confirmation, the funds will be directly deposited into your account.
-            </p>
-            <p>
-              5. Recharge service is available 24/7.
-            </p>
-            <p>
-              6. Please only recharge through channels provided by the platform.
-            </p>
-            <p>
-              7. If you have not received your funds after an extended period, please contact customer service.
-            </p>
-          </div>
+          )}
         </div>
 
       </div>
