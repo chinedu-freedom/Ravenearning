@@ -116,7 +116,7 @@ export default function CustomerServicePage() {
 
           <button
             type="button"
-            onClick={() => handleOpenLink(settings.whatsapp_group || settings.whatsapp_link || "https://chat.whatsapp.com/ravenearning")}
+            onClick={() => handleOpenLink(settings.whatsapp_group || settings.whatsapp_link || "https://chat.whatsapp.com/JwcV11vctlAI4ZOtle6I7P?s=cl&p=a&mlu=4")}
             className="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
             Join WhatsApp Group
