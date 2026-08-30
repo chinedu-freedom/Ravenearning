@@ -86,13 +86,13 @@ export default function BindWalletPage() {
     e.preventDefault();
 
     if (!password) {
-      toast.error("Please enter your withdrawal password to confirm");
+      toast.dismiss(); toast.error("Please enter your withdrawal password to confirm");
       return;
     }
 
     if (walletType === "usdt") {
       if (!usdtAddress.trim()) {
-        toast.error("Please enter your USDT wallet address");
+        toast.dismiss(); toast.error("Please enter your USDT wallet address");
         return;
       }
 
@@ -116,15 +116,15 @@ export default function BindWalletPage() {
 
     // Default Bank Account validation
     if (!actualName.trim()) {
-      toast.error("Please enter actual name");
+      toast.dismiss(); toast.error("Please enter actual name");
       return;
     }
     if (!selectedBank) {
-      toast.error("Please select your bank name");
+      toast.dismiss(); toast.error("Please select your bank name");
       return;
     }
     if (!accountNumber.trim()) {
-      toast.error("Please enter your bank account number");
+      toast.dismiss(); toast.error("Please enter your bank account number");
       return;
     }
 

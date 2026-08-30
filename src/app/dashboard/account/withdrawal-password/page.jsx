@@ -27,22 +27,22 @@ export default function WithdrawalPasswordPage() {
     e.preventDefault();
 
     if (hasExistingPin && !currentPassword) {
-      toast.error("Please enter your current withdrawal password");
+      toast.dismiss(); toast.error("Please enter your current withdrawal password");
       return;
     }
 
     if (!newPassword) {
-      toast.error("Please enter a new withdrawal password");
+      toast.dismiss(); toast.error("Please enter a new withdrawal password");
       return;
     }
 
     if (newPassword.length < 4) {
-      toast.error("Withdrawal password must be at least 4 characters");
+      toast.dismiss(); toast.error("Withdrawal password must be at least 4 characters");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("New withdrawal passwords do not match");
+      toast.dismiss(); toast.error("New withdrawal passwords do not match");
       return;
     }
 

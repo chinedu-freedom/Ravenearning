@@ -62,7 +62,7 @@ export const useFetchData = (
 
     onError: (error) => {
       if (error?.name === "CanceledError") return;
-      toast.error(getErrorMessage(error));
+      toast.dismiss(); toast.error(getErrorMessage(error));
     },
   });
 };
@@ -154,7 +154,7 @@ export const usePost = (endpoint, queryKey, isFormData = false, options = {}) =>
       queryClient.invalidateQueries(); // Force refetch of all data globally to keep tables fresh
 
       if (showToast) {
-        toast.success(getSuccessMessage("POST", endpoint, res));
+        toast.dismiss(); toast.success(getSuccessMessage("POST", endpoint, res));
       }
 
       if (options?.onSuccess) {
@@ -163,7 +163,7 @@ export const usePost = (endpoint, queryKey, isFormData = false, options = {}) =>
     },
 
     onError: (error, variables, context) => {
-      if (showToast) toast.error(getErrorMessage(error));
+      if (showToast) toast.dismiss(); toast.error(getErrorMessage(error));
       if (options?.onError) {
         options.onError(error, variables, context);
       }
@@ -191,14 +191,14 @@ export const usePut = (endpoint, queryKey, options = {}) => {
       queryClient.invalidateQueries(); // Force refetch of all data globally to keep tables fresh
 
       if (showToast) {
-        toast.success(getSuccessMessage("PUT", endpoint, res));
+        toast.dismiss(); toast.success(getSuccessMessage("PUT", endpoint, res));
       }
       if (options?.onSuccess) {
         options.onSuccess(res, variables, context);
       }
     },
     onError: (error, variables, context) => {
-      if (showToast) toast.error(getErrorMessage(error));
+      if (showToast) toast.dismiss(); toast.error(getErrorMessage(error));
       if (options?.onError) {
         options.onError(error, variables, context);
       }
@@ -252,7 +252,7 @@ export const usePatch = (endpoint, queryKey, isFormData = false, options = {}) =
       queryClient.invalidateQueries(); // Force refetch of all data globally to keep tables fresh
 
       if (showToast) {
-        toast.success(getSuccessMessage("PATCH", endpoint, res));
+        toast.dismiss(); toast.success(getSuccessMessage("PATCH", endpoint, res));
       }
       if (options?.onSuccess) {
         options.onSuccess(res, variables, context);
@@ -260,7 +260,7 @@ export const usePatch = (endpoint, queryKey, isFormData = false, options = {}) =
     },
 
     onError: (error, variables, context) => {
-      if (showToast) toast.error(getErrorMessage(error));
+      if (showToast) toast.dismiss(); toast.error(getErrorMessage(error));
       if (options?.onError) {
         options.onError(error, variables, context);
       }
@@ -297,14 +297,14 @@ export const useDelete = (endpoint, queryKey, options = {}) => {
       queryClient.invalidateQueries(); // Force refetch of all data globally to keep tables fresh
 
       if (showToast) {
-        toast.success(getSuccessMessage("DELETE", endpoint, res));
+        toast.dismiss(); toast.success(getSuccessMessage("DELETE", endpoint, res));
       }
       if (options?.onSuccess) {
         options.onSuccess(res, variables, context);
       }
     },
     onError: (error, variables, context) => {
-      if (showToast) toast.error(getErrorMessage(error));
+      if (showToast) toast.dismiss(); toast.error(getErrorMessage(error));
       if (options?.onError) {
         options.onError(error, variables, context);
       }
