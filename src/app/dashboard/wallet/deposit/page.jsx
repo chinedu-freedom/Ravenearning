@@ -95,7 +95,7 @@ function RechargeContent() {
       submitDeposit(
         {
           amount: zarEquivalent,
-          paymentMethod: `USDT (${usdtNetwork} Deposit)`
+          paymentMethod: `${rawNum} USDT (${usdtNetwork} Deposit)`
         },
         {
           onSuccess: (res) => {
