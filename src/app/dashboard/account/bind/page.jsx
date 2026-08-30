@@ -79,7 +79,7 @@ export default function BindWalletPage() {
     b.toLowerCase().includes(bankSearch.toLowerCase())
   );
 
-  const { mutate: saveDetails, isPending: isSubmitting } = usePost("/bank-details", ["user-profile"]);
+  const { mutate: saveDetails, isPending: isSubmitting } = usePost("/users/bank-details", ["user-profile"]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
