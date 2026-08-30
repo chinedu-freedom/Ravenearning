@@ -71,7 +71,7 @@ export default function WelcomeNoticeModal() {
             3. Daily Check-in Bonus: ZAR1.
           </p>
           <p className="font-semibold text-slate-800">
-            4. Daily return rate 25%-40%.
+            4. Daily return.
           </p>
           <p className="font-semibold text-slate-800">
             5. Invite your downline to invest, and you will immediately receive a cash reward of {refComm}% of their investment amount.
@@ -83,7 +83,7 @@ export default function WelcomeNoticeModal() {
             7. You can purchase multiple devices to earn more income.
           </p>
           <p className="font-semibold text-slate-800">
-            8. {siteName} will be launched in South Africa on August 17.
+            8. {siteName} will be launched in South Africa on August.
           </p>
         </div>
 

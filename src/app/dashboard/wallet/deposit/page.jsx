@@ -30,8 +30,7 @@ function RechargeContent() {
     const [amount, setAmount] = useState("300");
   const [selectedMethod, setSelectedMethod] = useState("bank"); // "bank" | "usdt"
   const [usdtNetwork, setUsdtNetwork] = useState("TRC20"); // "TRC20" | "BEP20"
-  const [txHash, setTxHash] = useState("");
-  const [proofBase64, setProofBase64] = useState("");
+    const [proofBase64, setProofBase64] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
   const [orderData, setOrderData] = useState(null);
@@ -112,8 +111,7 @@ function RechargeContent() {
         {
           amount: numAmount,
           paymentMethod: `USDT (${usdtNetwork} Manual)`,
-          tx_hash: txHash,
-          proof_image_url: proofBase64
+                    proof_image_url: proofBase64
         },
         {
           onSuccess: (res) => {
@@ -218,10 +216,10 @@ function RechargeContent() {
               </div>
               <div>
                 <span className="font-bold text-[14px] text-slate-900 block leading-tight">
-                  Online Gateway
+                  Bank Deposit
                 </span>
                 <span className="text-[11px] text-slate-500 font-medium">
-                  Instant Card / Bank (ZAR)
+                  South Africa Bank (ZAR)
                 </span>
               </div>
             </div>
@@ -237,7 +235,7 @@ function RechargeContent() {
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                  <Globe size={19} />
+                  <Wallet size={19} />
                 </div>
                 <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                   selectedMethod === "usdt" ? "border-[#03254c] bg-[#03254c]" : "border-slate-300"
@@ -247,10 +245,10 @@ function RechargeContent() {
               </div>
               <div>
                 <span className="font-bold text-[14px] text-slate-900 block leading-tight">
-                  USDT (Manual)
+                  Usdt Deposit
                 </span>
                 <span className="text-[11px] text-amber-600 font-bold">
-                  1 USDT = {currencySymbol} {usdtRate.toFixed(2)}
+                  Crypto Deposit (USDT)
                 </span>
               </div>
             </div>
@@ -315,19 +313,7 @@ function RechargeContent() {
               </div>
             </div>
 
-            {/* Transaction Hash / TxID Input */}
-            <div>
-              <label className="text-slate-800 font-bold text-[13px] block mb-1.5">
-                Transaction Hash / TxID (Optional)
-              </label>
-              <input
-                type="text"
-                value={txHash}
-                onChange={(e) => setTxHash(e.target.value)}
-                placeholder="Paste blockchain transaction hash / TxID"
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13px] font-mono text-slate-900 outline-none focus:border-[#03254c]"
-              />
-            </div>
+
 
             {/* Payment Receipt / Screenshot Upload */}
             <div>
