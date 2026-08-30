@@ -105,7 +105,7 @@ export default function BindWalletPage() {
         },
         {
           onSuccess: () => {
-            toast.success("USDT Wallet address saved successfully!");
+            toast.dismiss();
             refetchUser();
             router.push("/dashboard/account");
           }
@@ -138,7 +138,7 @@ export default function BindWalletPage() {
       },
       {
         onSuccess: () => {
-          toast.success("Bank account saved successfully!");
+          toast.dismiss();
           refetchUser();
           router.push("/dashboard/account");
         }

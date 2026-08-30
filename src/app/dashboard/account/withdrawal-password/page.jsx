@@ -57,7 +57,7 @@ export default function WithdrawalPasswordPage() {
       payload,
       {
         onSuccess: () => {
-          toast.success("Withdrawal password updated successfully!");
+          toast.dismiss();
           setTimeout(() => {
             router.push("/dashboard/account");
           }, 1000);

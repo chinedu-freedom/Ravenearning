@@ -109,7 +109,7 @@ export default function RootLayout({ children }) {
         <Providers>
           {children}
         </Providers>
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-right" richColors visibleToasts={1} duration={3000} />
       </body>
     </html>
   );
