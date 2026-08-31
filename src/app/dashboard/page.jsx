@@ -211,7 +211,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 gap-3.5">
           {/* Contact Support Card */}
           <div
-            onClick={() => router.push("/dashboard/account/service")}
+            onClick={() => window.open(settings?.telegram_channel || settings?.telegram_link || settings?.telegram_group || "https://t.me/ravenearning780", "_blank")}
             className="bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] border border-sky-200/60 rounded-[20px] p-4 flex flex-col justify-between h-[155px] cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
           >
             <div>
@@ -220,7 +220,7 @@ export default function DashboardPage() {
                 <ArrowRight size={13} className="ml-1 shrink-0" />
               </span>
               <p className="text-[10px] text-slate-500 font-bold mt-1 leading-none">
-                24/7 WhatsApp Helpdesk
+                24/7 Telegram Helpdesk
               </p>
             </div>
             {/* Custom SVG Illustration for Contact Support */}
