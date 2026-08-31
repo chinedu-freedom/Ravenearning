@@ -281,7 +281,7 @@ export default function AccountPage() {
 
           {/* Telegram Group */}
           <a
-            href="https://t.me/ravenearning780"
+            href="https://t.me/+zem_hTJCVY4yY2E0"
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
