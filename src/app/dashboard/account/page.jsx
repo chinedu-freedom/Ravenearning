@@ -139,7 +139,7 @@ export default function AccountPage() {
         </div>
 
         {/* First Grid Card (Bind Account, Balance Record, Recharge Record, Withdrawal Record) */}
-        <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-4 items-center divide-x divide-white/5">
+        <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-3 items-center divide-x divide-white/5">
 
           {/* Bind Account */}
           <Link
@@ -316,22 +316,7 @@ export default function AccountPage() {
             </span>
           </a>
 
-          {/* WhatsApp Group */}
-          <a
-            href={settings.whatsapp_group || settings.whatsapp_link || "https://chat.whatsapp.com/ravenearning"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
-          >
-            <div className="w-9 h-9 rounded-[10px] bg-emerald-900/20 border border-white/5 flex items-center justify-center text-[#25D366] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#25D366]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347z"/>
-              </svg>
-            </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              WhatsApp Group
-            </span>
-          </a>
+          
 
         </div>
 
