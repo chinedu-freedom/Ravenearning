@@ -211,7 +211,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 gap-3.5">
           {/* Contact Support Card */}
           <div
-            onClick={() => window.open(settings?.telegram_channel || settings?.telegram_link || settings?.telegram_group || "https://t.me/ravenearning780", "_blank")}
+            onClick={() => window.open(settings?.telegram_support || settings?.telegram_channel || settings?.telegram_link || "https://t.me/ravenearning780", "_blank")}
             className="bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] border border-sky-200/60 rounded-[20px] p-4 flex flex-col justify-between h-[155px] cursor-pointer shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
           >
             <div>
