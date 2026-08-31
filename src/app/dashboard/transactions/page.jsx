@@ -51,14 +51,6 @@ export default function TransactionsPage() {
     
     let isCredit = false;
     if (
-      typeLower.includes('debit') || 
-      typeLower.includes('cost') || 
-      typeLower.includes('withdraw') || 
-      typeLower.includes('invest') || 
-      typeLower.includes('plan')
-    ) {
-      isCredit = false;
-    } else if (
       typeLower.includes('deposit') || 
       typeLower.includes('reward') || 
       typeLower.includes('bonus') || 
@@ -72,11 +64,26 @@ export default function TransactionsPage() {
       typeLower.includes('profit') ||
       typeLower.includes('payout') ||
       typeLower.includes('refund') ||
+      descLower.includes('bonus') ||
+      descLower.includes('welcome') ||
+      descLower.includes('reward') ||
+      descLower.includes('gift') ||
       descLower.includes('refund') ||
       descLower.includes('payout') ||
-      descLower.includes('profit')
+      descLower.includes('profit') ||
+      descLower.includes('commission')
     ) {
       isCredit = true;
+    } else if (
+      typeLower.includes('debit') || 
+      typeLower.includes('cost') || 
+      typeLower.includes('withdraw') || 
+      typeLower.includes('invest') || 
+      typeLower.includes('plan') ||
+      descLower.includes('withdraw') ||
+      descLower.includes('invest')
+    ) {
+      isCredit = false;
     } else if (tx.balance_before !== undefined && tx.balance_after !== undefined && tx.balance_before !== null && tx.balance_after !== null) {
       const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
       if (diff !== 0) {
