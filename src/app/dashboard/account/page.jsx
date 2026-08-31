@@ -1,128 +1,145 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { LogOut, User, Copy, Check } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
+import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
-import {
-  User,
-  LogOut,
-  ShieldCheck,
-  Headphones,
-  ArrowRight,
-  Sparkles,
-  Award,
-  Wallet
-} from "lucide-react";
+import axiosInstance, { clearAuthToken } from "@/config/axiosInstance";
+
+import PageLoader from "@/components/PageLoader";
 
 export default function AccountPage() {
   const router = useRouter();
+  const { isInstallable, installPWA } = usePWA();
 
-  // Fetch settings & current user profile
+  const { data: userProfileResponse, isLoading } = useFetchData("/users/me", ["user-profile"]);
+  const userProfile = userProfileResponse?.user;
+
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
 
-  const { data: userRes } = useFetchData("/users/me", ["user-profile"]);
-  const user = userRes?.user || {};
+  const [copied, setCopied] = useState(false);
+
+  const displayPhone = userProfile?.phone
+    ? userProfile.phone.startsWith("27")
+      ? userProfile.phone.substring(2)
+      : userProfile.phone
+    : "";
+
+  const handleCopyId = () => {
+    if (!displayPhone) return;
+    navigator.clipboard.writeText(displayPhone);
+    setCopied(true);
+    toast.success("ID copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    clearAuthToken();
     toast.success("Logged out successfully");
-    router.push("/auth/login");
+    router.push("/");
   };
 
   const handleDownloadApp = () => {
-    if (settings.app_download_link) {
-      window.open(settings.app_download_link, "_blank");
-    } else {
-      toast.info("Official App download link will be available soon!");
-    }
+    toast.info("Coming soon");
   };
 
+  const handleCustomerService = () => {
+    router.push("/dashboard/account/service");
+  };
+
+  const currencySymbol = settings.currency_symbol || "R";
+  const cashBalance = parseFloat(userProfile?.balance ?? 0);
+  const deviceIncome = parseFloat(userProfile?.withdrawable_balance ?? 0);
+
   const formatAmount = (num) => {
-    return Number(num || 0).toLocaleString("en-US", {
-      minimumFractionDigits: 2,
+    return Number(num || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     });
   };
 
-  const currencySymbol = settings.currency_symbol || "R";
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#070c14] text-white pb-24 font-sans">
-      
-      {/* Top Profile Header Banner */}
-      <div className="relative bg-gradient-to-b from-[#101b2d] to-[#070c14] px-5 pt-8 pb-6 rounded-b-[30px] border-b border-white/5 shadow-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3.5">
-            <div className="relative">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#3b82f6] to-[#60a5fa] p-0.5 shadow-md shadow-blue-500/20">
-                <div className="w-full h-full bg-[#0d1527] rounded-[14px] flex items-center justify-center text-white overflow-hidden">
-                  {user.avatar ? (
-                    <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <User size={28} className="text-[#60a5fa]" />
-                  )}
-                </div>
-              </div>
-              <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-white rounded-full p-0.5 border-2 border-[#070c14]" title="Verified User">
-                <ShieldCheck size={12} />
-              </div>
-            </div>
+    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 select-none">
 
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-[17px] font-black tracking-tight text-white/95">
-                  {user.full_name || user.username || "Investor"}
-                </h2>
-                <span className="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-                  <Award size={10} className="text-amber-400" />
-                  VIP Member
-                </span>
-              </div>
-              <p className="text-[12px] text-gray-400 font-mono mt-0.5">
-                ID: {user.phone || user.email || user.id?.slice(0, 8) || "884920"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* User Balance Highlights */}
-        <div className="grid grid-cols-2 gap-3 mt-6">
-          <div className="bg-[#111c2e]/90 border border-white/10 rounded-[20px] p-4 shadow-sm relative overflow-hidden backdrop-blur-md">
-            <div className="absolute -right-3 -bottom-3 text-blue-500/10 pointer-events-none">
-              <Wallet size={70} />
-            </div>
-            <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">
-              Account Balance
-            </span>
-            <div className="text-[20px] font-black text-white font-mono flex items-baseline gap-1">
-              <span className="text-[14px] text-blue-400 font-sans">{currencySymbol}</span>
-              {formatAmount(user.balance || user.wallet_balance || 0)}
-            </div>
-          </div>
-
-          <div className="bg-[#111c2e]/90 border border-white/10 rounded-[20px] p-4 shadow-sm relative overflow-hidden backdrop-blur-md">
-            <div className="absolute -right-3 -bottom-3 text-emerald-500/10 pointer-events-none">
-              <Sparkles size={70} />
-            </div>
-            <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">
-              Total Earnings
-            </span>
-            <div className="text-[20px] font-black text-emerald-400 font-mono flex items-baseline gap-1">
-              <span className="text-[14px] text-emerald-500 font-sans">{currencySymbol}</span>
-              {formatAmount(user.total_earnings || user.total_income || 0)}
-            </div>
-          </div>
-        </div>
+      {/* Page Title Header */}
+      <div className="px-5 pt-4 pb-1">
+        <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
+          Account Center
+        </h1>
       </div>
 
-      {/* Main Action Options */}
-      <div className="px-5 mt-6 space-y-4 max-w-[480px] mx-auto w-full">
+      <div className="px-4 py-2 space-y-4 max-w-[480px] mx-auto w-full">
 
-        {/* Combined Single Grid Card */}
-        <div className="bg-[#111827] rounded-[18px] p-4 border border-white/5 shadow-md grid grid-cols-4 gap-y-5 gap-x-1 items-center">
+        {/* Profile Card */}
+        <div className="bg-[#111827] rounded-[20px] p-4 border border-white/5 shadow-md flex items-center gap-3.5">
+          {/* Website Logo Badge (Non-editable) */}
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#0f172a] p-[2px] shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-full h-full rounded-full bg-[#111827] flex items-center justify-center overflow-hidden p-1">
+              <img
+                src={settings?.platform_logo || settings?.site_logo || "/logo.png"}
+                alt="Website Logo"
+                className="w-full h-full object-contain rounded-full"
+              />
+            </div>
+          </div>
+
+          {/* User Info - Phone Number with Small Copy Icon right after number */}
+          <div className="flex flex-col justify-center flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-[17px] font-bold text-white tracking-tight truncate">
+                ID: {displayPhone || "----"}
+              </h2>
+              {displayPhone && (
+                <button
+                  onClick={handleCopyId}
+                  className="p-1 rounded-md bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-all cursor-pointer inline-flex items-center justify-center shrink-0 active:scale-95"
+                  title="Copy ID"
+                >
+                  {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* "My Wallet" Card */}
+        <div className="bg-gradient-to-br from-[#4f8cff] via-[#2563eb] to-[#0f172a] rounded-[20px] p-5 text-white shadow-xl relative overflow-hidden border border-white/10">
+          {/* Subtle glow decoration */}
+          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-2xl pointer-events-none" />
+
+          <h3 className="text-[15px] font-bold text-white/95 mb-4 relative z-10">My Wallet</h3>
+
+          <div className="grid grid-cols-2 relative z-10">
+            {/* Cash Balance */}
+            <div className="pr-4">
+              <p className="text-blue-100/80 text-[12.5px] font-medium mb-1">Cash Balance</p>
+              <div className="text-white text-[22px] font-black tracking-tight leading-tight">
+                {currencySymbol}{formatAmount(cashBalance)}
+              </div>
+              <div className="w-7 h-[2.5px] bg-[#6ee7ff] rounded-full mt-2 shadow-[0_0_8px_rgba(110,231,255,0.6)]" />
+            </div>
+
+            {/* Device Income */}
+            <div className="border-l border-white/20 pl-5">
+              <p className="text-blue-100/80 text-[12.5px] font-medium mb-1">Cumulative Income</p>
+              <div className="text-white text-[22px] font-black tracking-tight leading-tight">
+                {currencySymbol}{formatAmount(deviceIncome)}
+              </div>
+              <div className="w-7 h-[2.5px] bg-[#6ee7ff] rounded-full mt-2 shadow-[0_0_8px_rgba(110,231,255,0.6)]" />
+            </div>
+          </div>
+        </div>
+
+        {/* First Grid Card (Bind Account, Balance Record, Recharge Record, Withdrawal Record) */}
+        <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-3 items-center divide-x divide-white/5">
 
           {/* Bind Account */}
           <Link
@@ -169,7 +186,7 @@ export default function AccountPage() {
                 <rect x="2" y="5" width="20" height="14" rx="2" />
                 <line x1="2" y1="10" x2="22" y2="10" />
                 <circle cx="17" cy="15" r="3.5" fill="#111827" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M15.5 13.5L18.5 16.5M18.5 16.5H16M18.5 16.5V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M18.5 13.5L15.5 16.5M15.5 16.5H18M15.5 16.5V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
@@ -194,6 +211,11 @@ export default function AccountPage() {
               Withdrawal Record
             </span>
           </Link>
+
+        </div>
+
+        {/* Second Grid Card (Change Password, Withdrawal Password, About us, Download App) */}
+        <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-4 items-center divide-x divide-white/5">
 
           {/* Change Password */}
           <Link
@@ -261,11 +283,9 @@ export default function AccountPage() {
             </span>
           </button>
 
-          {/* Telegram Support */}
-          <a
-            href="https://t.me/ravenearning780"
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Customer Service */}
+          <Link
+            href="/dashboard/account/service"
             className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
           >
             <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
@@ -277,11 +297,11 @@ export default function AccountPage() {
             <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
               Telegram Support
             </span>
-          </a>
+          </Link>
 
           {/* Telegram Group */}
           <a
-            href="https://t.me/+zem_hTJCVY4yY2E0"
+            href={settings.telegram_group || settings.telegram_channel || settings.telegram_link || "https://t.me/ravenearning780"}
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
@@ -295,6 +315,8 @@ export default function AccountPage() {
               Telegram Group
             </span>
           </a>
+
+          
 
         </div>
 
