@@ -79,8 +79,8 @@ function RechargeContent() {
       const usdtRate = Number(settings.usdt_rate_zar || 18.50);
   const presets = selectedMethod === "usdt" ? [20, 50, 100] : [350, 900, 2000];
   const activeUsdtAddress = usdtNetwork === "BEP20"
-    ? (settings.usdt_bep20_address || "0x71C7656EC7ab88b098defB751B7401B5f6d8976F")
-    : (settings.usdt_trc20_address || "TYD8x9kL4mN2pQ3vR5sT7uW1xY8zA9bC3d");
+    ? (settings.usdt_bep20_address || "0xC6DD6e8d226bc069Dd6F8745F3D468EA502F9892")
+    : (settings.usdt_trc20_address || "TXmvGTE6PREAYxWarUissgHWMU9f6dhV4V");
 
   const handleContinue = () => {
     const rawNum = Number(amount);
