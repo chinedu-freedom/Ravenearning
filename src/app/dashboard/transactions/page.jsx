@@ -123,7 +123,7 @@ export default function TransactionsPage() {
           d.includes('manual debit') || 
           d.includes('debit')
         ) return "Withdrawal";
-        if (t.includes('commission') || t.includes('referral') || d.includes('commission')) return "Referral Commission";
+        if (t.includes('commission') || t.includes('referral') || d.includes('commission')) return "Rebate Commission";
         if (t.includes('spin') || d.includes('spin')) return "Lucky Spin Prize";
         if (t.includes('checkin') || d.includes('check-in') || d.includes('checkin')) return "Daily Check-in Reward";
         if (t.includes('invest') || t.includes('plan') || d.includes('invest')) return "VIP Plan Activation";
