@@ -66,7 +66,6 @@ export default function BindWalletPage() {
   // Pre-fill existing saved bank & usdt details
   useEffect(() => {
     if (user) {
-      if (user.full_name && !actualName) setActualName(user.full_name);
       if (bankDetails.account_name) setActualName(bankDetails.account_name);
       if (bankDetails.bank_name) setSelectedBank(bankDetails.bank_name);
       if (bankDetails.account_number) setAccountNumber(bankDetails.account_number);
@@ -260,7 +259,7 @@ export default function BindWalletPage() {
                   <User size={18} className="text-[#38bdf8] shrink-0" />
                   <input
                     type="text"
-                    value=""
+                    value={actualName}
                     onChange={(e) => setActualName(e.target.value)}
                     placeholder="Enter full name on bank account"
                     className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
