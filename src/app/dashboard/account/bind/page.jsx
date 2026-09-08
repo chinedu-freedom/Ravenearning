@@ -260,7 +260,7 @@ export default function BindWalletPage() {
                   <User size={18} className="text-[#38bdf8] shrink-0" />
                   <input
                     type="text"
-                    value={actualName}
+                    value=""
                     onChange={(e) => setActualName(e.target.value)}
                     placeholder="Enter full name on bank account"
                     className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
