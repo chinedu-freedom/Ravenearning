@@ -67,8 +67,7 @@ export default function LoginPage() {
     }
 
     const rawDigits = data.phone.replace(/[^0-9]/g, '');
-    const cleanDigits = rawDigits.startsWith('0') ? rawDigits.substring(1) : rawDigits;
-    const normalizedPhone = cleanDigits.startsWith('27') ? cleanDigits : `27${cleanDigits}`;
+    const normalizedPhone = rawDigits.startsWith('27') ? rawDigits : `27${rawDigits}`;
 
     const payload = {
       phone: normalizedPhone,
