@@ -16,23 +16,34 @@ export default function MiningPlansPage() {
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   
-  const [activeCategory, setActiveCategory] = useState("VIP Series");
+  const isActivityEnabled = Boolean(settings?.activity_series_enabled);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const defaultCategory = isActivityEnabled ? "Activity Series" : "VIP Series";
+  const activeCategory = selectedCategory || defaultCategory;
+
   const plans = Array.isArray(plansRes?.data) 
     ? [...plansRes.data].sort((a, b) => Number(a.min_investment || 0) - Number(b.min_investment || 0))
     : [];
   const router = useRouter();
 
-  const isActivityEnabled = Boolean(settings?.activity_series_enabled);
-
-  const categories = Array.from(new Set(
+  const rawCategories = Array.from(new Set(
     plans
       .map(p => p.category || "VIP Series")
       .filter(cat => cat !== "Activity Series" || isActivityEnabled)
   ));
-  if (!categories.includes("VIP Series")) categories.unshift("VIP Series");
-  if (isActivityEnabled && !categories.includes("Activity Series")) {
+
+  const categories = [];
+  if (isActivityEnabled) {
     categories.push("Activity Series");
   }
+  categories.push("VIP Series");
+
+  rawCategories.forEach(cat => {
+    if (!categories.includes(cat)) {
+      categories.push(cat);
+    }
+  });
 
   const filteredPlans = plans.filter(p => (p.category || "VIP Series") === activeCategory);
 
@@ -132,7 +143,7 @@ export default function MiningPlansPage() {
               <button
                 key={cat}
                 type="button"
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => setSelectedCategory(cat)}
                 className={`flex-1 py-2.5 px-4 rounded-xl text-[13px] font-black transition-all cursor-pointer border text-center whitespace-nowrap ${
                   isActive
                     ? "bg-gradient-to-r from-[#4f8cff] to-[#2563eb] text-white border-blue-500 shadow-sm scale-[1.01]"
