@@ -14,14 +14,14 @@ export default function CustomerServicePage() {
     settings.telegram_support_link ||
     settings.telegram_support ||
     settings.telegram_channel_link ||
-    "https://t.me/ravenearning780";
+    "https://t.me/suncerestcapital";
 
   const groupTelegram =
     settings.telegram_group ||
     settings.telegram_group_chat ||
     settings.telegram_link ||
     settings.telegram_channel_link ||
-    "https://t.me/ravenearning780";
+    "https://t.me/suncerestcapital";
 
   const handleOpenLink = (url) => {
     if (url) {

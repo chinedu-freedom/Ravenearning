@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
 
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
-  const siteName = settings.site_name || "Ravenearning";
+  const siteName = settings.site_name || "suncerestcapital";
 
   useEffect(() => {
     setIsMounted(true);
@@ -92,24 +92,23 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="min-h-screen flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
-        <div className="w-full max-w-sm">
-          <div className="mb-10 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-              <Image 
-                src={logoImg} 
-                alt="Logo" 
-                width={64} 
-                height={64} 
-                className="w-full h-full object-cover" 
-                priority 
-              />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">
+    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] p-4 sm:p-6 select-none">
+      <div 
+        className="relative z-10 w-full max-w-[420px] rounded-none shadow-2xl p-7 sm:p-9 bg-[#080d1a] bg-top bg-no-repeat overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-200"
+        style={{ backgroundImage: "url('/images/auth/card_bg.jpg')", backgroundSize: "100% auto" }}
+      >
+        {/* Soft bottom gradient to ensure pristine form field contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#080d1a]/60 to-[#080d1a]/95 pointer-events-none" />
+
+        <div className="relative z-10">
+          {/* Top clearance so the 3D gold logo emblem is showcased prominently */}
+          <div className="h-28 sm:h-32" />
+
+          <div className="mb-7 text-center">
+            <h1 className="text-2xl font-black text-white mb-1.5 tracking-tight drop-shadow-md">
               Reset Password
             </h1>
-            <p className="text-gray-500 text-sm">
+            <p className="text-slate-300 text-sm">
               Enter your new password and confirm it below for {siteName}.
             </p>
           </div>
@@ -133,18 +132,18 @@ export default function ResetPasswordPage() {
             <Button
               type="submit"
               disabled={resetPasswordMutation.isPending}
-              className="w-full h-10 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-95 active:brightness-90 rounded-md text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-70"
+              className="w-full h-12 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-105 active:brightness-95 rounded-full text-base font-bold transition-all shadow-lg shadow-sky-500/25 cursor-pointer disabled:opacity-70"
             >
               {resetPasswordMutation.isPending
                 ? "Resetting..."
                 : "Reset Password"}
             </Button>
 
-            <p className="text-center text-sm text-gray-500 mt-6">
+            <p className="text-center text-sm text-slate-300 mt-6">
               Back to{" "}
               <Link
                 href="/"
-                className="text-[#4fb3ff] font-medium hover:underline cursor-pointer"
+                className="text-[#4fb3ff] font-bold hover:underline cursor-pointer"
               >
                 Login
               </Link>
@@ -152,8 +151,6 @@ export default function ResetPasswordPage() {
           </form>
         </div>
       </div>
-
-
     </div>
   );
 }

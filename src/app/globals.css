@@ -106,11 +106,12 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* Fix autofill background and text color */
+/* Fix autofill background and text color for transparent auth inputs */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active {
-  -webkit-text-fill-color: black !important;
-  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(8, 13, 26, 0.75) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
 }

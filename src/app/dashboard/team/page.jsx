@@ -2,41 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  Users, 
-  Coins, 
-  TrendingUp, 
-  UserPlus, 
-  Copy, 
-  QrCode, 
-  Check, 
-  X,
-  Loader2,
-  Crown,
-  Calendar,
-  CreditCard
-} from "lucide-react";
-import QRCode from "react-qr-code";
+import { Check, Copy, X, Users, Calendar, ArrowRight, Loader2 } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { toast } from "sonner";
+import PageLoader from "@/components/PageLoader";
 
 export default function TeamPage() {
   const router = useRouter();
 
-  const [mounted, setMounted] = useState(false);
-  const [activeLevel, setActiveLevel] = useState(1); // 1 | 2 | 3
-  const [showQRModal, setShowQRModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [invitationLink, setInvitationLink] = useState("");
+  const [showUsersModal, setShowUsersModal] = useState(false);
+  const [showRewardsModal, setShowRewardsModal] = useState(false);
+  const [activeLevel, setActiveLevel] = useState(1);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const { data: userRes } = useFetchData("/users/me", ["user-profile"]);
+  const { data: userRes, isLoading: isLoadingUser } = useFetchData("/users/me", ["user-profile"]);
   const user = userRes?.user;
-  const invitationCode = user?.referral_code || "------";
+  const invitationCode = user?.referral_code || "3voa6c";
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
@@ -51,48 +34,49 @@ export default function TeamPage() {
   const teamData = teamRes?.data;
   const overview = teamData?.overview || { new_members_today: 0, new_earnings_today: 0, total_team: 0 };
   const levels = teamData?.levels || [
-    { level: 1, total_members: 0, valid_members: 0, commission_rate: 30, total_earnings: 0, total_deposits: 0 },
-    { level: 2, total_members: 0, valid_members: 0, commission_rate: 50, total_earnings: 0, total_deposits: 0 },
-    { level: 3, total_members: 0, valid_members: 0, commission_rate: 5, total_earnings: 0, total_deposits: 0 },
+    { level: 1, total_members: 0, valid_members: 0, commission_rate: 36, total_earnings: 0 },
+    { level: 2, total_members: 0, valid_members: 0, commission_rate: 3, total_earnings: 0 },
+    { level: 3, total_members: 0, valid_members: 0, commission_rate: 1, total_earnings: 0 },
   ];
 
-  const l1 = levels[0] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 30 };
-  const l2 = levels[1] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 50 };
-  const l3 = levels[2] || { total_members: 0, total_earnings: 0, total_deposits: 0, commission_rate: 5 };
+  const l1 = levels[0] || { total_members: 0, total_earnings: 0, commission_rate: 36 };
+  const l2 = levels[1] || { total_members: 0, total_earnings: 0, commission_rate: 3 };
+  const l3 = levels[2] || { total_members: 0, total_earnings: 0, commission_rate: 1 };
 
-  const totalMembersCount = (l1.total_members || 0) + (l2.total_members || 0) + (l3.total_members || 0) || overview.total_team || 0;
-  const totalActiveMembersCount = (l1.valid_members || 0) + (l2.valid_members || 0) + (l3.valid_members || 0);
-  const totalTeamCommission = (l1.total_earnings || 0) + (l2.total_earnings || 0) + (l3.total_earnings || 0);
-  const totalTeamRecharge = (l1.total_deposits || 0) + (l2.total_deposits || 0) + (l3.total_deposits || 0);
+  const totalMembersCount =
+    (l1.total_members || 0) + (l2.total_members || 0) + (l3.total_members || 0) || overview.total_team || 0;
+  const totalTeamCommission =
+    (l1.total_earnings || 0) + (l2.total_earnings || 0) + (l3.total_earnings || 0);
 
   const currentLevelMembers = memberListRes?.members || memberListRes?.data || [];
 
   useEffect(() => {
-    if (invitationCode && invitationCode !== "------" && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       const origin = window.location.origin;
-      setInvitationLink(`${origin}/auth/register?ref=${invitationCode}`);
+      const code = user?.referral_code || "3voa6c";
+      setInvitationLink(`${origin}/auth/register?ref=${code}`);
     }
-  }, [invitationCode]);
+  }, [user?.referral_code]);
 
   const handleCopyLink = () => {
     if (!invitationLink) return;
     navigator.clipboard.writeText(invitationLink);
     setCopiedLink(true);
-    toast.success("Invitation link copied to clipboard!");
+    toast.success("Invitation link copied!");
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
   const handleCopyCode = () => {
-    if (!invitationCode || invitationCode === "------") return;
-    navigator.clipboard.writeText(invitationCode.toString());
+    if (!invitationCode) return;
+    navigator.clipboard.writeText(invitationCode);
     setCopiedCode(true);
-    toast.success("Invite code copied to clipboard!");
+    toast.success("Invite code copied!");
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
   const formatAmount = (num) => {
     return Number(num || 0).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     });
   };
@@ -103,430 +87,400 @@ export default function TeamPage() {
     const day = String(d.getDate()).padStart(2, "0");
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const year = d.getFullYear();
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    return `${day}-${month}-${year} ${hours}:${minutes}`;
+    return `${day}-${month}-${year}`;
   };
 
+  if (isLoadingUser && isLoadingTeam) {
+    return <PageLoader />;
+  }
+
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-28 select-none">
+    <div className="flex flex-col min-h-full bg-white sm:bg-[#f8fafc] overflow-y-auto [&::-webkit-scrollbar]:hidden pb-16 select-none">
       
-      {/* Page Title Header */}
-      <div className="px-5 pt-4 pb-2">
-        <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
+      {/* Top Title Header */}
+      <div className="px-5 pt-6 pb-2">
+        <h1 className="text-slate-900 text-[26px] font-bold tracking-tight leading-tight">
           Team
         </h1>
-        <p className="text-slate-500 text-[12.5px] font-medium mt-0.5">
-          Partner network
-        </p>
       </div>
 
-      <div className="px-4 py-2 space-y-4 max-w-[480px] mx-auto w-full">
+      <div className="px-4 space-y-3.5 max-w-[480px] mx-auto w-full">
 
-        {/* Top 3-Column Hero Stats Card with Blue Palette */}
-        <div className="bg-[#111827] rounded-[20px] p-4 text-white shadow-lg border border-white/5 grid grid-cols-3 divide-x divide-white/10 items-center text-center">
+        {/* 1. Hero Runner Card */}
+        <div className="relative w-full rounded-[24px] overflow-hidden shadow-sm aspect-[0.95/1] sm:aspect-[1.05/1] min-h-[380px] flex flex-col justify-between p-5 text-white">
           
-          {/* Total Members */}
-          <div className="flex flex-col items-center px-1">
-            <div className="w-10 h-10 rounded-full bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] mb-2 shadow-sm">
-              <Users size={18} />
+          {/* Background Runner Photo */}
+          <img
+            src="/images/dashboard/team_runner_hero.jpg"
+            alt="Team Runner"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          {/* Vignette Gradients for Text Legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/20 to-black/85 pointer-events-none" />
+
+          {/* Top Row: Total rewards & Total users */}
+          <div className="relative z-10 flex items-start justify-between pt-1">
+            
+            {/* Total rewards */}
+            <div
+              onClick={() => setShowRewardsModal(true)}
+              className="flex flex-col cursor-pointer group active:scale-95 transition-transform"
+            >
+              <span className="text-white text-[24px] font-bold tracking-tight leading-none drop-shadow-sm">
+                {currencySymbol} {formatAmount(totalTeamCommission || 0)}
+              </span>
+              <span className="text-white/90 text-[12.5px] font-medium flex items-center gap-1 mt-1.5 drop-shadow-sm group-hover:text-white transition-colors">
+                Total rewards &gt;
+              </span>
             </div>
-            <div className="text-gray-300 text-[11px] font-medium">
-              Total Members
+
+            {/* Total users */}
+            <div
+              onClick={() => setShowUsersModal(true)}
+              className="flex flex-col items-end cursor-pointer group active:scale-95 transition-transform"
+            >
+              <span className="text-white text-[24px] font-bold tracking-tight leading-none drop-shadow-sm">
+                {totalMembersCount || 0}
+              </span>
+              <span className="text-white/90 text-[12.5px] font-medium flex items-center gap-1 mt-1.5 drop-shadow-sm group-hover:text-white transition-colors">
+                Total users &gt;
+              </span>
             </div>
-            <div className="text-white text-[18px] font-black mt-0.5 tracking-tight">
-              {totalMembersCount}
-            </div>
+
           </div>
 
-          {/* Team Commission */}
-          <div className="flex flex-col items-center px-1">
-            <div className="w-10 h-10 rounded-full bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] mb-2 shadow-sm">
-              <Coins size={18} />
-            </div>
-            <div className="text-gray-300 text-[11px] font-medium">
-              Team Commission
-            </div>
-            <div className="text-[#38bdf8] text-[16px] font-black mt-0.5 tracking-tight">
-              {currencySymbol}{formatAmount(totalTeamCommission)}
-            </div>
-          </div>
-
-          {/* Active Members */}
-          <div className="flex flex-col items-center px-1">
-            <div className="w-10 h-10 rounded-full bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] mb-2 shadow-sm">
-              <TrendingUp size={18} />
-            </div>
-            <div className="text-gray-300 text-[11px] font-medium">
-              Recharge Volume
-            </div>
-            <div className="text-[#38bdf8] text-[16px] font-black mt-0.5 tracking-tight">
-              {totalActiveMembersCount}
-            </div>
-          </div>
-
-        </div>
-
-        {/* Invite Friends QR & Links Section */}
-        <div className="bg-[#111827] rounded-[24px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center relative overflow-hidden">
-          
-          {/* Decorative subtle background accents */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-[15%] left-[10%] w-4 h-[1px] bg-white/10 -rotate-45" />
-            <div className="absolute top-[12%] right-[15%] w-3 h-[1px] bg-white/10 rotate-45" />
-            <div className="absolute bottom-[20%] left-[8%] w-4 h-[1px] bg-white/10 rotate-45" />
-            <div className="absolute bottom-[15%] right-[12%] w-5 h-[1px] bg-white/10 -rotate-45" />
-            <div className="absolute top-[22%] right-[8%] opacity-[0.04] text-[#38bdf8] text-[24px] font-bold">R</div>
-          </div>
-
-          <h3 className="text-white text-[16px] font-bold tracking-tight mb-1 relative z-10">
-            Invite Friends
-          </h3>
-          <p className="text-gray-400 text-[11.5px] leading-relaxed max-w-[280px] mb-5 relative z-10">
-            Let&apos;s pass {settings.site_name || "Ravenearning"} to the world together, so everyone feels joy and reward
-          </p>
-
-          {/* QR Code Container */}
-          <div className="bg-white p-3 rounded-[20px] mb-5 shadow-xl relative z-10">
-            <div className="w-[140px] h-[140px] flex items-center justify-center rounded-[12px] overflow-hidden">
-              {mounted && invitationLink ? (
-                <QRCode
-                  value={invitationLink}
-                  size={140}
-                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                  viewBox={`0 0 140 140`}
-                />
-              ) : (
-                <div className="w-[140px] h-[140px] bg-slate-100 animate-pulse rounded-xl flex items-center justify-center">
-                  <QrCode size={40} className="text-slate-300 animate-pulse" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Stacked Code & Link Cards */}
-          <div className="w-full space-y-2.5 relative z-10">
-            {/* Invitation Code */}
-            <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-3 flex items-center justify-between shadow-sm text-left">
-              <div className="min-w-0 flex-1 pr-2">
-                <span className="text-gray-400 text-[10.5px] font-medium block">
-                  Invitation code
-                </span>
-                <span className="text-white font-bold text-[14px] font-mono tracking-wider mt-0.5 block">
-                  {invitationCode}
-                </span>
-              </div>
+          {/* Bottom Row: Invite Code & Invite Link */}
+          <div className="relative z-10 grid grid-cols-2 gap-4 pb-1">
+            
+            {/* Invite Code Column */}
+            <div className="flex flex-col justify-end">
+              <span className="text-white text-[15px] font-bold tracking-tight mb-1 drop-shadow-sm">
+                Invite Code
+              </span>
+              <span className="text-white text-[24px] font-black font-sans tracking-wide leading-tight drop-shadow-sm mb-3">
+                {invitationCode}
+              </span>
               <button
                 type="button"
                 onClick={handleCopyCode}
-                className="w-8 h-8 rounded-lg border border-white/10 hover:border-[#0284c7]/50 bg-white/5 hover:bg-[#0284c7]/20 flex items-center justify-center text-gray-300 hover:text-[#38bdf8] transition-colors cursor-pointer shrink-0"
-                title="Copy Code"
+                className="w-full py-2.5 rounded-full border-2 border-white text-white font-bold text-[13.5px] tracking-wider hover:bg-white/10 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1"
               >
-                {copiedCode ? <Check size={14} className="text-[#38bdf8]" /> : <Copy size={14} />}
+                {copiedCode ? <Check size={16} /> : "COPY"}
               </button>
             </div>
 
-            {/* Invitation Link */}
-            <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-3 flex items-center justify-between shadow-sm text-left">
-              <div className="min-w-0 flex-1 pr-2 overflow-hidden">
-                <span className="text-gray-400 text-[10.5px] font-medium block">
-                  Invitation link
-                </span>
-                <span className="text-[#38bdf8] font-bold text-[11.5px] font-mono truncate mt-0.5 block">
-                  {invitationLink || "Generating link..."}
-                </span>
-              </div>
+            {/* Invite Link Column */}
+            <div className="flex flex-col justify-end">
+              <span className="text-white text-[15px] font-bold tracking-tight mb-1 drop-shadow-sm">
+                Invite Link
+              </span>
+              <p className="text-white/90 text-[11px] font-mono break-all line-clamp-2 h-7 leading-tight mb-3 drop-shadow-sm">
+                {invitationLink || `https://shokz-iioss.com/reg?code=${invitationCode}`}
+              </p>
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className="w-8 h-8 rounded-lg border border-white/10 hover:border-[#0284c7]/50 bg-white/5 hover:bg-[#0284c7]/20 flex items-center justify-center text-gray-300 hover:text-[#38bdf8] transition-colors cursor-pointer shrink-0"
-                title="Copy Link"
+                className="w-full py-2.5 rounded-full bg-white text-black font-bold text-[13.5px] tracking-wider shadow-md hover:bg-gray-100 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-1"
               >
-                {copiedLink ? <Check size={14} className="text-[#38bdf8]" /> : <Copy size={14} />}
+                {copiedLink ? <Check size={16} className="text-black" /> : "COPY"}
               </button>
             </div>
+
           </div>
 
         </div>
 
-        {/* Section: Team Levels (Using Blue Accent Theme) */}
-        <div className="space-y-3 pt-1">
-          <h2 className="text-slate-900 text-[16px] font-bold tracking-tight">
-            Team Levels
-          </h2>
+        {/* 2. Level 1 Card */}
+        <div
+          onClick={() => {
+            setActiveLevel(1);
+            setShowUsersModal(true);
+          }}
+          className="bg-gradient-to-r from-[#fef5e7] via-[#fffbf3] to-[#fef6e9] border border-amber-200/50 rounded-[20px] p-4 shadow-2xs flex items-center gap-3 cursor-pointer hover:shadow-xs active:scale-[0.99] transition-all"
+        >
+          {/* Frosted Badge */}
+          <div className="relative flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-full bg-white/80 shadow-xs flex items-center justify-center text-amber-700 font-bold text-[12px]">
+              Lv1
+            </div>
+            <span className="text-[10px] text-amber-700/60 font-bold absolute -bottom-1 -right-0.5">/1</span>
+          </div>
 
-          {/* LV1 Card */}
-          <div className="bg-[#111827] border border-white/5 rounded-[20px] p-4 shadow-sm space-y-3 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#0b0f19] border border-[#0284c7]/40 flex flex-col items-center justify-center text-white relative shadow-sm">
-                  <Crown size={11} className="text-[#38bdf8] -mb-0.5" />
-                  <span className="text-[12px] font-black tracking-tight text-[#38bdf8]">LV1</span>
-                </div>
-                <div className="text-[15px] font-bold text-[#38bdf8]">
-                  {l1.commission_rate || 30}%{" "}
-                  <span className="text-gray-400 text-[12px] font-normal">
-                    Commission
-                  </span>
-                </div>
+          {/* 3 Stats Columns */}
+          <div className="grid grid-cols-3 flex-1 text-center items-center">
+            <div>
+              <div className="text-[20px] font-bold text-[#b48325] leading-none">
+                {l1.commission_rate || 36}%
+              </div>
+              <div className="text-[12px] text-[#b48325]/90 mt-1.5 font-normal">
+                Commission
               </div>
             </div>
-
-            <div className="grid grid-cols-3 divide-x divide-white/5 pt-1 text-center">
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Members
-                </span>
-                <span className="text-white text-[16px] font-black mt-0.5 block">
-                  {l1.total_members || 0}
-                </span>
+            <div>
+              <div className="text-[20px] font-bold text-[#b48325] leading-none">
+                {l1.total_members || 0}
               </div>
-
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">Active Members</span>
-                <span className="text-white text-[14px] font-bold mt-0.5 block">
-                  {l1.valid_members || 0}
-                </span>
+              <div className="text-[12px] text-[#b48325]/90 mt-1.5 font-normal">
+                Users
               </div>
-
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Promotion Income
-                </span>
-                <span className="text-[#38bdf8] text-[14px] font-bold mt-0.5 block">
-                  {currencySymbol}{formatAmount(l1.total_earnings || 0)}
-                </span>
+            </div>
+            <div>
+              <div className="text-[20px] font-bold text-[#b48325] leading-none">
+                {formatAmount(l1.total_earnings || 0)}
+              </div>
+              <div className="text-[12px] text-[#b48325]/90 mt-1.5 font-normal">
+                Rewards
               </div>
             </div>
           </div>
-
-          {/* LV2 Card */}
-          <div className="bg-[#111827] border border-white/5 rounded-[20px] p-4 shadow-sm space-y-3 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#0b0f19] border border-white/10 flex flex-col items-center justify-center text-white relative shadow-sm">
-                  <span className="text-[12px] font-black tracking-tight text-white/90">LV2</span>
-                </div>
-                <div className="text-[15px] font-bold text-[#38bdf8]">
-                  {l2.commission_rate || 10}%{" "}
-                  <span className="text-gray-400 text-[12px] font-normal">
-                    Commission
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 divide-x divide-white/5 pt-1 text-center">
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Members
-                </span>
-                <span className="text-white text-[16px] font-black mt-0.5 block">
-                  {l2.total_members || 0}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">Active Members</span>
-                <span className="text-white text-[14px] font-bold mt-0.5 block">
-                  {l2.valid_members || 0}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Promotion Income
-                </span>
-                <span className="text-[#38bdf8] text-[14px] font-bold mt-0.5 block">
-                  {currencySymbol}{formatAmount(l2.total_earnings || 0)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* LV3 Card */}
-          <div className="bg-[#111827] border border-white/5 rounded-[20px] p-4 shadow-sm space-y-3 relative overflow-hidden">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#0b0f19] border border-white/10 flex flex-col items-center justify-center text-white relative shadow-sm">
-                  <span className="text-[12px] font-black tracking-tight text-white/90">LV3</span>
-                </div>
-                <div className="text-[15px] font-bold text-[#38bdf8]">
-                  {l3.commission_rate || 5}%{" "}
-                  <span className="text-gray-400 text-[12px] font-normal">
-                    Commission
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 divide-x divide-white/5 pt-1 text-center">
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Members
-                </span>
-                <span className="text-white text-[16px] font-black mt-0.5 block">
-                  {l3.total_members || 0}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">Active Members</span>
-                <span className="text-white text-[14px] font-bold mt-0.5 block">
-                  {l3.valid_members || 0}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-gray-400 text-[11px] font-medium block">
-                  Promotion Income
-                </span>
-                <span className="text-[#38bdf8] text-[14px] font-bold mt-0.5 block">
-                  {currencySymbol}{formatAmount(l3.total_earnings || 0)}
-                </span>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        {/* Section: Team Details */}
-        <div className="space-y-3 pt-2">
-          
-          <div className="flex items-center justify-between">
-            <h2 className="text-slate-900 text-[16px] font-bold tracking-tight">
-              Team Details
-            </h2>
-            <span className="text-slate-500 text-[12px] font-semibold">
-              {currentLevelMembers.length} / {totalMembersCount}
-            </span>
+        {/* 3. Level 2 Card */}
+        <div
+          onClick={() => {
+            setActiveLevel(2);
+            setShowUsersModal(true);
+          }}
+          className="bg-gradient-to-r from-[#f5f3ff] via-[#faf5ff] to-[#f3e8ff] border border-purple-200/50 rounded-[20px] p-4 shadow-2xs flex items-center gap-3 cursor-pointer hover:shadow-xs active:scale-[0.99] transition-all"
+        >
+          {/* Frosted Badge */}
+          <div className="relative flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-full bg-white/80 shadow-xs flex items-center justify-center text-[#6d28d9] font-bold text-[12px]">
+              Lv2
+            </div>
+            <span className="text-[10px] text-[#6d28d9]/60 font-bold absolute -bottom-1 -right-0.5">/2</span>
           </div>
 
-          <div className="bg-[#111827] rounded-[20px] p-3.5 border border-white/5 shadow-md space-y-3">
+          {/* 3 Stats Columns */}
+          <div className="grid grid-cols-3 flex-1 text-center items-center">
+            <div>
+              <div className="text-[20px] font-bold text-[#6d28d9] leading-none">
+                {l2.commission_rate || 3}%
+              </div>
+              <div className="text-[12px] text-[#6d28d9]/90 mt-1.5 font-normal">
+                Commission
+              </div>
+            </div>
+            <div>
+              <div className="text-[20px] font-bold text-[#6d28d9] leading-none">
+                {l2.total_members || 0}
+              </div>
+              <div className="text-[12px] text-[#6d28d9]/90 mt-1.5 font-normal">
+                Users
+              </div>
+            </div>
+            <div>
+              <div className="text-[20px] font-bold text-[#6d28d9] leading-none">
+                {formatAmount(l2.total_earnings || 0)}
+              </div>
+              <div className="text-[12px] text-[#6d28d9]/90 mt-1.5 font-normal">
+                Rewards
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Level 3 Card */}
+        <div
+          onClick={() => {
+            setActiveLevel(3);
+            setShowUsersModal(true);
+          }}
+          className="bg-gradient-to-r from-[#faf5ff] via-[#f5f3ff] to-[#ede9fe] border border-purple-200/50 rounded-[20px] p-4 shadow-2xs flex items-center gap-3 cursor-pointer hover:shadow-xs active:scale-[0.99] transition-all"
+        >
+          {/* Frosted Badge */}
+          <div className="relative flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-full bg-white/80 shadow-xs flex items-center justify-center text-[#7c3aed] font-bold text-[12px]">
+              Lv3
+            </div>
+            <span className="text-[10px] text-[#7c3aed]/60 font-bold absolute -bottom-1 -right-0.5">/3</span>
+          </div>
+
+          {/* 3 Stats Columns */}
+          <div className="grid grid-cols-3 flex-1 text-center items-center">
+            <div>
+              <div className="text-[20px] font-bold text-[#7c3aed] leading-none">
+                {l3.commission_rate || 1}%
+              </div>
+              <div className="text-[12px] text-[#7c3aed]/90 mt-1.5 font-normal">
+                Commission
+              </div>
+            </div>
+            <div>
+              <div className="text-[20px] font-bold text-[#7c3aed] leading-none">
+                {l3.total_members || 0}
+              </div>
+              <div className="text-[12px] text-[#7c3aed]/90 mt-1.5 font-normal">
+                Users
+              </div>
+            </div>
+            <div>
+              <div className="text-[20px] font-bold text-[#7c3aed] leading-none">
+                {formatAmount(l3.total_earnings || 0)}
+              </div>
+              <div className="text-[12px] text-[#7c3aed]/90 mt-1.5 font-normal">
+                Rewards
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Rules & Explanation Paragraphs */}
+        <div className="text-[13px] text-gray-800 leading-relaxed space-y-2 mt-4 px-1 pb-4">
+          <p>
+            When a friend you invite registers and invests, you immediately receive a cash reward equal to 36% of their investment amount.
+          </p>
+          <p>
+            When a member of your Level 2 team invests, you receive a 3% cash reward.
+          </p>
+          <p>
+            When a member of your Level 3 team invests, you receive a 1% cash reward.
+          </p>
+          <p>
+            Once your team members invest, the cash rewards are immediately credited to your account balance and are available for instant withdrawal.
+          </p>
+        </div>
+
+      </div>
+
+      {/* Users List Modal */}
+      {showUsersModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-t-[28px] sm:rounded-3xl w-full max-w-[440px] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-gray-100">
             
-            {/* Level Tabs Selector with Blue Highlight */}
-            <div className="bg-[#0b0f19] border border-white/5 p-1 rounded-xl grid grid-cols-3 gap-1">
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-gray-900">Team Members</h3>
+                <p className="text-xs text-gray-500">Total: {totalMembersCount} users</p>
+              </div>
+              <button
+                onClick={() => setShowUsersModal(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Level Tabs */}
+            <div className="px-5 pt-3 pb-2 flex gap-2">
               {[1, 2, 3].map((lvl) => (
                 <button
                   key={lvl}
-                  type="button"
                   onClick={() => setActiveLevel(lvl)}
-                  className={`py-2 rounded-lg text-[13px] font-bold transition-all relative cursor-pointer text-center ${
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     activeLevel === lvl
-                      ? "bg-[#111827] text-[#38bdf8] shadow-sm"
-                      : "text-gray-400 hover:text-white"
+                      ? "bg-slate-900 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  LV{lvl}
-                  {activeLevel === lvl && (
-                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-[#0284c7] rounded-full" />
-                  )}
+                  Level {lvl}
                 </button>
               ))}
             </div>
 
-            {/* List Content */}
-            <div className="pt-2">
+            {/* Members List */}
+            <div className="p-5 overflow-y-auto flex-1 space-y-2.5">
               {isLoadingMembers ? (
-                <div className="flex flex-col items-center justify-center py-10">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#0284c7] mb-2" />
-                  <span className="text-[12px] text-gray-500 font-medium">
-                    Loading level {activeLevel} records...
-                  </span>
+                <div className="py-12 flex flex-col items-center justify-center">
+                  <Loader2 className="w-6 h-6 animate-spin text-slate-800 mb-2" />
+                  <span className="text-xs text-gray-500">Loading members...</span>
                 </div>
               ) : currentLevelMembers.length > 0 ? (
-                <div className="space-y-2.5">
-                  {currentLevelMembers.map((member) => {
-                    const memberDeposit = member.deposits?.reduce(
-                      (sum, d) => sum + parseFloat(d.amount || 0),
-                      0
-                    ) || 0;
-
-                    return (
-                      <div
-                        key={member.id}
-                        className="bg-[#0b0f19] border border-white/5 rounded-xl p-3 flex items-center justify-between hover:border-[#0284c7]/30 transition-all"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] font-bold text-[12px]">
-                            {(member.phone || member.username || "M").slice(0, 2).toUpperCase()}
-                          </div>
-                          <div>
-                            <h4 className="text-white text-[13px] font-bold leading-tight">
-                              {member.phone || member.username || `Member #${member.id.slice(-4)}`}
-                            </h4>
-                            <div className="flex items-center gap-1 text-gray-400 text-[10.5px] mt-0.5">
-                              <Calendar size={10} className="text-[#38bdf8]" />
-                              <span>{formatDate(member.created_at || member.joined_at) || 'Recently joined'}</span>
-                            </div>
-                          </div>
+                currentLevelMembers.map((member) => (
+                  <div
+                    key={member.id}
+                    className="p-3 bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-purple-100 text-purple-700 font-bold text-xs flex items-center justify-center">
+                        {(member.phone || member.username || "U").slice(0, 2).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-gray-900">
+                          {member.phone || member.username || `User #${member.id}`}
                         </div>
-
-                        <div className="text-right">
-                          <span className="text-gray-400 text-[10.5px] block font-medium">
-                            Deposit
-                          </span>
-                          <span className="text-[#38bdf8] text-[13.5px] font-black">
-                            {currencySymbol}{formatAmount(memberDeposit)}
-                          </span>
+                        <div className="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                          <Calendar size={11} />
+                          <span>{formatDate(member.created_at || member.joined_at) || "Joined recently"}</span>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] text-gray-400 block">Deposit</span>
+                      <span className="text-xs font-bold text-slate-900">
+                        {currencySymbol} {formatAmount(member.total_deposits || 0)}
+                      </span>
+                    </div>
+                  </div>
+                ))
               ) : (
-                <div className="py-10 text-center text-gray-400 text-[13px] font-medium">
-                  No data available.
+                <div className="py-12 text-center text-gray-400 text-xs">
+                  No registered members yet for Level {activeLevel}.
                 </div>
               )}
             </div>
 
           </div>
-
         </div>
+      )}
 
-      </div>
-
-      {/* QR Code Modal */}
-      {showQRModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#111827] border border-white/10 rounded-[24px] p-6 max-w-[340px] w-full text-center space-y-4 shadow-2xl relative">
+      {/* Rewards History Modal */}
+      {showRewardsModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-t-[28px] sm:rounded-3xl w-full max-w-[440px] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-gray-100">
             
-            <button
-              onClick={() => setShowQRModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white p-1 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-            >
-              <X size={18} />
-            </button>
-
-            <h3 className="text-white font-bold text-[17px] tracking-tight pt-1">
-              Invite QR Code
-            </h3>
-
-            <div className="bg-white p-4 rounded-2xl inline-block shadow-lg">
-              <QRCode
-                value={invitationLink || "https://goldengreatland.com"}
-                size={180}
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                viewBox={`0 0 180 180`}
-              />
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-gray-900">Commission Overview</h3>
+                <p className="text-xs text-gray-500">
+                  Total Rewards: {currencySymbol} {formatAmount(totalTeamCommission || 0)}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowRewardsModal(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X size={16} />
+              </button>
             </div>
 
-            <div className="bg-[#0b0f19] border border-white/5 rounded-xl p-3">
-              <span className="text-gray-400 text-[11px] font-medium block">
-                Your Invite Code
-              </span>
-              <span className="text-white text-[17px] font-black font-mono tracking-wider mt-0.5 block">
-                {invitationCode}
-              </span>
-            </div>
+            {/* Content Summary */}
+            <div className="p-5 space-y-3 overflow-y-auto">
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 p-4 rounded-2xl">
+                <span className="text-xs text-amber-800 font-medium">Level 1 Direct Referral (36%)</span>
+                <div className="text-lg font-bold text-amber-900 mt-1">
+                  {currencySymbol} {formatAmount(l1.total_earnings || 0)}
+                </div>
+              </div>
 
-            <button
-              onClick={handleCopyLink}
-              className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:from-[#0369a1] hover:to-[#075985] text-white font-bold py-3 rounded-xl text-[14px] shadow-md transition-all active:scale-[0.99] cursor-pointer"
-            >
-              {copiedLink ? "Link Copied!" : "Copy Invite Link"}
-            </button>
+              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200/60 p-4 rounded-2xl">
+                <span className="text-xs text-purple-800 font-medium">Level 2 Secondary Referral (3%)</span>
+                <div className="text-lg font-bold text-purple-900 mt-1">
+                  {currencySymbol} {formatAmount(l2.total_earnings || 0)}
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200/60 p-4 rounded-2xl">
+                <span className="text-xs text-violet-800 font-medium">Level 3 Team Referral (1%)</span>
+                <div className="text-lg font-bold text-violet-900 mt-1">
+                  {currencySymbol} {formatAmount(l3.total_earnings || 0)}
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  setShowRewardsModal(false);
+                  router.push("/dashboard/transactions");
+                }}
+                className="w-full mt-2 py-3 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-black transition-colors cursor-pointer"
+              >
+                <span>View Full Transaction History</span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
 
           </div>
         </div>
@@ -535,4 +489,3 @@ export default function TeamPage() {
     </div>
   );
 }
-

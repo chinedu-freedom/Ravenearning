@@ -19,9 +19,9 @@ const poppins = Poppins({
 });
 
 export async function generateMetadata() {
-  const siteUrl = "https://ravenearning.vercel.app";
-  let siteName = "Ravenearning";
-  let siteTitle = "Ravenearning - Smart Mining & Earnings Platform";
+  const siteUrl = "https://suncerestcapital.com";
+  let siteName = "suncerestcapital";
+  let siteTitle = "suncerestcapital - Smart Mining & Earnings Platform";
 
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_URL;
@@ -99,11 +99,11 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
     >
       <head>
-        <meta property="og:image" content="https://ravenearning.vercel.app/logo.png" />
+        <meta property="og:image" content="https://suncerestcapital.com/logo.png" />
         <meta property="og:image:width" content="800" />
         <meta property="og:image:height" content="800" />
         <meta property="og:image:type" content="image/png" />
-        <link rel="image_src" href="https://ravenearning.vercel.app/logo.png" />
+        <link rel="image_src" href="https://suncerestcapital.com/logo.png" />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>

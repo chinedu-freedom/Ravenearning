@@ -22,14 +22,14 @@ export default function WelcomeNoticeModal() {
   };
 
   const handleTelegramClick = () => {
-    const telegramUrl = settings.telegram_support || "https://t.me/ravenearning780";
+    const telegramUrl = settings.telegram_support || "https://t.me/suncerestcapital";
     window.open(telegramUrl, "_blank", "noopener,noreferrer");
     handleDismiss();
   };
 
   if (!isOpen) return null;
 
-  const siteName = settings.site_name || "Ravenearning";
+  const siteName = settings.site_name || "suncerestcapital";
   const regBonus = Number(settings.registration_bonus ?? 100);
   const refComm = Number(settings.level1_commission || 30);
 

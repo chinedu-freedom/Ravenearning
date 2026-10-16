@@ -117,10 +117,10 @@ const Input = React.forwardRef(
     return (
       <div className="relative w-full">
         {prefix && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none select-none text-gray-800 font-semibold text-sm z-10">
-            {Icon && <Icon className="w-4 h-4 text-gray-700 shrink-0" />}
+          <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none select-none text-white font-semibold text-sm z-10">
+            {Icon && <Icon className="w-4 h-4 text-slate-300 shrink-0" />}
             <span>{prefix}</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-white/30">|</span>
           </div>
         )}
         <input
@@ -133,16 +133,13 @@ const Input = React.forwardRef(
           onBlur={handleBlur}
           placeholder={placeholder || " "}
           className={cn(
-            "peer block w-full rounded-md border border-gray-300 bg-white px-3 py-3 text-sm text-black",
-            "focus:border-[#4fb3ff] focus:outline-none focus:ring-1 focus:ring-[#93c5fd] transition-all duration-150",
+            "peer block w-full h-12 rounded-full border border-white/20 bg-black/20 px-5 py-3 text-sm text-white placeholder-slate-400 backdrop-blur-sm",
+            "focus:border-[#4fb3ff] focus:outline-none focus:ring-2 focus:ring-[#4fb3ff]/30 transition-all duration-200",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            prefix ? (Icon ? "pl-[76px]" : "pl-16") : "",
-            isPassword ? "pr-10" : "",
+            prefix ? (Icon ? "pl-[82px]" : "pl-[68px]") : "pl-5",
+            isPassword ? "pr-12" : "",
             className
           )}
-          style={{
-            boxShadow: "inset 0 0 0 1000px white",
-          }}
           {...props}
         />
 
@@ -150,18 +147,18 @@ const Input = React.forwardRef(
           <label
             htmlFor={generatedId}
             className={cn(
-              "absolute left-3 pointer-events-none transition-all duration-200",
-              "text-gray-500",
+              "absolute left-5 pointer-events-none transition-all duration-200",
+              "text-slate-400",
               (shouldFloatLabel || prefix)
                 ? [
-                    "-top-2 text-xs font-medium text-[#4fb3ff]",
-                    "bg-white px-1",
+                    "-top-2.5 text-xs font-semibold text-[#4fb3ff]",
+                    "bg-[#080d1a] px-2.5 rounded-full shadow-xs",
                   ].join(' ')
                 : [
-                    "top-3 text-sm",
+                    "top-3.5 text-sm",
                     "bg-transparent"
                   ].join(' '),
-              "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[#4fb3ff] peer-focus:bg-white peer-focus:px-1"
+              "peer-focus:-top-2.5 peer-focus:text-xs peer-focus:font-semibold peer-focus:text-[#4fb3ff] peer-focus:bg-[#080d1a] peer-focus:px-2.5 peer-focus:rounded-full"
             )}
           >
             {label}
@@ -172,14 +169,14 @@ const Input = React.forwardRef(
           <button
             type="button"
             onClick={() => setShowPassword((s) => !s)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+            className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors focus:outline-none p-1 cursor-pointer"
             tabIndex={-1}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         )}
 
-        {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        {error && <p className="text-red-400 text-xs mt-1.5 ml-4">{error}</p>}
       </div>
     );
   }

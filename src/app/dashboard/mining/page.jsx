@@ -126,7 +126,7 @@ export default function MiningPlansPage() {
             VIP Packages
           </h1>
           <p className="text-slate-500 text-[12.5px] font-medium mt-0.5">
-            Select a Raven projector package
+            Select a suncerestcapital package
           </p>
         </div>
         <Link href="/dashboard/investments" className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200/80 shadow-xs">

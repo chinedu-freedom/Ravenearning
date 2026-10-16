@@ -25,7 +25,7 @@ export default function VerifyOtpPage() {
 
   const { data: settingsResponse, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsResponse?.settings || {};
-  const siteName = settings.site_name || "Ravenearning";
+  const siteName = settings.site_name || "suncerestcapital";
 
   useEffect(() => {
     setIsMounted(true);
@@ -103,26 +103,28 @@ export default function VerifyOtpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      {/* Left side (OTP Form) */}
-      <div className="min-h-screen flex flex-col justify-center items-center w-full lg:w-1/2 px-8 lg:px-16 py-12">
-        <div className="w-full max-w-sm text-center flex flex-col items-center">
-          <div className="w-16 h-16 rounded-full overflow-hidden shadow-sm flex items-center justify-center bg-gray-50 border border-gray-100 mb-4">
-            <Image 
-              src={logoImg} 
-              alt="Logo" 
-              width={64} 
-              height={64} 
-              className="w-full h-full object-cover" 
-              priority 
-            />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify OTP</h2>
-          <p className="text-sm text-gray-500 mb-8">
-            Enter the 4-digit code sent to your phone number to access {siteName}.
-          </p>
+    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] p-4 sm:p-6 select-none">
+      <div 
+        className="relative z-10 w-full max-w-[420px] rounded-none shadow-2xl p-7 sm:p-9 bg-[#080d1a] bg-top bg-no-repeat overflow-hidden my-6 animate-in fade-in zoom-in-95 duration-200"
+        style={{ backgroundImage: "url('/images/auth/card_bg.jpg')", backgroundSize: "100% auto" }}
+      >
+        {/* Soft bottom gradient to ensure pristine form field contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#080d1a]/60 to-[#080d1a]/95 pointer-events-none" />
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div className="relative z-10">
+          {/* Top clearance so the 3D gold logo emblem is showcased prominently */}
+          <div className="h-28 sm:h-32" />
+
+          <div className="mb-7 text-center">
+            <h2 className="text-2xl font-black text-white mb-2 tracking-tight drop-shadow-md">
+              Verify OTP
+            </h2>
+            <p className="text-sm text-slate-300 mb-8">
+              Enter the 4-digit code sent to your phone number to access {siteName}.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
             <div className="flex justify-center gap-2">
               {otp.map((digit, index) => (
                 <Input
@@ -132,28 +134,28 @@ export default function VerifyOtpPage() {
                   inputMode="numeric"
                   maxLength={1}
                   value={digit}
-                  onChange={(e) => handleChange(e.target.value, index)}
+                  onChange={(e) => handleOtpChange(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 focus:ring-2 focus:ring-[#4fb3ff]"
+                  className="w-12 h-12 text-center text-lg font-semibold border-white/20 focus:ring-2 focus:ring-[#4fb3ff]"
                 />
               ))}
             </div>
 
             <Button
               type="submit"
-              className="w-full h-10 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-95 active:brightness-90 rounded-md text-sm font-medium transition-all shadow-sm cursor-pointer"
+              className="w-full h-12 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-105 active:brightness-95 rounded-full text-base font-bold transition-all shadow-lg shadow-sky-500/25 cursor-pointer"
               disabled={verifyOtpMutation.isPending}
             >
               {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
             </Button>
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-center text-slate-300">
               Didn't receive the code?{" "}
               <button
                 type="button"
                 onClick={handleResend}
                 disabled={resendOtpMutation.isPending}
-                className={`font-medium cursor-pointer hover:underline ${
+                className={`font-bold cursor-pointer hover:underline ${
                   resendOtpMutation.isPending
                     ? "text-gray-400 cursor-not-allowed"
                     : "text-[#4fb3ff]"
@@ -165,9 +167,6 @@ export default function VerifyOtpPage() {
           </form>
         </div>
       </div>
-
-      {/* Right side (Image) */}
-       
     </div>
   );
 }

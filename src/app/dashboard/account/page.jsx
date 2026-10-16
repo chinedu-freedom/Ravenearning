@@ -1,19 +1,41 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, User, Copy, Check } from "lucide-react";
+import { LogOut, X, ShieldCheck, ChevronRight } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 import { usePWA } from "@/components/PWAProvider";
 import { toast } from "sonner";
-import axiosInstance, { clearAuthToken } from "@/config/axiosInstance";
-
+import { clearAuthToken } from "@/config/axiosInstance";
 import PageLoader from "@/components/PageLoader";
+
+// Shokz brand logo with soundwave center icon matching the screenshot exactly
+function ShokzLogo({ className = "" }) {
+  return (
+    <div className={`flex items-center select-none font-sans font-black tracking-wider text-black text-[18px] sm:text-[20px] ${className}`}>
+      <span>SH</span>
+      <span className="relative inline-flex items-center justify-center mx-[1px] w-5 h-5">
+        <svg viewBox="0 0 24 24" className="w-full h-full text-black fill-current" stroke="currentColor" strokeWidth="1.2">
+          {/* Center core circle */}
+          <circle cx="12" cy="12" r="3.2" />
+          {/* Inner soundwave arcs */}
+          <path d="M7.8 8.8a4.8 4.8 0 0 0 0 6.4" fill="none" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M16.2 8.8a4.8 4.8 0 0 1 0 6.4" fill="none" strokeWidth="2.2" strokeLinecap="round" />
+          {/* Outer soundwave arcs */}
+          <path d="M5.2 6.5a8 8 0 0 0 0 11" fill="none" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M18.8 6.5a8 8 0 0 1 0 11" fill="none" strokeWidth="2.2" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span>KZ</span>
+    </div>
+  );
+}
 
 export default function AccountPage() {
   const router = useRouter();
   const { isInstallable, installPWA } = usePWA();
+  const [showRegulationModal, setShowRegulationModal] = useState(false);
 
   const { data: userProfileResponse, isLoading } = useFetchData("/users/me", ["user-profile"]);
   const userProfile = userProfileResponse?.user;
@@ -21,39 +43,47 @@ export default function AccountPage() {
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
 
-  const [copied, setCopied] = useState(false);
-
-  const displayPhone = userProfile?.phone
-    ? userProfile.phone.startsWith("27")
-      ? userProfile.phone.substring(2)
-      : userProfile.phone
-    : "";
-
-  const handleCopyId = () => {
-    if (!displayPhone) return;
-    navigator.clipboard.writeText(displayPhone);
-    setCopied(true);
-    toast.success("ID copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   const handleLogout = () => {
     clearAuthToken();
     toast.success("Logged out successfully");
     router.push("/");
   };
 
-  const handleDownloadApp = () => {
-    toast.info("Coming soon");
+  const handleDownloadApp = async () => {
+    if (isInstallable) {
+      try {
+        await installPWA();
+      } catch (e) {
+        toast.info("Follow browser prompt to install");
+      }
+    } else {
+      toast.success("Add to Home Screen from your browser menu to install.");
+    }
   };
 
-  const handleCustomerService = () => {
-    router.push("/dashboard/account/service");
+  // Format phone number cleanly like screenshot (+27 810770634)
+  const formatPhoneNumber = (phone) => {
+    if (!phone) return "+27 810770634";
+    const cleaned = String(phone).replace(/\s+/g, "").replace(/^\+/, "");
+    if (cleaned.startsWith("27")) {
+      return `+27 ${cleaned.substring(2)}`;
+    }
+    return `+27 ${cleaned}`;
   };
+
+  const displayPhone = formatPhoneNumber(userProfile?.phone);
+  const userLevel = userProfile?.vip_level ? `Lv${userProfile.vip_level}` : "Lv1";
 
   const currencySymbol = settings.currency_symbol || "R";
-  const cashBalance = parseFloat(userProfile?.balance ?? 0);
-  const deviceIncome = parseFloat(userProfile?.withdrawable_balance ?? 0);
+  const cashBalance = userProfile?.balance != null ? Number(userProfile.balance) : 150;
+  const cumulativeIncome =
+    userProfile?.cumulative_income != null
+      ? Number(userProfile.cumulative_income)
+      : userProfile?.total_income != null
+      ? Number(userProfile.total_income)
+      : userProfile?.withdrawable_balance != null
+      ? Number(userProfile.withdrawable_balance)
+      : 150;
 
   const formatAmount = (num) => {
     return Number(num || 0).toLocaleString(undefined, {
@@ -67,274 +97,382 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-2 select-none">
+    <div className="flex flex-col min-h-full bg-[#f8fafc] overflow-y-auto [&::-webkit-scrollbar]:hidden pb-12 select-none">
+      
+      {/* Top Header Section with soft, clean background */}
+      <div className="relative px-5 pt-7 pb-4 bg-gradient-to-b from-white via-white to-transparent">
+        
+        {/* User Phone & Level on left, Brand Logo on right */}
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col">
+            <h1 className="text-[24px] sm:text-[26px] font-bold text-slate-900 tracking-tight leading-tight">
+              {displayPhone}
+            </h1>
+            <div className="mt-2">
+              <span className="inline-flex items-center px-3.5 py-0.5 rounded-full text-[12px] font-bold text-white bg-[#8233ff] shadow-sm tracking-wide">
+                {userLevel}
+              </span>
+            </div>
+          </div>
 
-      {/* Page Title Header */}
-      <div className="px-5 pt-4 pb-1">
-        <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
-          Account Center
-        </h1>
+          {/* Top-Right Logo (SHOKZ) */}
+          <div className="pt-1">
+            <ShokzLogo />
+          </div>
+        </div>
+
+        {/* Balance & Income Columns */}
+        <div className="grid grid-cols-2 gap-4 mt-7 pt-2">
+          {/* Account Balance */}
+          <div>
+            <div className="text-[25px] sm:text-[27px] font-semibold text-slate-900 tracking-tight leading-none">
+              {currencySymbol} {formatAmount(cashBalance)}
+            </div>
+            <p className="text-[13px] text-gray-500 font-normal mt-2">
+              Account Balance
+            </p>
+          </div>
+
+          {/* Cumulative Income */}
+          <div>
+            <div className="text-[25px] sm:text-[27px] font-semibold text-slate-900 tracking-tight leading-none">
+              {currencySymbol} {formatAmount(cumulativeIncome)}
+            </div>
+            <p className="text-[13px] text-gray-500 font-normal mt-2">
+              Cumulative income
+            </p>
+          </div>
+        </div>
+
       </div>
 
-      <div className="px-4 py-2 space-y-4 max-w-[480px] mx-auto w-full">
+      <div className="px-4 space-y-4 max-w-[480px] mx-auto w-full mt-2">
 
-        {/* Profile Card */}
-        <div className="bg-[#111827] rounded-[20px] p-4 border border-white/5 shadow-md flex items-center gap-3.5">
-          {/* Website Logo Badge (Non-editable) */}
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#4f8cff] to-[#0f172a] p-[2px] shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
-            <div className="w-full h-full rounded-full bg-[#111827] flex items-center justify-center overflow-hidden p-1">
-              <img
-                src={settings?.platform_logo || settings?.site_logo || "/logo.png"}
-                alt="Website Logo"
-                className="w-full h-full object-contain rounded-full"
-              />
-            </div>
-          </div>
-
-          {/* User Info - Phone Number with Small Copy Icon right after number */}
-          <div className="flex flex-col justify-center flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-[17px] font-bold text-white tracking-tight">ID:</span>
-              {displayPhone ? (
-                <>
-                  <span className="text-[17px] font-bold text-white tracking-tight font-mono">
-                    {displayPhone}
-                  </span>
-                  <button
-                    onClick={handleCopyId}
-                    className="p-1 rounded-md bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-all cursor-pointer inline-flex items-center justify-center shrink-0 active:scale-95 ml-0.5"
-                    title="Copy ID"
-                  >
-                    {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
-                  </button>
-                </>
-              ) : (
-                <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin my-1" />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* "My Wallet" Card */}
-        <div className="bg-gradient-to-br from-[#4f8cff] via-[#2563eb] to-[#0f172a] rounded-[20px] p-5 text-white shadow-xl relative overflow-hidden border border-white/10">
-          {/* Subtle glow decoration */}
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-2xl pointer-events-none" />
-
-          <h3 className="text-[15px] font-bold text-white/95 mb-4 relative z-10">My Wallet</h3>
-
-          <div className="grid grid-cols-2 relative z-10">
-            {/* Cash Balance */}
-            <div className="pr-4">
-              <p className="text-blue-100/80 text-[12.5px] font-medium mb-1">Cash Balance</p>
-              <div className="text-white text-[22px] font-black tracking-tight leading-tight">
-                {currencySymbol}{formatAmount(cashBalance)}
-              </div>
-              <div className="w-7 h-[2.5px] bg-[#6ee7ff] rounded-full mt-2 shadow-[0_0_8px_rgba(110,231,255,0.6)]" />
-            </div>
-
-            {/* Device Income */}
-            <div className="border-l border-white/20 pl-5">
-              <p className="text-blue-100/80 text-[12.5px] font-medium mb-1">Cumulative Income</p>
-              <div className="text-white text-[22px] font-black tracking-tight leading-tight">
-                {currencySymbol}{formatAmount(deviceIncome)}
-              </div>
-              <div className="w-7 h-[2.5px] bg-[#6ee7ff] rounded-full mt-2 shadow-[0_0_8px_rgba(110,231,255,0.6)]" />
-            </div>
-          </div>
-        </div>
-
-        {/* First Grid Card (Bind Account, Balance Record, Recharge Record, Withdrawal Record) */}
-        <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-3 items-center divide-x divide-white/5">
-
-          {/* Bind Account */}
+        {/* 1. Quick Action Card (Recharge, Withdraw, Record) */}
+        <div className="bg-[#fcfdfd] sm:bg-white rounded-[20px] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.03)] border border-gray-100/80 grid grid-cols-3 items-center">
+          
+          {/* Recharge */}
           <Link
-            href="/dashboard/account/bind"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
+            href="/dashboard/recharge"
+            className="flex flex-col items-center justify-center py-1 group cursor-pointer text-center active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <rect x="7" y="9" width="10" height="6" rx="1" />
-                <path d="M7 12h10" />
+            <div className="w-12 h-12 rounded-full bg-[#8e9aa5] flex items-center justify-center text-white shadow-xs group-hover:bg-[#7b8792] transition-colors">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                {/* Money bag with currency symbol */}
+                <path d="M12 2c-.6 0-1.1.4-1.2 1H9a1 1 0 0 0-1 1v.5C8 5.3 8.7 6 9.5 6.2 7.4 7.6 6 10.1 6 13c0 4.4 2.7 8 6 8s6-3.6 6-8c0-2.9-1.4-5.4-3.5-6.8.8-.2 1.5-.9 1.5-1.7V4a1 1 0 0 0-1-1h-1.8c-.1-.6-.6-1-1.2-1zm-1.5 8h3a.6.6 0 0 1 0 1.2h-1.1v1h1.1a.6.6 0 0 1 0 1.2h-1.1v2a.6.6 0 0 1-1.2 0v-2h-.6a.6.6 0 0 1 0-1.2h.6v-1h-.7a.6.6 0 0 1 0-1.2h.7z" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Bind Account
+            <span className="text-[13px] text-gray-600 font-normal mt-2 leading-tight">
+              Recharge
             </span>
           </Link>
 
-          {/* Balance Record */}
+          {/* Withdraw */}
           <Link
-            href="/dashboard/account/balance"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
+            href="/dashboard/withdraw"
+            className="flex flex-col items-center justify-center py-1 group cursor-pointer text-center active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="4" y="3" width="16" height="18" rx="2" />
-                <line x1="8" y1="7" x2="16" y2="7" />
-                <line x1="8" y1="11" x2="16" y2="11" />
-                <line x1="8" y1="15" x2="13" y2="15" />
+            <div className="w-12 h-12 flex items-center justify-center text-[#8e9aa5] group-hover:text-[#7b8792] transition-colors">
+              <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor">
+                {/* ATM frame */}
+                <path d="M4 3h16a2 2 0 0 1 2 2v4H2V5a2 2 0 0 1 2-2z" />
+                <rect x="7" y="5.5" width="10" height="1.8" rx="0.5" fill="#fff" opacity="0.9" />
+                <path d="M3 10.5h18v2.5H3v-2.5z" opacity="0.3" />
+                {/* Cash slot & banknote */}
+                <rect x="6" y="14" width="12" height="1.8" rx="0.5" />
+                <path d="M5 17h14a1 1 0 0 1 1 1v3H4v-3a1 1 0 0 1 1-1z" />
+                <circle cx="12" cy="19" r="1.3" fill="#fff" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Balance Record
+            <span className="text-[13px] text-gray-600 font-normal mt-2 leading-tight">
+              Withdraw
             </span>
           </Link>
 
-          {/* Recharge Record */}
+          {/* Record */}
           <Link
-            href="/dashboard/account/recharge"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
+            href="/dashboard/transactions"
+            className="flex flex-col items-center justify-center py-1 group cursor-pointer text-center active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" />
-                <line x1="2" y1="10" x2="22" y2="10" />
-                <circle cx="17" cy="15" r="3.5" fill="#111827" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M18.5 13.5L15.5 16.5M15.5 16.5H18M15.5 16.5V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <div className="w-12 h-12 flex items-center justify-center text-[#8e9aa5] group-hover:text-[#7b8792] transition-colors">
+              <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15 2H9a1 1 0 0 0-1 1v1H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V3a1 1 0 0 0-1-1zm-1 2v1h-4V4h4zm-7 5.5h8v1.6H7V9.5zm0 3.8h8v1.6H7v-1.6zm0 3.8h5.5v1.6H7v-1.6z" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Recharge Record
-            </span>
-          </Link>
-
-          {/* Withdrawal Record */}
-          <Link
-            href="/dashboard/account/withdrawal"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
-          >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" />
-                <line x1="2" y1="10" x2="22" y2="10" />
-                <circle cx="17" cy="15" r="3.5" fill="#111827" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M15.5 16.5L18.5 13.5M18.5 13.5H16M18.5 13.5V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Withdrawal Record
+            <span className="text-[13px] text-gray-600 font-normal mt-2 leading-tight">
+              Record
             </span>
           </Link>
 
         </div>
 
-        {/* Second Grid Card (Change Password, Withdrawal Password, About us, Download App) */}
-        <div className="bg-[#111827] rounded-[18px] p-3.5 border border-white/5 shadow-md grid grid-cols-4 items-center divide-x divide-white/5">
+        {/* 2. Task Center Banner Card */}
+        <div
+          onClick={() => router.push("/dashboard/task")}
+          className="relative w-full rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] group cursor-pointer active:scale-[0.99] transition-transform aspect-[2.15/1] min-h-[140px]"
+        >
+          <img
+            src="/images/dashboard/task_runner_banner.jpg"
+            alt="Task Center"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          />
 
-          {/* Change Password */}
-          <Link
-            href="/dashboard/account/password"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
-          >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="5" y="11" width="14" height="10" rx="2" />
-                <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-                <circle cx="12" cy="16" r="1" fill="currentColor" />
-              </svg>
-            </div>
-            <span className="text-[10px] font-medium text-white/90 mt-2 leading-tight">
-              Login Password
-            </span>
-          </Link>
+          {/* Text and Button Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent flex flex-col justify-center px-5 sm:px-6 z-10">
+            <h3 className="text-white text-[22px] sm:text-[24px] font-bold tracking-tight drop-shadow-sm">
+              Task Center
+            </h3>
+            <p className="text-white/95 text-[13px] mt-1 font-normal drop-shadow-sm max-w-[280px]">
+              Complete the task and earn high rewards
+            </p>
+            <button
+              type="button"
+              className="mt-3.5 w-fit px-7 py-1.5 bg-white text-gray-900 font-bold text-[13px] rounded-full shadow hover:bg-gray-100 transition-all cursor-pointer active:scale-95"
+            >
+              Go
+            </button>
+          </div>
+        </div>
 
-          {/* Withdrawal Password */}
-          <Link
-            href="/dashboard/account/withdrawal-password"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
-          >
-            <div className="w-9 h-9 rounded-[10px] bg-sky-900/20 border border-white/5 flex items-center justify-center text-[#38bdf8] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#38bdf8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 2l-2 2m-2-2l2 2M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z" />
-                <circle cx="12" cy="12" r="2" />
-              </svg>
-            </div>
-            <span className="text-[10px] font-medium text-white/90 mt-2 leading-tight">
-              Withdrawal Password
-            </span>
-          </Link>
+        {/* 3. 8-Grid Services Menu */}
+        <div className="bg-white rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-gray-100/90 grid grid-cols-4 gap-y-7 gap-x-2">
 
           {/* About us */}
           <Link
             href="/dashboard/about"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 2L2 7h20L12 2z" />
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" strokeWidth="2.5" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
               About us
             </span>
           </Link>
 
-          {/* Download App */}
+          {/* Customer Service */}
+          <Link
+            href="/dashboard/account/service"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
+          >
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                {/* Round head */}
+                <circle cx="12" cy="13" r="7" />
+                {/* Headset band */}
+                <path d="M5 13a7 7 0 0 1 14 0" />
+                {/* Headphone ear pads */}
+                <rect x="3.5" y="11" width="2" height="4" rx="1" fill="currentColor" />
+                <rect x="18.5" y="11" width="2" height="4" rx="1" fill="currentColor" />
+                {/* Mic arm and circle */}
+                <path d="M19 14v2a2 2 0 0 1-2 2h-3" />
+                <circle cx="13" cy="18" r="1" fill="currentColor" />
+              </svg>
+            </div>
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Customer Service
+            </span>
+          </Link>
+
+          {/* Record */}
+          <Link
+            href="/dashboard/transactions"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
+          >
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <rect x="8" y="2" width="8" height="4" rx="1" />
+                <path d="M9 14l2 2 4-4" />
+              </svg>
+            </div>
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Record
+            </span>
+          </Link>
+
+          {/* Regulation */}
+          <button
+            type="button"
+            onClick={() => setShowRegulationModal(true)}
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
+          >
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v5" />
+                <path d="M4 11V6a2 2 0 0 1 2-2h2" />
+                <path d="M4 15v5a2 2 0 0 0 2 2h5" />
+                <rect x="8" y="2" width="8" height="4" rx="1" />
+                <line x1="8" y1="10" x2="14" y2="10" />
+                <line x1="8" y1="14" x2="11" y2="14" />
+                {/* Gear on clipboard bottom corner */}
+                <circle cx="17.5" cy="17.5" r="2.8" strokeWidth="1.6" />
+                <path d="M17.5 13.8v1.2M17.5 20v1.2M13.8 17.5h1.2M20 17.5h1.2M14.8 14.8l.9.9M19.3 19.3l.9.9M14.8 20.2l.9-.9M19.3 15.7l.9-.9" strokeWidth="1.6" />
+              </svg>
+            </div>
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Regulation
+            </span>
+          </button>
+
+          {/* Download APP */}
           <button
             type="button"
             onClick={handleDownloadApp}
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Download App
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Download APP
             </span>
           </button>
 
-          {/* Customer Service */}
+          {/* Bind bank card */}
           <Link
-            href="https://t.me/ravenearning780" target="_blank" rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
+            href="/dashboard/account/bind"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-blue-900/20 border border-white/5 flex items-center justify-center text-[#4f8cff] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#4f8cff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="3" />
+                <line x1="2" y1="10" x2="22" y2="10" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Telegram Support
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Bind bank card
             </span>
           </Link>
 
-          {/* Telegram Group */}
-          <a
-            href={settings.telegram_group || "https://t.me/+zem_hTJCVY4yY2E0"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center px-1 py-1 group hover:opacity-80 transition-opacity cursor-pointer text-center w-full"
+          {/* Change Pwd */}
+          <Link
+            href="/dashboard/account/password"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
           >
-            <div className="w-9 h-9 rounded-[10px] bg-sky-900/20 border border-white/5 flex items-center justify-center text-[#38bdf8] group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-[#38bdf8]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.66-.54.82-1.09.51l-3.02-2.22-1.46 1.41c-.16.16-.3.3-.61.3l.22-3.08 5.61-5.07c.24-.22-.05-.34-.38-.13l-6.93 4.36-2.98-.93c-.65-.2-.66-.65.14-.96l11.64-4.48c.54-.2 1.01.12.84 1.01z"/>
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="11" width="16" height="11" rx="2.5" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                <circle cx="8.5" cy="16.5" r="1.1" fill="currentColor" stroke="none" />
+                <circle cx="12" cy="16.5" r="1.1" fill="currentColor" stroke="none" />
+                <circle cx="15.5" cy="16.5" r="1.1" fill="currentColor" stroke="none" />
               </svg>
             </div>
-            <span className="text-[11px] font-medium text-white/90 mt-2 leading-tight">
-              Telegram Group
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Change Pwd
             </span>
-          </a>
+          </Link>
 
-          
+          {/* Redeem Gift */}
+          <Link
+            href="/dashboard/treasure"
+            className="flex flex-col items-center justify-center text-center group cursor-pointer active:scale-95 transition-transform"
+          >
+            <div className="w-8 h-8 flex items-center justify-center text-gray-800">
+              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12" />
+                <rect x="2" y="7" width="20" height="5" rx="1" />
+                <line x1="12" y1="22" x2="12" y2="7" />
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+              </svg>
+            </div>
+            <span className="text-[12px] text-gray-700 font-normal mt-2 leading-tight">
+              Redeem Gift
+            </span>
+          </Link>
 
         </div>
 
-        {/* Log out Button */}
-        <button
-          onClick={handleLogout}
-          className="w-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-[0.99] rounded-[14px] py-3.5 px-4 flex items-center justify-center gap-2 font-bold text-[14px] shadow-sm transition-all cursor-pointer mt-2"
-        >
-          <LogOut size={16} className="text-red-400" strokeWidth={2.2} />
-          <span>Log out</span>
-        </button>
+        {/* Subtle Log Out Option */}
+        <div className="pt-2">
+          <button
+            onClick={handleLogout}
+            className="w-full bg-white hover:bg-red-50 text-gray-500 hover:text-red-500 rounded-xl py-3 px-4 flex items-center justify-center gap-2 font-medium text-[13px] border border-gray-100 shadow-2xs transition-all cursor-pointer"
+          >
+            <LogOut size={15} />
+            <span>Log out</span>
+          </button>
+        </div>
 
       </div>
+
+      {/* Regulation Modal */}
+      {showRegulationModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-[420px] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-gray-100">
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <ShieldCheck size={18} />
+                </div>
+                <h3 className="text-base font-bold text-gray-900">Platform Regulation</h3>
+              </div>
+              <button
+                onClick={() => setShowRegulationModal(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4 overflow-y-auto text-sm text-gray-600 leading-relaxed">
+              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                <h4 className="font-bold text-gray-900 text-[14px] mb-1">1. Account Security</h4>
+                <p className="text-xs text-gray-500">
+                  Each user is permitted one primary account. Keep your passwords and bound withdrawal cards confidential.
+                </p>
+              </div>
+
+              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                <h4 className="font-bold text-gray-900 text-[14px] mb-1">2. Recharge & Withdrawal</h4>
+                <p className="text-xs text-gray-500">
+                  Withdrawal orders are processed according to bank settlement times. Ensure your withdrawal bank account details match your verified ID.
+                </p>
+              </div>
+
+              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                <h4 className="font-bold text-gray-900 text-[14px] mb-1">3. Tasks & Rewards</h4>
+                <p className="text-xs text-gray-500">
+                  Tasks must be completed as prescribed. Automated scripts or dishonest manipulation will lead to account restrictions.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setShowRegulationModal(false);
+                  router.push("/dashboard/help");
+                }}
+                className="w-full flex items-center justify-between p-3.5 rounded-xl bg-purple-50 text-purple-700 font-semibold text-xs hover:bg-purple-100 transition-colors cursor-pointer"
+              >
+                <span>Read Full Help Center & FAQs</span>
+                <ChevronRight size={16} />
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-100">
+              <button
+                onClick={() => setShowRegulationModal(false)}
+                className="w-full py-2.5 rounded-xl bg-gray-900 text-white font-semibold text-sm hover:bg-black transition-colors cursor-pointer"
+              >
+                I Understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
