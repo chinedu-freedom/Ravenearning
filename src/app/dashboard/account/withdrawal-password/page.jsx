@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Lock, ShieldCheck, KeyRound, Loader2, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Lock, ShieldCheck, KeyRound, Loader2, Eye, EyeOff, Info } from "lucide-react";
 import { useFetchData, usePut } from "@/hooks/useApi";
 import { toast } from "sonner";
 
@@ -58,74 +58,90 @@ export default function WithdrawalPasswordPage() {
       {
         onSuccess: () => {
           toast.dismiss();
+          toast.success(hasExistingPin ? "Withdrawal password updated successfully!" : "Withdrawal password set successfully!");
+          setCurrentPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
           setTimeout(() => {
             router.push("/dashboard/account");
-          }, 1000);
+          }, 800);
+        },
+        onError: (err) => {
+          toast.dismiss();
+          toast.error("Withdrawal Password Failed", {
+            description: err?.response?.data?.message || err?.message || "Could not update withdrawal password",
+          });
         }
       }
     );
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-24 select-none">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
       
-      {/* Header */}
-      <div className="bg-[#111827] px-4 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <button
-          onClick={() => router.push("/dashboard/account")}
-          className="w-9 h-9 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors text-gray-300 border border-white/5 cursor-pointer"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <h1 className="text-white/90 text-[16px] font-bold">
-          {hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"}
-        </h1>
-        <div className="w-9" />
+      {/* Top Header Bar - White background, Text on left, Logo on right */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push("/dashboard/account")}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back to Account"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            {hasExistingPin ? "Withdrawal Password" : "Set Withdrawal Password"}
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-4 space-y-4 max-w-[480px] mx-auto w-full">
-
-        {/* Hero Card */}
-        <div className="bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-[22px] p-5 text-white shadow-xl shadow-sky-950/20 relative overflow-hidden border border-sky-400/20">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
-          
-          <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-xs border border-white/25 text-white px-2.5 py-0.5 rounded-full text-[10.5px] font-bold tracking-wider mb-2.5">
-            <ShieldCheck size={12} className="text-sky-200" />
-            <span>PAYMENT SECURITY</span>
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
+        
+        {/* Security Overview Stats Card */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
+          <div>
+            <div className="text-[20px] sm:text-[22px] font-black text-slate-900 tracking-tight leading-tight">
+              Payment Security
+            </div>
+            <p className="text-[13px] text-slate-500 font-medium mt-1">
+              Required for all payouts & bank bindings
+            </p>
           </div>
-
-          <h2 className="text-white text-[20px] font-bold tracking-tight mb-1">
-            {hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"}
-          </h2>
-          <p className="text-sky-100 text-[12.5px] leading-relaxed">
-            {hasExistingPin 
-              ? "Enter your current password below to update your withdrawal password." 
-              : "Set your dedicated withdrawal password required for binding bank details and withdrawing funds."}
-          </p>
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+            <Lock size={22} className="stroke-[2.2]" />
+          </div>
         </div>
 
         {/* Form Card */}
-        <form onSubmit={handleSubmit} className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-4">
+        <form onSubmit={handleSubmit} className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
 
-          {/* Current Withdrawal Password (ONLY if user already set one!) */}
+          {/* Current Withdrawal Password */}
           {hasExistingPin && (
             <div className="space-y-1.5">
-              <label className="text-[13px] font-semibold text-white/90 block">
+              <label className="text-[12.5px] font-bold text-slate-700 block">
                 Current Withdrawal Password
               </label>
-              <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-                <Lock size={18} className="text-[#38bdf8] shrink-0" />
+              <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
                 <input
                   type={showCurrent ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Enter current withdrawal password"
-                  className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                  disabled={updatePinMutation.isPending}
+                  className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrent(!showCurrent)}
-                  className="text-gray-400 hover:text-white"
+                  className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                  aria-label="Toggle password visibility"
                 >
                   {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -135,22 +151,23 @@ export default function WithdrawalPasswordPage() {
 
           {/* New Withdrawal Password */}
           <div className="space-y-1.5">
-            <label className="text-[13px] font-semibold text-white/90 block">
-              {hasExistingPin ? "New Withdrawal Password" : "Withdrawal Password"}
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              {hasExistingPin ? "New Withdrawal Password" : "Create Withdrawal Password"}
             </label>
-            <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-              <KeyRound size={18} className="text-[#38bdf8] shrink-0" />
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
                 type={showNew ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter 4-6 digit withdrawal password"
-                className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                disabled={updatePinMutation.isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
               <button
                 type="button"
                 onClick={() => setShowNew(!showNew)}
-                className="text-gray-400 hover:text-white"
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
               >
                 {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -159,42 +176,53 @@ export default function WithdrawalPasswordPage() {
 
           {/* Confirm New Withdrawal Password */}
           <div className="space-y-1.5">
-            <label className="text-[13px] font-semibold text-white/90 block">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
               Confirm {hasExistingPin ? "New " : ""}Withdrawal Password
             </label>
-            <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-              <KeyRound size={18} className="text-[#38bdf8] shrink-0" />
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
                 type={showConfirm ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter withdrawal password"
-                className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                disabled={updatePinMutation.isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="text-gray-400 hover:text-white"
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
               >
                 {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Action Submit Button */}
           <button
             type="submit"
-            disabled={updatePinMutation.isPending}
-            className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
+            disabled={updatePinMutation.isPending || !newPassword || !confirmPassword || (hasExistingPin && !currentPassword)}
+            className="w-full bg-[#0f172a] hover:bg-[#021d3c] disabled:opacity-50 text-white font-bold py-3.5 rounded-xl text-[14.5px] shadow-md shadow-blue-950/15 cursor-pointer active:scale-[0.98] transition-all flex items-center justify-center gap-2 pt-3"
           >
             {updatePinMutation.isPending ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"
+              <span>{hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"}</span>
             )}
           </button>
 
         </form>
+
+        {/* Security Guidelines Card */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs space-y-2">
+          <div className="text-slate-800 font-bold text-[13px]">
+            <span>Important Notice</span>
+          </div>
+          <p className="text-[12px] text-slate-500 leading-relaxed">
+            Your withdrawal password is used exclusively to authorize cash withdrawals and bind destination bank details. Keep it private at all times.
+          </p>
+        </div>
 
       </div>
 

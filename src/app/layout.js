@@ -47,14 +47,15 @@ export async function generateMetadata() {
     manifest: "/manifest.json",
     icons: {
       icon: [
-        { url: "/favicon.ico" },
-        { url: "/logo.jpeg", type: "image/jpeg" },
-        { url: "/icon.png", type: "image/png" },
+        { url: "/icon-32.png?v=sun3", sizes: "32x32", type: "image/png" },
+        { url: "/icon-16.png?v=sun3", sizes: "16x16", type: "image/png" },
+        { url: "/favicon.ico?v=sun3", sizes: "any" },
+        { url: "/icon.png?v=sun3", type: "image/png" },
+        { url: "/logo.png?v=sun3", type: "image/png" },
       ],
-      shortcut: ["/logo.jpeg"],
+      shortcut: ["/icon-32.png?v=sun3"],
       apple: [
-        { url: "/logo.jpeg" },
-        { url: "/apple-icon.png", type: "image/png" },
+        { url: "/apple-icon.png?v=sun3" },
       ],
     },
     openGraph: {
@@ -99,6 +100,11 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
     >
       <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png?v=sun3" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png?v=sun3" />
+        <link rel="icon" href="/favicon.ico?v=sun3" sizes="any" />
+        <link rel="shortcut icon" href="/icon-32.png?v=sun3" />
+        <link rel="apple-touch-icon" href="/apple-icon.png?v=sun3" />
         <meta property="og:image" content="https://suncerestcapital.com/logo.png" />
         <meta property="og:image:width" content="800" />
         <meta property="og:image:height" content="800" />

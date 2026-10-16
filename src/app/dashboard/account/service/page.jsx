@@ -48,23 +48,23 @@ export default function CustomerServicePage() {
 
       <div className="px-4 py-4 space-y-4 max-w-[480px] mx-auto w-full">
 
-        {/* Top Hero Card - Clean Vibrant Blue */}
-        <div className="bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-[22px] p-5 text-white shadow-xl shadow-sky-950/20 relative overflow-hidden border border-sky-400/20">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
+        {/* Top Hero Card - Luxury Graphite Titanium */}
+        <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] rounded-[22px] p-5 text-white shadow-xl shadow-black/15 relative overflow-hidden border border-slate-800">
+          <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
           
-          <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-xs border border-white/25 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-2.5">
+          <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 text-slate-200 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-2.5">
             SUPPORT DESK
           </div>
 
           <h2 className="text-white text-[20px] font-bold tracking-tight mb-1">
             Service Center
           </h2>
-          <p className="text-sky-100 text-[12px] leading-relaxed mb-3">
+          <p className="text-slate-400 text-[12px] leading-relaxed mb-3">
             Contact customer service
           </p>
 
           {/* Online Hours Pill */}
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-xs border border-white/20 px-3 py-1 rounded-full text-white text-[11px] font-semibold">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xs border border-white/15 px-3 py-1 rounded-full text-white text-[11px] font-semibold">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>9 AM - 7 PM</span>
           </div>
@@ -72,7 +72,7 @@ export default function CustomerServicePage() {
 
         {/* Card 1: 1-on-1 Telegram Support */}
         <div className="bg-[#111827] rounded-[20px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
-          <div className="w-16 h-16 rounded-full bg-[#0284c7]/15 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] shadow-[0_0_20px_rgba(2,132,199,0.2)]">
+          <div className="w-16 h-16 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-amber-300 shadow-md">
             <Send size={26} className="translate-x-0.5 -translate-y-0.5" />
           </div>
 
@@ -85,14 +85,14 @@ export default function CustomerServicePage() {
           </p>
 
           <div className="inline-flex items-center gap-1.5 text-gray-400 text-[11px] font-medium bg-[#0b0f19] px-2.5 py-1 rounded-lg border border-white/5">
-            <Clock size={12} className="text-[#38bdf8]" />
+            <Clock size={12} className="text-amber-300" />
             <span>9 AM - 7 PM</span>
           </div>
 
           <button
             type="button"
             onClick={() => handleOpenLink(supportTelegram)}
-            className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
+            className="w-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold py-3.5 rounded-[12px] text-[14px] shadow-lg shadow-black/20 border border-white/10 transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
             Contact Telegram Support
           </button>
@@ -117,7 +117,7 @@ export default function CustomerServicePage() {
           <button
             type="button"
             onClick={() => handleOpenLink(settings.whatsapp_group || settings.whatsapp_link || "https://chat.whatsapp.com/IUJGcWWHKsfD4H62oMIWyI?s=cl&p=a&mlu=4&ilr=4")}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
+            className="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:opacity-95 text-white font-bold py-3.5 rounded-[12px] text-[14px] shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
             Join WhatsApp Group
           </button>
@@ -125,7 +125,7 @@ export default function CustomerServicePage() {
 
         {/* Card 3: Official Telegram Group */}
         <div className="bg-[#111827] rounded-[20px] p-6 border border-white/5 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
-          <div className="w-16 h-16 rounded-full bg-[#0284c7]/15 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8] shadow-[0_0_20px_rgba(2,132,199,0.2)]">
+          <div className="w-16 h-16 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-amber-300 shadow-md">
             <Users size={26} />
           </div>
 
@@ -140,7 +140,7 @@ export default function CustomerServicePage() {
           <button
             type="button"
             onClick={() => handleOpenLink(groupTelegram)}
-            className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3 rounded-[12px] text-[14px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer mt-2"
+            className="w-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-bold py-3.5 rounded-[12px] text-[14px] shadow-lg shadow-black/20 border border-white/10 transition-all active:scale-[0.99] cursor-pointer mt-2"
           >
             Join Telegram Group
           </button>
@@ -150,7 +150,7 @@ export default function CustomerServicePage() {
 
         {/* Card 3: Notice Guidelines */}
         <div className="bg-[#111827] rounded-[20px] p-4 border border-white/5 shadow-md flex items-start gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#0284c7]/15 border border-[#0284c7]/25 flex items-center justify-center text-[#38bdf8] shrink-0 mt-0.5">
+          <div className="w-8 h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-amber-300 shrink-0 mt-0.5">
             <ShieldCheck size={16} />
           </div>
           <div>

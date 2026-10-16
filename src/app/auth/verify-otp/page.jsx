@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 import logoImg from "../../../../public/logo.jpeg";
 
 export default function VerifyOtpPage() {
@@ -111,6 +112,16 @@ export default function VerifyOtpPage() {
         {/* Soft bottom gradient to ensure pristine form field contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#080d1a]/60 to-[#080d1a]/95 pointer-events-none" />
 
+        {/* Back Arrow Button */}
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="absolute top-5 left-5 z-30 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all cursor-pointer active:scale-95 shadow-sm"
+          aria-label="Back to Login"
+        >
+          <ArrowLeft size={16} />
+        </button>
+
         <div className="relative z-10">
           {/* Top clearance so the 3D gold logo emblem is showcased prominently */}
           <div className="h-28 sm:h-32" />
@@ -136,14 +147,14 @@ export default function VerifyOtpPage() {
                   value={digit}
                   onChange={(e) => handleOtpChange(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-12 h-12 text-center text-lg font-semibold border-white/20 focus:ring-2 focus:ring-[#4fb3ff]"
+                  className="w-12 h-12 text-center text-lg font-semibold border-white/20 focus:ring-2 focus:ring-amber-400 bg-black/20 text-white"
                 />
               ))}
             </div>
 
             <Button
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-105 active:brightness-95 rounded-full text-base font-bold transition-all shadow-lg shadow-sky-500/25 cursor-pointer flex items-center justify-center"
+              className="w-full h-12 bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.99] text-white rounded-full text-base font-bold transition-all shadow-lg shadow-black/20 border border-white/10 cursor-pointer flex items-center justify-center"
               disabled={verifyOtpMutation.isPending}
             >
               {verifyOtpMutation.isPending ? (
@@ -173,7 +184,7 @@ export default function VerifyOtpPage() {
                 className={`font-bold cursor-pointer hover:underline ${
                   resendOtpMutation.isPending
                     ? "text-gray-400 cursor-not-allowed"
-                    : "text-[#4fb3ff]"
+                    : "text-amber-300"
                 }`}
               >
                 {resendOtpMutation.isPending ? "Resending..." : "Resend"}

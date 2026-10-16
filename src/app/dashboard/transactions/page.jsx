@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  BarChart2,
-  FileText,
-  ListFilter,
-  Download,
-  Upload,
-  Gift,
+  ArrowUpRight,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
   Inbox,
   Loader2
 } from "lucide-react";
@@ -17,307 +15,417 @@ import { useFetchData } from "@/hooks/useApi";
 
 export default function TransactionsPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("All");
-
-  const tabs = [
-    { id: "All", label: "All", icon: ListFilter },
-    { id: "Deposits", label: "Deposits", icon: Download },
-    { id: "Withdrawals", label: "Withdrawals", icon: Upload },
-    { id: "Commission", label: "Commission", icon: Gift },
-    { id: "Rewards", label: "Rewards", icon: Gift },
-    { id: "Investments", label: "Investments", icon: BarChart2 },
-  ];
-
-  const getTransactionMeta = (type) => {
-    const t = (type || "").toLowerCase();
-    if (t.includes('deposit') || t.includes('admin_credit')) return { category: 'Deposits', icon: Download, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
-    if (t.includes('withdraw') || t.includes('admin_debit')) return { category: 'Withdrawals', icon: Upload, iconBg: "bg-red-100", iconColor: "text-red-500" };
-    if (t.includes('commission') || t.includes('referral')) return { category: 'Commission', icon: Gift, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
-    if (t.includes('reward') || t.includes('gift') || t.includes('bonus') || t.includes('spin') || t.includes('task') || t.includes('checkin')) return { category: 'Rewards', icon: Gift, iconBg: "bg-green-100", iconColor: "text-green-500" };
-    if (t.includes('invest') || t.includes('plan')) return { category: 'Investments', icon: BarChart2, iconBg: "bg-amber-100", iconColor: "text-amber-500" };
-    return { category: 'Others', icon: FileText, iconBg: "bg-gray-100", iconColor: "text-gray-500" };
-  };
 
   const { data: txRes, isLoading } = useFetchData("/users/transactions", ["transactions"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
+  const currencySymbol = settings.currency_symbol || "R";
   const rawTransactions = txRes?.transactions || [];
 
-  const transactions = rawTransactions.map(tx => {
-    const meta = getTransactionMeta(tx.type);
-    
-    const typeLower = (tx.type || "").toLowerCase();
-    const descLower = (tx.description || "").toLowerCase();
-    
-    let isCredit = false;
+  const formatAmount = (num) => {
+    return Number(num || 0).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
+
+  const getTransactionTypeInfo = (type, description) => {
+    const t = (type || "").toLowerCase();
+    const d = (description || "").toLowerCase();
+
     if (
-      typeLower.includes('deposit') || 
-      typeLower.includes('reward') || 
-      typeLower.includes('bonus') || 
-      typeLower.includes('gift') || 
-      typeLower.includes('checkin') || 
-      typeLower.includes('check-in') || 
-      typeLower.includes('credit') || 
-      typeLower.includes('commission') || 
-      typeLower.includes('referral') || 
-      typeLower.includes('migration') ||
-      typeLower.includes('profit') ||
-      typeLower.includes('payout') ||
-      typeLower.includes('refund') ||
-      descLower.includes('bonus') ||
-      descLower.includes('welcome') ||
-      descLower.includes('reward') ||
-      descLower.includes('gift') ||
-      descLower.includes('refund') ||
-      descLower.includes('payout') ||
-      descLower.includes('profit') ||
-      descLower.includes('commission')
+      d.includes("deposit") ||
+      t.includes("deposit") ||
+      t.includes("admin_credit") ||
+      d.includes("manual credit") ||
+      d.includes("quick pay") ||
+      d.includes("gateway")
     ) {
-      isCredit = true;
-    } else if (
-      typeLower.includes('debit') || 
-      typeLower.includes('cost') || 
-      typeLower.includes('withdraw') || 
-      typeLower.includes('invest') || 
-      typeLower.includes('plan') ||
-      descLower.includes('withdraw') ||
-      descLower.includes('invest')
-    ) {
-      isCredit = false;
-    } else if (tx.balance_before !== undefined && tx.balance_after !== undefined && tx.balance_before !== null && tx.balance_after !== null) {
-      const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
-      if (diff !== 0) {
-        isCredit = diff > 0;
-      }
+      return {
+        label: "Deposit",
+        description: description || "Recharge Deposit",
+        badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200/80"
+      };
     }
 
-    const baseSymbol = settings.currency_symbol || "R";
-    const amountVal = parseFloat(tx.amount) || 0;
-    let amountStr = "";
-    
-    if (isCredit) {
-      amountStr = `+${baseSymbol}${Math.abs(amountVal).toFixed(2)}`;
-    } else {
-      amountStr = `-${baseSymbol}${Math.abs(amountVal).toFixed(2)}`;
+    if (
+      d.includes("withdraw") ||
+      t.includes("withdraw") ||
+      t.includes("admin_debit") ||
+      d.includes("manual debit")
+    ) {
+      return {
+        label: "Withdrawal",
+        description: description || "Account Withdrawal",
+        badgeClass: "bg-rose-50 text-rose-700 border-rose-200/80"
+      };
+    }
+
+    if (t.includes("commission") || t.includes("referral") || d.includes("commission")) {
+      return {
+        label: "Commission",
+        description: description || "Referral Commission",
+        badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200/80"
+      };
+    }
+
+    if (t.includes("spin") || d.includes("spin")) {
+      return {
+        label: "Lucky Spin",
+        description: description || "Lucky Spin Prize",
+        badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80"
+      };
+    }
+
+    if (t.includes("checkin") || d.includes("check-in") || d.includes("checkin")) {
+      return {
+        label: "Check-in",
+        description: description || "Daily Check-in Reward",
+        badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80"
+      };
+    }
+
+    if (t.includes("task") || d.includes("task")) {
+      return {
+        label: "Task",
+        description: description || "Task Mission Reward",
+        badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80"
+      };
+    }
+
+    if (t.includes("invest") || t.includes("plan") || d.includes("invest")) {
+      return {
+        label: "Investment",
+        description: description || "Plan Investment",
+        badgeClass: "bg-slate-100 text-slate-700 border-slate-200"
+      };
+    }
+
+    if (t.includes("reward") || t.includes("bonus") || d.includes("bonus") || d.includes("welcome")) {
+      return {
+        label: "Bonus",
+        description: description || "Reward Bonus",
+        badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80"
+      };
     }
 
     return {
-      id: tx.id,
-      title: (() => {
-        const d = (tx.description || "").toLowerCase();
-        const t = (tx.type || "").toLowerCase();
-        if (
-          d.includes('deposit') || 
-          t.includes('deposit') || 
-          t.includes('admin_credit') || 
-          d.includes('manual credit') || 
-          d.includes('credit') || 
-          d.includes('quick pay') || 
-          d.includes('gateway') || 
-          d.includes('direct bank')
-        ) return "Deposit";
-        if (
-          d.includes('withdraw') || 
-          t.includes('withdraw') || 
-          t.includes('admin_debit') || 
-          d.includes('manual debit') || 
-          d.includes('debit')
-        ) return "Withdrawal";
-        if (t.includes('commission') || t.includes('referral') || d.includes('commission')) return "Referral Commission";
-        if (t.includes('spin') || d.includes('spin')) return "Lucky Spin Prize";
-        if (t.includes('checkin') || d.includes('check-in') || d.includes('checkin')) return "Daily Check-in Reward";
-        if (t.includes('invest') || t.includes('plan') || d.includes('invest')) return "VIP Plan Activation";
-        return tx.description || tx.type || "Deposit";
-      })(),
-      date: new Date(tx.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' }),
-      amount: amountStr,
-      status: tx.status || "SUCCESS",
-      type: meta.category,
-      iconBg: meta.iconBg,
-      iconColor: meta.iconColor,
-      icon: meta.icon,
-      wallet_address: tx.wallet_address || ""
+      label: type ? type.toUpperCase() : "Transaction",
+      description: description || type || "Transaction Record",
+      badgeClass: "bg-slate-50 text-slate-600 border-slate-200"
     };
-  });
+  };
 
-  const filteredTransactions = activeTab === "All"
-    ? transactions
-    : transactions.filter(t => t.type === activeTab);
-
-  const totalInflow = rawTransactions.reduce((acc, tx) => {
-    const status = (tx.status || "SUCCESS").toUpperCase();
-    if (status !== "SUCCESS" && status !== "APPROVED" && status !== "COMPLETED") {
-      return acc;
+  const getStatusBadge = (status) => {
+    const s = (status || "SUCCESS").toLowerCase();
+    if (s === "completed" || s === "success" || s === "approved") {
+      return {
+        text: "SUCCESS",
+        badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+        icon: CheckCircle2,
+      };
     }
+    if (s === "pending" || s === "processing") {
+      return {
+        text: "PENDING",
+        badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80",
+        icon: AlertCircle,
+      };
+    }
+    return {
+      text: "FAILED",
+      badgeClass: "bg-rose-50 text-rose-700 border-rose-200/80",
+      icon: XCircle,
+    };
+  };
 
-    const typeLower = (tx.type || "").toLowerCase();
-    const descLower = (tx.description || "").toLowerCase();
-    
-    let isCredit = false;
-    if (
-      typeLower.includes('debit') || 
-      typeLower.includes('cost') || 
-      typeLower.includes('withdraw') || 
-      typeLower.includes('invest') || 
-      typeLower.includes('plan')
-    ) {
-      isCredit = false;
-    } else if (
-      typeLower.includes('deposit') || 
-      typeLower.includes('reward') || 
-      typeLower.includes('bonus') || 
-      typeLower.includes('gift') || 
-      typeLower.includes('checkin') || 
-      typeLower.includes('check-in') || 
-      typeLower.includes('credit') || 
-      typeLower.includes('commission') || 
-      typeLower.includes('referral') || 
-      typeLower.includes('migration') ||
-      typeLower.includes('profit') ||
-      typeLower.includes('payout') ||
-      typeLower.includes('refund') ||
-      descLower.includes('refund') ||
-      descLower.includes('payout') ||
-      descLower.includes('profit')
-    ) {
-      isCredit = true;
-    } else if (tx.balance_before !== undefined && tx.balance_after !== undefined && tx.balance_before !== null && tx.balance_after !== null) {
-      const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
-      if (diff !== 0) {
-        isCredit = diff > 0;
+  const transactions = useMemo(() => {
+    return rawTransactions
+      .slice()
+      .sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
+      .map((tx) => {
+        const typeInfo = getTransactionTypeInfo(tx.type, tx.description);
+        const typeLower = (tx.type || "").toLowerCase();
+        const descLower = (tx.description || "").toLowerCase();
+
+        let isCredit = false;
+        if (
+          typeLower.includes("deposit") ||
+          typeLower.includes("reward") ||
+          typeLower.includes("bonus") ||
+          typeLower.includes("gift") ||
+          typeLower.includes("checkin") ||
+          typeLower.includes("check-in") ||
+          typeLower.includes("credit") ||
+          typeLower.includes("commission") ||
+          typeLower.includes("referral") ||
+          typeLower.includes("migration") ||
+          typeLower.includes("profit") ||
+          typeLower.includes("payout") ||
+          typeLower.includes("refund") ||
+          descLower.includes("bonus") ||
+          descLower.includes("welcome") ||
+          descLower.includes("reward") ||
+          descLower.includes("gift") ||
+          descLower.includes("refund") ||
+          descLower.includes("payout") ||
+          descLower.includes("profit") ||
+          descLower.includes("commission")
+        ) {
+          isCredit = true;
+        } else if (
+          typeLower.includes("debit") ||
+          typeLower.includes("cost") ||
+          typeLower.includes("withdraw") ||
+          typeLower.includes("invest") ||
+          typeLower.includes("plan") ||
+          descLower.includes("withdraw") ||
+          descLower.includes("invest")
+        ) {
+          isCredit = false;
+        } else if (
+          tx.balance_before !== undefined &&
+          tx.balance_after !== undefined &&
+          tx.balance_before !== null &&
+          tx.balance_after !== null
+        ) {
+          const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
+          if (diff !== 0) {
+            isCredit = diff > 0;
+          }
+        }
+
+        const amountVal = Math.abs(parseFloat(tx.amount) || 0);
+        const descText = (tx.description && tx.description.trim()) ? tx.description : typeInfo.description;
+
+        return {
+          id: tx.id || Math.random().toString(),
+          description: descText,
+          typeLabel: typeInfo.label,
+          typeBadgeClass: typeInfo.badgeClass,
+          date: formatDate(tx.created_at),
+          rawDate: tx.created_at,
+          amountVal,
+          isCredit,
+          amountStr: `${isCredit ? "+" : "-"} ${currencySymbol} ${formatAmount(amountVal)}`,
+          status: tx.status || "SUCCESS",
+          wallet_address: tx.wallet_address || "",
+          orderId: tx.reference || tx.order_id || tx.id || `TXN-${Date.now()}`
+        };
+      });
+  }, [rawTransactions, currencySymbol]);
+
+  // Total inflow calculation
+  const totalInflow = useMemo(() => {
+    return rawTransactions.reduce((acc, tx) => {
+      const status = (tx.status || "SUCCESS").toUpperCase();
+      if (status !== "SUCCESS" && status !== "APPROVED" && status !== "COMPLETED") {
+        return acc;
       }
-    }
 
-    if (!isCredit) {
-      return acc;
-    }
+      const typeLower = (tx.type || "").toLowerCase();
+      const descLower = (tx.description || "").toLowerCase();
 
-    const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
-    const amountVal = parseFloat(tx.amount) || 0;
-    const addedAmount = diff > 0 ? diff : amountVal;
+      let isCredit = false;
+      if (
+        typeLower.includes("deposit") ||
+        typeLower.includes("reward") ||
+        typeLower.includes("bonus") ||
+        typeLower.includes("gift") ||
+        typeLower.includes("checkin") ||
+        typeLower.includes("check-in") ||
+        typeLower.includes("credit") ||
+        typeLower.includes("commission") ||
+        typeLower.includes("referral") ||
+        typeLower.includes("migration") ||
+        typeLower.includes("profit") ||
+        typeLower.includes("payout") ||
+        typeLower.includes("refund") ||
+        descLower.includes("refund") ||
+        descLower.includes("payout") ||
+        descLower.includes("profit")
+      ) {
+        isCredit = true;
+      } else if (
+        tx.balance_before !== undefined &&
+        tx.balance_after !== undefined &&
+        tx.balance_before !== null &&
+        tx.balance_after !== null
+      ) {
+        const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
+        if (diff !== 0) {
+          isCredit = diff > 0;
+        }
+      }
 
-    return acc + addedAmount;
-  }, 0);
+      if (!isCredit) return acc;
 
-  const totalCount = rawTransactions.length;
+      const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
+      const amountVal = parseFloat(tx.amount) || 0;
+      const addedAmount = diff > 0 ? diff : amountVal;
+
+      return acc + addedAmount;
+    }, 0);
+  }, [rawTransactions]);
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-10">
-
-      {/* Header */}
-      <div className="bg-[#111827] px-4 py-3.5 flex items-center sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <h1 className="text-white/90 text-[15px] font-bold">All Transactions</h1>
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
+      
+      {/* Top Header Bar - White background, Text on left, Logo on right */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            Transactions
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-4 max-w-[480px] mx-auto w-full space-y-4">
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-[#111827] rounded-[16px] p-4 border border-white/5 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="w-8 h-8 bg-blue-900/20 rounded-[8px] flex items-center justify-center text-[#4f8cff] mb-3">
-              <BarChart2 size={16} />
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
+        
+        {/* Stats Card - Exactly matching our standard stats card format */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
+          <div>
+            <div className="text-[28px] sm:text-[32px] font-black text-emerald-600 tracking-tight leading-none font-mono">
+              {currencySymbol}{formatAmount(totalInflow)}
             </div>
-            <div className="text-white/90 font-bold text-[18px] mb-0.5">
-              {settings.currency_symbol || "R"}{totalInflow.toFixed(2)}
-            </div>
-            <div className="text-gray-400 text-[11px]">Total Inflow</div>
+            <p className="text-[13px] text-slate-500 font-medium mt-1.5">
+              Total Inflow ({transactions.length} records)
+            </p>
           </div>
-
-          <div className="bg-[#111827] rounded-[16px] p-4 border border-white/5 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] flex flex-col">
-            <div className="w-8 h-8 bg-blue-900/20 rounded-[8px] flex items-center justify-center text-[#4f8cff] mb-3">
-              <FileText size={16} />
-            </div>
-            <div className="text-white/90 font-bold text-[18px] mb-0.5">{totalCount}</div>
-            <div className="text-gray-400 text-[11px]">Transaction Count</div>
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+            <ArrowUpRight size={22} className="stroke-[2.5]" />
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-1 pt-1 [&::-webkit-scrollbar]:hidden -mx-4 px-4">
-          {tabs.map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-full whitespace-nowrap text-[12px] font-bold transition-all ${
-                  isActive
-                    ? 'bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] text-white shadow-[0_4px_10px_rgba(79,140,255,0.25)] border border-[#4f8cff]/50'
-                    : 'bg-[#111827] text-gray-300 border border-white/10 hover:bg-[#1e293b] hover:text-white hover:border-[#4f8cff]/40'
-                }`}
-              >
-                <Icon size={14} className={isActive ? "text-white" : "text-gray-400 group-hover:text-white"} />
-                {tab.label}
-              </button>
-            )
-          })}
-        </div>
+        {/* Responsive Horizontal-Scrolling Table Card */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between px-0.5">
+            <h2 className="text-slate-900 text-[15px] font-bold tracking-tight">
+              History
+            </h2>
+          </div>
 
-        {/* Transaction List */}
-        <div className="mt-2">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-10">
-              <Loader2 className="w-8 h-8 animate-spin text-[#4f8cff] mb-2" />
-              <span className="text-[12px] text-gray-500">Loading transactions...</span>
-            </div>
-          ) : filteredTransactions.length > 0 ? (
-            <div className="space-y-2.5">
-              {filteredTransactions.map(tx => (
-                <div
-                  key={tx.id}
-                  onClick={() => {
-                    const params = new URLSearchParams({
-                      id: tx.id.toString(),
-                      title: tx.title,
-                      date: tx.date,
-                      amount: tx.amount,
-                      status: tx.status,
-                      type: tx.type
-                    });
-                    if (tx.wallet_address) {
-                      params.set("wallet_address", tx.wallet_address);
-                    }
-                    router.push(`/dashboard/transactions/receipt?${params.toString()}`);
-                  }}
-                  className="bg-[#111827] rounded-[14px] p-3 border border-white/5 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:bg-[#1e293b] active:scale-[0.99] transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center ${tx.iconBg.replace('bg-', 'bg-').replace('100', '900/20')} ${tx.iconColor.replace('500', '400')}`}>
-                      <tx.icon size={18} />
-                    </div>
-                    <div>
-                      <div className="text-white/90 font-bold text-[13px] mb-0.5 max-w-[150px] truncate" title={tx.title}>{tx.title}</div>
-                      <div className="text-gray-400 text-[10px]">{tx.date}</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <div className={`font-bold text-[13px] ${tx.amount.startsWith('+') ? 'text-green-500' : (tx.amount.startsWith('-') ? 'text-red-500' : 'text-gray-400')}`}>
-                      {tx.amount}
-                    </div>
-                    <div className={`px-2 py-0.5 rounded text-[8px] font-bold tracking-widest ${
-                      tx.status?.toUpperCase() === 'PENDING' ? 'bg-orange-900/20 text-orange-400' :
-                      (tx.status?.toUpperCase() === 'REJECTED' || tx.status?.toUpperCase() === 'FAILED') ? 'bg-red-900/20 text-red-400' :
-                      'bg-emerald-900/20 text-emerald-400'
-                    }`}>
-                      {tx.status?.toUpperCase() || 'SUCCESS'}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-[#111827] rounded-[16px] border-2 border-dashed border-white/5 p-8 flex flex-col items-center justify-center text-center mt-4">
-              <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-500 mb-3">
-                <Inbox size={24} />
+          <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-16">
+                <Loader2 className="w-8 h-8 animate-spin text-[#0f172a] mb-2" />
+                <span className="text-[12px] text-slate-500 font-medium">
+                  Loading transactions...
+                </span>
               </div>
-              <h3 className="text-white/90 font-bold text-[14px] mb-1">No Transactions Yet</h3>
-              <p className="text-gray-400 text-[11px]">Your transaction history will appear here</p>
-            </div>
-          )}
+            ) : transactions.length > 0 ? (
+              <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden">
+                <table className="w-full text-left border-collapse min-w-[540px]">
+                  <thead>
+                    <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                      <th className="py-3 px-3.5">Date & Time</th>
+                      <th className="py-3 px-3.5">Type</th>
+                      <th className="py-3 px-3.5">Description</th>
+                      <th className="py-3 px-3.5 text-right">Amount</th>
+                      <th className="py-3 px-3.5 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-[12.5px]">
+                    {transactions.map((item) => {
+                      const badge = getStatusBadge(item.status);
+                      const StatusIcon = badge.icon;
+
+                      return (
+                        <tr 
+                          key={item.id}
+                          className="hover:bg-slate-50/70 transition-colors"
+                        >
+                          {/* Date & Time */}
+                          <td className="py-3.5 px-3.5 whitespace-nowrap text-slate-600 font-medium text-[12px]">
+                            {item.date}
+                          </td>
+
+                          {/* Type */}
+                          <td className="py-3.5 px-3.5 whitespace-nowrap">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-md border text-[11px] font-bold ${item.typeBadgeClass}`}
+                            >
+                              {item.typeLabel}
+                            </span>
+                          </td>
+
+                          {/* Description */}
+                          <td className="py-3.5 px-3.5 whitespace-nowrap">
+                            <span className="text-[12.5px] font-semibold text-slate-800 block truncate max-w-[220px]" title={item.description}>
+                              {item.description}
+                            </span>
+                          </td>
+
+                          {/* Amount */}
+                          <td className="py-3.5 px-3.5 whitespace-nowrap text-right">
+                            <span
+                              className={`font-black text-[13.5px] font-mono ${
+                                item.isCredit ? "text-emerald-600" : "text-rose-600"
+                              }`}
+                            >
+                              {item.amountStr}
+                            </span>
+                          </td>
+
+                          {/* Status Badge */}
+                          <td className="py-3.5 px-3.5 whitespace-nowrap text-center">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10.5px] font-bold ${badge.badgeClass}`}
+                            >
+                              <StatusIcon size={11} className="shrink-0" />
+                              <span>{badge.text}</span>
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="p-10 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-3">
+                  <Inbox size={22} />
+                </div>
+                <p className="text-slate-700 text-[14px] font-bold">
+                  No records yet
+                </p>
+                <p className="text-slate-400 text-[12px] mt-1">
+                  Your transaction history will appear here.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
       </div>
+
     </div>
   );
 }

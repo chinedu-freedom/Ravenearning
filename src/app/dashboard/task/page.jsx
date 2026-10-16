@@ -1,6 +1,16 @@
 "use client";
 
-import { ArrowLeft, Gift, Lock, CheckCircle2, Loader2 } from "lucide-react";
+import { 
+  ArrowLeft,
+  Gift, 
+  Lock, 
+  CheckCircle2, 
+  Loader2, 
+  Sparkles, 
+  Users, 
+  ListTodo,
+  Check
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { useRef, useEffect } from "react";
@@ -13,6 +23,7 @@ export default function TaskPage() {
   const claimMutation = usePost("/users/tasks/claim", "user-tasks");
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
+  const currencySymbol = settings.currency_symbol || "R";
 
   const confettiCanvasRef = useRef(null);
   const confettiRef = useRef(null);
@@ -34,7 +45,7 @@ export default function TaskPage() {
             this.resize();
             this.canvas.style.display = 'block';
             this.particles = [];
-            const colors = ['#f59e0b', '#22c55e', '#f59e0b', '#ef4444', '#f59e0b', '#06b6d4'];
+            const colors = ['#0f172a', '#22c55e', '#3b82f6', '#f59e0b', '#06b6d4', '#ec4899'];
             for (let i = 0; i < count; i++) {
                 this.particles.push({
                     x: Math.random() * this.canvas.width,
@@ -98,101 +109,192 @@ export default function TaskPage() {
     claimMutation.mutate({ taskId }, {
       onSuccess: () => {
         confettiRef.current?.launch(150);
+        toast.success("Task reward claimed successfully!");
         refetch();
       }
     });
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden">
-      {/* Header */}
-      <div className="bg-[#111827] px-4 py-4 flex items-center gap-3 shadow-sm z-10 relative border-b border-white/5">
-        <button 
-          onClick={() => router.back()}
-          className="w-8 h-8 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-        >
-          <ArrowLeft size={18} className="text-white/90" />
-        </button>
-        <h1 className="text-white/90 font-bold text-[18px]">Task</h1>
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
+      
+      {/* Top Header Bar - White background, Text on left, Logo on right */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            Task Center
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="p-4 space-y-4 pb-24">
-        {/* Stats Card */}
-        <div className="bg-[#111827] border border-white/5 rounded-[16px] p-5 text-white/90 shadow-sm flex justify-between items-center text-center">
-          <div className="flex flex-col gap-1 items-center">
-            <span className="text-[24px] font-bold leading-none text-[#4f8cff]">{totalTasks}</span>
-            <span className="text-[11px] text-gray-400">Total Tasks</span>
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24">
+        
+        {/* Stats Grid - 4 Modern Cards */}
+        <div className="grid grid-cols-2 gap-3">
+          
+          {/* Card 1: Total Tasks */}
+          <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center justify-between">
+            <div>
+              <div className="text-[22px] sm:text-[24px] font-black text-slate-900 font-mono tracking-tight leading-none">
+                {totalTasks}
+              </div>
+              <p className="text-[12px] text-slate-500 font-medium mt-1.5">
+                Total Tasks
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-slate-100 text-[#0f172a] flex items-center justify-center font-bold shrink-0 shadow-2xs">
+              <ListTodo size={18} />
+            </div>
           </div>
-          <div className="flex flex-col gap-1 items-center">
-            <span className="text-[24px] font-bold leading-none text-[#4f8cff]">{readyTasks}</span>
-            <span className="text-[11px] text-gray-400">Ready</span>
+
+          {/* Card 2: Ready */}
+          <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center justify-between">
+            <div>
+              <div className={`text-[22px] sm:text-[24px] font-black font-mono tracking-tight leading-none ${readyTasks > 0 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                {readyTasks}
+              </div>
+              <p className="text-[12px] text-slate-500 font-medium mt-1.5">
+                Ready to Claim
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+              <Sparkles size={18} />
+            </div>
           </div>
-          <div className="flex flex-col gap-1 items-center">
-            <span className="text-[24px] font-bold leading-none text-[#4f8cff]">{claimedTasks}</span>
-            <span className="text-[11px] text-gray-400">Claimed</span>
+
+          {/* Card 3: Claimed */}
+          <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center justify-between">
+            <div>
+              <div className="text-[22px] sm:text-[24px] font-black text-slate-900 font-mono tracking-tight leading-none">
+                {claimedTasks}
+              </div>
+              <p className="text-[12px] text-slate-500 font-medium mt-1.5">
+                Claimed Tasks
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+              <CheckCircle2 size={18} />
+            </div>
           </div>
-          <div className="flex flex-col gap-1 items-center">
-            <span className="text-[24px] font-bold leading-none text-[#4f8cff]">{todayInvites}</span>
-            <span className="text-[11px] text-gray-400">Today's Invites</span>
+
+          {/* Card 4: Today's Invites */}
+          <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center justify-between">
+            <div>
+              <div className="text-[22px] sm:text-[24px] font-black text-slate-900 font-mono tracking-tight leading-none">
+                {todayInvites}
+              </div>
+              <p className="text-[12px] text-slate-500 font-medium mt-1.5">
+                Today&apos;s Invites
+              </p>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+              <Users size={18} />
+            </div>
           </div>
+
         </div>
 
-        {/* Task List */}
-        <div className="space-y-4">
+        {/* Task List Section */}
+        <div className="space-y-3 pt-1">
+          <div className="flex items-center justify-between px-0.5">
+            <h2 className="text-slate-900 text-[15px] font-bold tracking-tight">
+              Task Missions
+            </h2>
+            <span className="text-[11.5px] text-slate-400 font-medium">
+              Invite friends to earn cash
+            </span>
+          </div>
+
           {isLoading ? (
-            <div className="flex justify-center items-center py-10">
-              <Loader2 className="w-6 h-6 text-[#4f8cff] animate-spin" />
+            <div className="flex flex-col justify-center items-center py-16 bg-white border border-slate-200 rounded-xl">
+              <Loader2 className="w-7 h-7 text-[#0f172a] animate-spin mb-2" />
+              <span className="text-[12px] text-slate-500 font-medium">Loading tasks...</span>
             </div>
           ) : tasks.length === 0 ? (
-            <div className="text-center py-10 text-gray-500">No active tasks available.</div>
+            <div className="bg-white rounded-xl border border-slate-200 p-10 flex flex-col items-center justify-center text-center shadow-2xs">
+              <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-3">
+                <Gift size={22} />
+              </div>
+              <p className="text-slate-800 text-[14px] font-bold">No active tasks available</p>
+              <p className="text-slate-400 text-[12px] mt-1">Check back later for new reward tasks and referral missions.</p>
+            </div>
           ) : (
             tasks.map(task => {
               const progressPercent = Math.min((task.progress / task.required_referrals) * 100, 100);
               
               return (
-                <div key={task.id} className="bg-[#111827] rounded-[10px] p-4 shadow-sm border border-white/5 flex gap-3">
-                  <div className="w-12 h-12 bg-blue-900/20 rounded-[12px] flex items-center justify-center shrink-0">
-                    <Gift className="text-[#4f8cff]" size={20} />
+                <div 
+                  key={task.id} 
+                  className="bg-white rounded-xl p-4 shadow-2xs border border-slate-200/90 hover:border-slate-300 transition-all flex gap-3.5"
+                >
+                  <div className="w-12 h-12 bg-slate-100 text-[#0f172a] rounded-xl flex items-center justify-center shrink-0 shadow-2xs">
+                    <Gift size={22} />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="text-[14px] font-bold text-white/90 leading-tight mb-0.5">{task.task_name}</h3>
-                        <div className="flex items-center gap-2 text-[12px]">
-                          <span className="text-[#4f8cff] font-bold">{settings.currency_symbol || "R"}{Number(task.reward_amount).toFixed(2)}</span>
-                          <span className="text-gray-400">{task.required_referrals} invites required</span>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-2 gap-2">
+                      <div className="min-w-0">
+                        <h3 className="text-[14.5px] font-bold text-slate-900 leading-snug truncate">
+                          {task.task_name}
+                        </h3>
+                        <div className="flex items-center gap-2 text-[12px] mt-0.5">
+                          <span className="text-emerald-600 font-black font-mono">
+                            {currencySymbol}{Number(task.reward_amount).toFixed(2)}
+                          </span>
+                          <span className="text-slate-400">&bull;</span>
+                          <span className="text-slate-500 font-medium">
+                            {task.required_referrals} invites required
+                          </span>
                         </div>
                       </div>
                       
                       {task.isClaimed ? (
-                        <button className="bg-green-900/20 text-green-400 px-2.5 py-1.5 rounded-full cursor-pointer text-[11px] font-bold flex items-center gap-1.5 shrink-0 ml-2 border border-green-900/50">
-                          <CheckCircle2 size={12} />
+                        <span className="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1 shrink-0 border border-slate-200/80">
+                          <Check size={12} className="stroke-[3]" />
                           Claimed
-                        </button>
+                        </span>
                       ) : task.isReady ? (
                         <button 
                           onClick={() => handleClaim(task.id)}
                           disabled={claimMutation.isPending}
-                          className="bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] text-white px-3 py-1.5 rounded-full cursor-pointer text-[11px] font-bold shrink-0 ml-2 hover:opacity-95 transition-all disabled:opacity-70"
+                          className="bg-[#0f172a] hover:bg-[#021d3c] active:scale-95 text-white px-3.5 py-1.5 rounded-full cursor-pointer text-[11.5px] font-bold shrink-0 transition-all shadow-xs disabled:opacity-70 flex items-center gap-1"
                         >
                           {claimMutation.isPending ? "Claiming..." : "Claim"}
                         </button>
                       ) : (
-                        <button className="bg-white/5 text-gray-400 px-2.5 py-1.5 rounded-full cursor-pointer text-[11px] font-bold flex items-center gap-1.5 shrink-0 ml-2 border border-white/5">
+                        <span className="bg-slate-50 text-slate-400 px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 shrink-0 border border-slate-200/60">
                           <Lock size={12} />
                           Locked
-                        </button>
+                        </span>
                       )}
                     </div>
                     
-                    <div className="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-1">
+                    {/* Progress Bar */}
+                    <div className="relative w-full h-2 bg-slate-100 rounded-full overflow-hidden mt-2 mb-1.5">
                       <div 
-                        className={`absolute top-0 left-0 h-full ${task.isClaimed ? 'bg-[#10b981]' : 'bg-[#4f8cff]'} transition-all duration-500`} 
+                        className={`absolute top-0 left-0 h-full ${task.isClaimed ? 'bg-emerald-500' : 'bg-[#0f172a]'} transition-all duration-500 rounded-full`} 
                         style={{ width: `${progressPercent}%` }}
-                      ></div>
+                      />
                     </div>
-                    <div className="text-[11px] text-gray-400 font-medium">
-                      {task.progress}/{task.required_referrals} today ({Math.floor(progressPercent)}%)
+                    
+                    <div className="flex items-center justify-between text-[11.5px] text-slate-400 font-medium">
+                      <span>Progress: {task.progress}/{task.required_referrals} today</span>
+                      <span className="font-bold text-slate-600 font-mono">{Math.floor(progressPercent)}%</span>
                     </div>
                   </div>
                 </div>
@@ -200,7 +302,9 @@ export default function TaskPage() {
             })
           )}
         </div>
+
       </div>
+
       <canvas 
         ref={confettiCanvasRef} 
         className="pointer-events-none fixed inset-0 z-[100] w-full h-full" 

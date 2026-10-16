@@ -109,10 +109,10 @@ export default function TeamPage() {
         {/* 1. Hero Runner Card */}
         <div className="relative w-full rounded-[24px] overflow-hidden shadow-sm aspect-[0.95/1] sm:aspect-[1.05/1] min-h-[380px] flex flex-col justify-between p-5 text-white">
           
-          {/* Background Runner Photo */}
+          {/* Background Sun Emblem */}
           <img
-            src="/images/dashboard/team_runner_hero.jpg"
-            alt="Team Runner"
+            src="/images/dashboard/team_sun_hero.jpg"
+            alt="Team Sun Crest"
             className="absolute inset-0 w-full h-full object-cover"
           />
 
@@ -176,7 +176,7 @@ export default function TeamPage() {
                 Invite Link
               </span>
               <p className="text-white/90 text-[11px] font-mono break-all line-clamp-2 h-7 leading-tight mb-3 drop-shadow-sm">
-                {invitationLink || `https://shokz-iioss.com/reg?code=${invitationCode}`}
+                {invitationLink || `https://suncerestcapital.com/auth/register?ref=${invitationCode}`}
               </p>
               <button
                 type="button"
@@ -197,39 +197,36 @@ export default function TeamPage() {
             setActiveLevel(1);
             setShowUsersModal(true);
           }}
-          className="bg-gradient-to-r from-[#fef5e7] via-[#fffbf3] to-[#fef6e9] border border-amber-200/50 rounded-[20px] p-4 shadow-2xs flex items-center gap-3 cursor-pointer hover:shadow-xs active:scale-[0.99] transition-all"
+          className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md active:scale-[0.99] transition-all"
         >
-          {/* Frosted Badge */}
-          <div className="relative flex items-center justify-center shrink-0">
-            <div className="w-10 h-10 rounded-full bg-white/80 shadow-xs flex items-center justify-center text-amber-700 font-bold text-[12px]">
-              Lv1
-            </div>
-            <span className="text-[10px] text-amber-700/60 font-bold absolute -bottom-1 -right-0.5">/1</span>
+          {/* Level Badge */}
+          <div className="w-10 h-10 rounded-xl bg-[#0f172a] shadow-xs flex items-center justify-center text-amber-400 font-black text-[13px] border border-slate-800 shrink-0">
+            Lv1
           </div>
 
           {/* 3 Stats Columns */}
           <div className="grid grid-cols-3 flex-1 text-center items-center">
             <div>
-              <div className="text-[20px] font-bold text-[#b48325] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {l1.commission_rate || 36}%
               </div>
-              <div className="text-[12px] text-[#b48325]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Commission
               </div>
             </div>
             <div>
-              <div className="text-[20px] font-bold text-[#b48325] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {l1.total_members || 0}
               </div>
-              <div className="text-[12px] text-[#b48325]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Users
               </div>
             </div>
             <div>
-              <div className="text-[20px] font-bold text-[#b48325] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {formatAmount(l1.total_earnings || 0)}
               </div>
-              <div className="text-[12px] text-[#b48325]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Rewards
               </div>
             </div>
@@ -242,39 +239,36 @@ export default function TeamPage() {
             setActiveLevel(2);
             setShowUsersModal(true);
           }}
-          className="bg-gradient-to-r from-[#f5f3ff] via-[#faf5ff] to-[#f3e8ff] border border-purple-200/50 rounded-[20px] p-4 shadow-2xs flex items-center gap-3 cursor-pointer hover:shadow-xs active:scale-[0.99] transition-all"
+          className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md active:scale-[0.99] transition-all"
         >
-          {/* Frosted Badge */}
-          <div className="relative flex items-center justify-center shrink-0">
-            <div className="w-10 h-10 rounded-full bg-white/80 shadow-xs flex items-center justify-center text-[#6d28d9] font-bold text-[12px]">
-              Lv2
-            </div>
-            <span className="text-[10px] text-[#6d28d9]/60 font-bold absolute -bottom-1 -right-0.5">/2</span>
+          {/* Level Badge */}
+          <div className="w-10 h-10 rounded-xl bg-[#0f172a] shadow-xs flex items-center justify-center text-slate-200 font-black text-[13px] border border-slate-800 shrink-0">
+            Lv2
           </div>
 
           {/* 3 Stats Columns */}
           <div className="grid grid-cols-3 flex-1 text-center items-center">
             <div>
-              <div className="text-[20px] font-bold text-[#6d28d9] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {l2.commission_rate || 3}%
               </div>
-              <div className="text-[12px] text-[#6d28d9]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Commission
               </div>
             </div>
             <div>
-              <div className="text-[20px] font-bold text-[#6d28d9] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {l2.total_members || 0}
               </div>
-              <div className="text-[12px] text-[#6d28d9]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Users
               </div>
             </div>
             <div>
-              <div className="text-[20px] font-bold text-[#6d28d9] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {formatAmount(l2.total_earnings || 0)}
               </div>
-              <div className="text-[12px] text-[#6d28d9]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Rewards
               </div>
             </div>
@@ -287,39 +281,36 @@ export default function TeamPage() {
             setActiveLevel(3);
             setShowUsersModal(true);
           }}
-          className="bg-gradient-to-r from-[#faf5ff] via-[#f5f3ff] to-[#ede9fe] border border-purple-200/50 rounded-[20px] p-4 shadow-2xs flex items-center gap-3 cursor-pointer hover:shadow-xs active:scale-[0.99] transition-all"
+          className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex items-center gap-3 cursor-pointer hover:shadow-md active:scale-[0.99] transition-all"
         >
-          {/* Frosted Badge */}
-          <div className="relative flex items-center justify-center shrink-0">
-            <div className="w-10 h-10 rounded-full bg-white/80 shadow-xs flex items-center justify-center text-[#7c3aed] font-bold text-[12px]">
-              Lv3
-            </div>
-            <span className="text-[10px] text-[#7c3aed]/60 font-bold absolute -bottom-1 -right-0.5">/3</span>
+          {/* Level Badge */}
+          <div className="w-10 h-10 rounded-xl bg-[#0f172a] shadow-xs flex items-center justify-center text-slate-300 font-black text-[13px] border border-slate-800 shrink-0">
+            Lv3
           </div>
 
           {/* 3 Stats Columns */}
           <div className="grid grid-cols-3 flex-1 text-center items-center">
             <div>
-              <div className="text-[20px] font-bold text-[#7c3aed] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {l3.commission_rate || 1}%
               </div>
-              <div className="text-[12px] text-[#7c3aed]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Commission
               </div>
             </div>
             <div>
-              <div className="text-[20px] font-bold text-[#7c3aed] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {l3.total_members || 0}
               </div>
-              <div className="text-[12px] text-[#7c3aed]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Users
               </div>
             </div>
             <div>
-              <div className="text-[20px] font-bold text-[#7c3aed] leading-none">
+              <div className="text-[20px] font-black text-slate-900 leading-none">
                 {formatAmount(l3.total_earnings || 0)}
               </div>
-              <div className="text-[12px] text-[#7c3aed]/90 mt-1.5 font-normal">
+              <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Rewards
               </div>
             </div>

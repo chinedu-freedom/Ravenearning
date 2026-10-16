@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ShieldCheck, Award, TrendingUp, Cpu, Globe2, Building2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
 
 export default function AboutPage() {
@@ -9,173 +9,51 @@ export default function AboutPage() {
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const siteName = settings.site_name || "GREATLAND";
-
-  const siteInitial = siteName.slice(0, 2).toUpperCase() || "GL";
+  const siteName = settings.site_name || "suncerestcapital";
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-24 select-none">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
       
-      {/* Header */}
-      <div className="bg-[#111827] px-4 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <button
-          onClick={() => router.push("/dashboard/account")}
-          className="w-9 h-9 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors text-gray-300 border border-white/5 cursor-pointer"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <h1 className="text-white/90 text-[16px] font-bold">
-          About us
-        </h1>
-        <div className="w-9" />
+      {/* Top Header Bar - Matching our standard site header */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push("/dashboard/account")}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back to Account"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            About Us
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-4 space-y-4 max-w-[480px] mx-auto w-full">
+      {/* Plain, Clean Write-up - No cards, no extra designs, pure clean reading */}
+      <div className="w-full max-w-[480px] mx-auto px-5 py-6 space-y-5 pb-24 text-[14.5px] sm:text-[15px] text-slate-800 leading-[1.75] font-normal">
+        <p>
+          <span className="capitalize">{siteName}</span> is a global digital asset growth and resource investment company specializing in computational infrastructure and automated yield generation. Committed to making decentralized computing and physical asset earnings accessible to investors worldwide, <span className="capitalize">{siteName}</span> leverages high-efficiency hardware networks and proprietary distribution protocols to deliver a secure, dependable financial experience.
+        </p>
 
-        {/* Hero Section - Clean Vibrant Blue */}
-        <div className="bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-[22px] p-5 text-white shadow-xl shadow-sky-950/20 relative overflow-hidden border border-sky-400/20">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
-          
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-xs border border-white/30 flex items-center justify-center text-white font-black text-[15px] shadow-sm">
-              {siteInitial}
-            </div>
-            <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-xs border border-white/25 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider">
-              RESOURCE GROWTH PLATFORM
-            </div>
-          </div>
+        <p>
+          The platform&apos;s defining feature is its automated cloud computing infrastructure; investors participate directly in enterprise-grade hashing power without the complexity of hardware maintenance, cooling, or power logistics. Our facilities balance high-performance computing clusters with sustainable and renewable energy sources, delivering consistent daily returns, high operational uptime, and rigorous risk management across varying market conditions.
+        </p>
 
-          <h2 className="text-white text-[20px] font-bold tracking-tight mb-1">
-            About {siteName}
-          </h2>
-          <p className="text-sky-100 text-[12.5px] leading-relaxed mb-4">
-            Responsible mining. Sustainable value. Long-term returns for investors and communities worldwide.
-          </p>
+        <p>
+          Security and liquidity remain fundamental to <span className="capitalize">{siteName}</span>. The platform implements institutional-level multi-signature vault custody, 256-bit encryption protocols, and audited reserve management to protect investor capital at every stage. Members benefit from total liquidity flexibility, with daily earnings automatically credited every 24 hours, alongside frictionless local banking settlement in South African Rand (Rand) and global cryptocurrency transfers.
+        </p>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 pt-1">
-            <div className="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-3">
-              <div className="text-[20px] font-black text-white leading-tight">
-                2013
-              </div>
-              <div className="text-sky-100 text-[11px] font-medium mt-0.5">
-                Industry roots
-              </div>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-3">
-              <div className="text-[20px] font-black text-white leading-tight">
-                100+
-              </div>
-              <div className="text-sky-100 text-[11px] font-medium mt-0.5">
-                Regions served
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Company Profile Card */}
-        <div className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-4">
-          <div className="inline-block bg-[#0284c7]/15 text-[#38bdf8] border border-[#0284c7]/25 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold">
-            Company profile
-          </div>
-
-          {/* Decorative Industry Banner */}
-          <div className="w-full h-36 rounded-xl bg-gradient-to-r from-[#0b0f19] via-[#111827] to-[#0b0f19] border border-white/5 p-4 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#0284c7]/10 rounded-full blur-xl pointer-events-none" />
-            <div className="flex items-center justify-between z-10">
-              <div className="flex items-center gap-2">
-                <Building2 className="text-[#38bdf8]" size={20} />
-                <span className="text-white text-[13px] font-bold">Telfer Mining Complex</span>
-              </div>
-              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">
-                Active Operations
-              </span>
-            </div>
-            <div className="z-10">
-              <p className="text-gray-400 text-[11px]">Paterson Province, Western Australia</p>
-              <p className="text-white/90 text-[13px] font-bold mt-0.5">20Mtpa Nominal Processing Capacity</p>
-            </div>
-          </div>
-
-          <div className="text-gray-300 text-[12.5px] leading-relaxed space-y-3">
-            <p>
-              <strong className="text-white">{siteName}</strong> is a leading gold and copper producer. The Company operates one of the largest gold-copper mining complexes and is concurrently developing world-class exploration projects across a significant regional portfolio.
-            </p>
-            <p>
-              Operating with both open pit and underground mining facilities, established logistics infrastructure, and automated ore processing facilities, our platform converts industrial resources into dependable digital investment returns.
-            </p>
-          </div>
-        </div>
-
-        {/* Company Overview & Financial Highlights */}
-        <div className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-3.5">
-          <h3 className="text-white text-[15px] font-bold tracking-tight">
-            Financial & Capital Overview
-          </h3>
-
-          <div className="divide-y divide-white/5">
-            <div className="py-2.5 flex items-center justify-between text-[12.5px]">
-              <span className="text-gray-400">Market Capitalisation</span>
-              <span className="text-white font-bold">R9.1bn</span>
-            </div>
-            <div className="py-2.5 flex items-center justify-between text-[12.5px]">
-              <span className="text-gray-400">Shares Outstanding</span>
-              <span className="text-white font-bold">673m</span>
-            </div>
-            <div className="py-2.5 flex items-center justify-between text-[12.5px]">
-              <span className="text-gray-400">Net Cash Position</span>
-              <span className="text-[#38bdf8] font-bold">R1,208m</span>
-            </div>
-            <div className="py-2.5 flex items-center justify-between text-[12.5px]">
-              <span className="text-gray-400">Total Available Liquidity</span>
-              <span className="text-[#38bdf8] font-black">R1,283m</span>
-            </div>
-            <div className="py-2.5 flex items-center justify-between text-[12.5px]">
-              <span className="text-gray-400">Total Processing Nominal</span>
-              <span className="text-white font-bold">20 Mtpa</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Core Pillars */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-[#111827] border border-white/5 rounded-2xl p-4 space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8]">
-              <ShieldCheck size={18} />
-            </div>
-            <h4 className="text-white text-[13px] font-bold">High Security</h4>
-            <p className="text-gray-400 text-[11px] leading-relaxed">
-              Enterprise-grade vault protection and multi-sig security.
-            </p>
-          </div>
-
-          <div className="bg-[#111827] border border-white/5 rounded-2xl p-4 space-y-2">
-            <div className="w-8 h-8 rounded-lg bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8]">
-              <TrendingUp size={18} />
-            </div>
-            <h4 className="text-white text-[13px] font-bold">Daily Yields</h4>
-            <p className="text-gray-400 text-[11px] leading-relaxed">
-              Consistent daily income distributions from active projects.
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom Compliance Card */}
-        <div className="bg-[#111827] rounded-[20px] p-4 border border-white/5 shadow-md flex items-start gap-3">
-          <div className="w-8 h-8 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-            <CheckCircle2 size={16} />
-          </div>
-          <div>
-            <h4 className="text-white/95 font-bold text-[13px]">
-              Audited & Transparent
-            </h4>
-            <p className="text-gray-400 text-[11.5px] mt-0.5 leading-relaxed">
-              All investment tiers are backed by real-world physical mining assets, verifiable operational capacity, and strict liquidity reserves.
-            </p>
-          </div>
-        </div>
-
+        <p>
+          Currently, <span className="capitalize">{siteName}</span> offers a diversified range of computational investment tiers designed to cater to various financial goals—from introductory starter tiers to high-capacity institutional mining allocations. Thanks to our innovative technology architecture, transparent real-time tracking, and dedicated around-the-clock client support, <span className="capitalize">{siteName}</span> has established itself as a trusted premier brand in modern digital capital growth.
+        </p>
       </div>
 
     </div>

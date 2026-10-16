@@ -64,7 +64,7 @@ export default function RechargeRecordPage() {
     if (status === "completed" || status === "success" || status === "approved") {
       return {
         text: "SUCCESS",
-        bg: "bg-[#0284c7]/10 text-[#38bdf8] border-[#0284c7]/30",
+        bg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
         icon: CheckCircle2,
       };
     }
@@ -101,27 +101,27 @@ export default function RechargeRecordPage() {
 
       <div className="px-4 py-4 space-y-4 max-w-[480px] mx-auto w-full">
 
-        {/* Top Hero Card - Clean Vibrant Blue */}
-        <div className="bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-[22px] p-5 text-white shadow-xl shadow-sky-950/20 relative overflow-hidden border border-sky-400/20">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
+        {/* Top Hero Card - Luxury Graphite Titanium */}
+        <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] rounded-[22px] p-5 text-white shadow-xl shadow-black/15 relative overflow-hidden border border-slate-800">
+          <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
           
-          <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-xs border border-white/25 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-2.5">
+          <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 text-slate-200 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-2.5">
             RECHARGE LOG
           </div>
 
           <h2 className="text-white text-[20px] font-bold tracking-tight mb-1">
             Recharge Record
           </h2>
-          <p className="text-sky-100 text-[12px] leading-relaxed mb-3">
+          <p className="text-slate-400 text-[12px] leading-relaxed mb-3">
             Track payment orders, status, and confirmation time.
           </p>
 
           {/* Stats Badge */}
-          <div className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-xs border border-white/20 px-3 py-1.5 rounded-xl">
+          <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 px-3 py-1.5 rounded-xl">
             <span className="text-white font-black text-[14px]">
               {rechargeRecords.length}
             </span>
-            <span className="text-sky-100 text-[11px] font-medium">
+            <span className="text-slate-400 text-[11px] font-medium">
               Total records
             </span>
           </div>
@@ -131,7 +131,7 @@ export default function RechargeRecordPage() {
         <div className="space-y-3">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-[#0284c7] mb-2" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#0f172a] mb-2" />
               <span className="text-[12px] text-gray-500 font-medium">
                 Loading records...
               </span>
@@ -148,7 +148,7 @@ export default function RechargeRecordPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#0284c7]/20 border border-[#0284c7]/30 flex items-center justify-center text-[#38bdf8]">
+                      <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center text-amber-300">
                         <ArrowDownLeft size={16} />
                       </div>
                       <div>
@@ -163,7 +163,7 @@ export default function RechargeRecordPage() {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-[#38bdf8] text-[16px] font-black tracking-tight">
+                      <div className="text-emerald-400 text-[16px] font-black tracking-tight">
                         + {currencySymbol}{formatAmount(item.amount)}
                       </div>
                     </div>

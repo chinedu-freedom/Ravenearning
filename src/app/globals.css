@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f0f4f8;
+  --background: #f8fafc;
   --foreground: #0f172a;
-  --primary: #4f8cff;
-  --primary-light: #6ee7ff;
-  --primary-dark: #2563eb;
-  --primary-focus: #93c5fd;
-  --teal-accent: #5eead4;
-  --primary-gradient: linear-gradient(135deg, #4f8cff 0%, #6ee7ff 100%);
-  --btn-gradient: linear-gradient(90deg, #5eead4 0%, #93c5fd 100%);
+  --primary: #0f172a;
+  --primary-light: #1e293b;
+  --primary-dark: #020617;
+  --primary-focus: #334155;
+  --teal-accent: #e2e8f0;
+  --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --btn-gradient: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, #4f8cff 0%, #6ee7ff 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .btn-gradient {
-  background: linear-gradient(90deg, #5eead4 0%, #93c5fd 100%);
+  background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
 }
 
 @theme inline {

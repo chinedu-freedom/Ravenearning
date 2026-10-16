@@ -15,9 +15,10 @@ import {
   Search, 
   X, 
   Check, 
-  Globe,
   Wallet,
-  CheckCircle2
+  CheckCircle2,
+  AlertCircle,
+  Info
 } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -85,13 +86,15 @@ export default function BindWalletPage() {
     e.preventDefault();
 
     if (!password) {
-      toast.dismiss(); toast.error("Please enter your withdrawal password to confirm");
+      toast.dismiss(); 
+      toast.error("Please enter your withdrawal password to confirm");
       return;
     }
 
     if (walletType === "usdt") {
       if (!usdtAddress.trim()) {
-        toast.dismiss(); toast.error("Please enter your USDT wallet address");
+        toast.dismiss(); 
+        toast.error("Please enter your USDT wallet address");
         return;
       }
 
@@ -105,6 +108,7 @@ export default function BindWalletPage() {
         {
           onSuccess: () => {
             toast.dismiss();
+            toast.success("USDT Wallet linked successfully");
             refetchUser();
             router.push("/dashboard/account");
           }
@@ -115,15 +119,18 @@ export default function BindWalletPage() {
 
     // Default Bank Account validation
     if (!actualName.trim()) {
-      toast.dismiss(); toast.error("Please enter actual name");
+      toast.dismiss(); 
+      toast.error("Please enter actual name");
       return;
     }
     if (!selectedBank) {
-      toast.dismiss(); toast.error("Please select your bank name");
+      toast.dismiss(); 
+      toast.error("Please select your bank name");
       return;
     }
     if (!accountNumber.trim()) {
-      toast.dismiss(); toast.error("Please enter your bank account number");
+      toast.dismiss(); 
+      toast.error("Please enter your bank account number");
       return;
     }
 
@@ -138,6 +145,7 @@ export default function BindWalletPage() {
       {
         onSuccess: () => {
           toast.dismiss();
+          toast.success("Bank account linked successfully");
           refetchUser();
           router.push("/dashboard/account");
         }
@@ -146,96 +154,124 @@ export default function BindWalletPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0b0f19] overflow-y-auto [&::-webkit-scrollbar]:hidden pb-20 select-none">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
       
-      {/* Header Bar */}
-      <div className="bg-[#111827] px-4 py-3.5 flex items-center sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <button
-          type="button"
-          onClick={() => router.push("/dashboard/account")}
-          className="mr-3 text-gray-400 hover:text-white transition-colors cursor-pointer"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <h1 className="text-white/90 text-[16px] font-bold tracking-tight">
-          Bind Wallet / Payment Method
-        </h1>
+      {/* Top Header Bar - White background, Text on left, Logo on right */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/account")}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-slate-900 text-[19px] sm:text-[21px] font-black tracking-tight leading-tight">
+            Bind Payment Method
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-4 max-w-[480px] mx-auto w-full space-y-4">
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
         
-        {/* Wallet Type Switcher Cards */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* South Africa Bank Tab */}
-          <button
-            type="button"
-            onClick={() => setWalletType("bank")}
-            className={`p-3.5 rounded-[16px] border text-left transition-all cursor-pointer flex flex-col justify-between ${
-              walletType === "bank"
-                ? "bg-[#0284c7]/10 border-[#0284c7] ring-1 ring-[#0284c7]/50"
-                : "bg-[#111827] border-white/5 text-gray-400 hover:border-white/20"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-8 h-8 rounded-xl bg-[#0284c7]/20 text-[#38bdf8] flex items-center justify-center">
-                <Landmark size={17} />
-              </div>
-              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                walletType === "bank" ? "border-[#38bdf8] bg-[#0284c7]" : "border-gray-600"
-              }`}>
-                {walletType === "bank" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-              </div>
-            </div>
-            <div>
-              <span className="text-white font-bold text-[13.5px] block leading-tight">
-                South Africa Bank
-              </span>
-              <span className="text-gray-400 text-[11px]">
-                ZAR Direct Payout
-              </span>
-            </div>
-          </button>
+        {/* Destination Type Selection using Full Width Radio Selectable Divs */}
+        <div className="space-y-2">
+          <label className="text-slate-900 text-[14px] font-bold tracking-tight block px-0.5">
+            Select Destination Type
+          </label>
 
-          {/* USDT Crypto Wallet Tab */}
-          <button
-            type="button"
-            onClick={() => setWalletType("usdt")}
-            className={`p-3.5 rounded-[16px] border text-left transition-all cursor-pointer flex flex-col justify-between ${
-              walletType === "usdt"
-                ? "bg-amber-500/10 border-amber-500 ring-1 ring-amber-500/50"
-                : "bg-[#111827] border-white/5 text-gray-400 hover:border-white/20"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                <Globe size={17} />
+          <div className="space-y-2">
+            {/* South Africa Bank Option */}
+            <div
+              onClick={() => setWalletType("bank")}
+              className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
+                walletType === "bank"
+                  ? "bg-slate-50/80 border-[#0f172a] shadow-xs"
+                  : "bg-white border-slate-200 hover:border-slate-300"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                  walletType === "bank" ? "bg-[#0f172a] text-white" : "bg-slate-100 text-slate-600"
+                }`}>
+                  <Landmark size={18} />
+                </div>
+                <div>
+                  <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
+                    South Africa Bank (Rand)
+                  </span>
+                  <span className="text-[11.5px] text-slate-500 font-medium">
+                    Local South African bank account payout
+                  </span>
+                </div>
               </div>
-              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                walletType === "usdt" ? "border-amber-400 bg-amber-500" : "border-gray-600"
+
+              {/* Radio Indicator */}
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                walletType === "bank" ? "border-[#0f172a]" : "border-slate-300"
               }`}>
-                {walletType === "usdt" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                {walletType === "bank" && (
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a]" />
+                )}
               </div>
             </div>
-            <div>
-              <span className="text-white font-bold text-[13.5px] block leading-tight">
-                USDT Wallet
-              </span>
-              <span className="text-amber-400 text-[11px] font-semibold">
-                TRC20 / BEP20 Crypto
-              </span>
+
+            {/* USDT Crypto Option */}
+            <div
+              onClick={() => setWalletType("usdt")}
+              className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
+                walletType === "usdt"
+                  ? "bg-slate-50/80 border-[#0f172a] shadow-xs"
+                  : "bg-white border-slate-200 hover:border-slate-300"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                  walletType === "usdt" ? "bg-[#0f172a] text-white" : "bg-slate-100 text-slate-600"
+                }`}>
+                  <Wallet size={18} />
+                </div>
+                <div>
+                  <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
+                    USDT Wallet (Crypto)
+                  </span>
+                  <span className="text-[11.5px] text-slate-500 font-medium">
+                    TRC20 / BEP20 cryptocurrency address
+                  </span>
+                </div>
+              </div>
+
+              {/* Radio Indicator */}
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                walletType === "usdt" ? "border-[#0f172a]" : "border-slate-300"
+              }`}>
+                {walletType === "usdt" && (
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a]" />
+                )}
+              </div>
             </div>
-          </button>
+          </div>
         </div>
 
         {/* Existing Bound Info Card if available */}
         {((walletType === "bank" && bankDetails.account_number) || (walletType === "usdt" && bankDetails.usdt_address)) && (
-          <div className="bg-[#111827] border border-[#38bdf8]/20 rounded-[18px] p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#0284c7]/20 text-[#38bdf8] flex items-center justify-center shrink-0">
+          <div className="bg-white border border-slate-200/90 rounded-lg p-4 flex items-center gap-3 shadow-2xs">
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <CheckCircle2 size={20} />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="text-xs text-gray-400 block font-medium">Currently Bound {walletType === "usdt" ? "USDT Address" : "Bank Account"}</span>
-              <span className="text-white font-bold text-[13.5px] truncate block">
+              <span className="text-[11.5px] text-slate-500 block font-medium">
+                Currently Bound {walletType === "usdt" ? "USDT Address" : "Bank Account"}
+              </span>
+              <span className="text-slate-900 font-bold text-[13.5px] truncate block mt-0.5">
                 {walletType === "usdt" 
                   ? `${bankDetails.usdt_network || "TRC20"}: ${bankDetails.usdt_address}`
                   : `${bankDetails.bank_name} - ${bankDetails.account_number}`}
@@ -245,61 +281,61 @@ export default function BindWalletPage() {
         )}
 
         {/* Form Container */}
-        <form onSubmit={handleSubmit} className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-4">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg p-5 border border-slate-200/90 shadow-2xs space-y-4">
           
           {walletType === "bank" ? (
             /* South Africa Bank Form Fields */
             <>
               {/* Account Holder Name */}
               <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-white/90 block">
+                <label className="text-[13px] font-bold text-slate-900 block">
                   Actual Name / Account Holder
                 </label>
-                <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-                  <User size={18} className="text-[#38bdf8] shrink-0" />
+                <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 transition-all">
+                  <User size={18} className="text-slate-400 shrink-0" />
                   <input
                     type="text"
                     value={actualName}
                     onChange={(e) => setActualName(e.target.value)}
                     placeholder="Enter full name on bank account"
-                    className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                    className="bg-transparent outline-none text-slate-900 text-[13.5px] font-semibold w-full placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
               </div>
 
               {/* Select Bank Name */}
               <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-white/90 block">
+                <label className="text-[13px] font-bold text-slate-900 block">
                   Bank Name
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowBankModal(true)}
-                  className="w-full flex items-center justify-between bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 cursor-pointer hover:border-[#0284c7]/50 transition-all text-left"
+                  className="w-full flex items-center justify-between bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 cursor-pointer hover:border-slate-300 hover:bg-white transition-all text-left"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <Landmark size={18} className="text-[#38bdf8] shrink-0" />
-                    <span className={`text-[13.5px] truncate ${selectedBank ? "text-white font-medium" : "text-gray-500"}`}>
+                    <Landmark size={18} className="text-slate-400 shrink-0" />
+                    <span className={`text-[13.5px] truncate font-semibold ${selectedBank ? "text-slate-900" : "text-slate-400 font-normal"}`}>
                       {selectedBank || "Choose South Africa Bank"}
                     </span>
                   </div>
-                  <ChevronRight size={16} className="text-gray-400 shrink-0 ml-2" />
+                  <ChevronRight size={16} className="text-slate-400 shrink-0 ml-2" />
                 </button>
               </div>
 
               {/* Bank Account Number */}
               <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-white/90 block">
+                <label className="text-[13px] font-bold text-slate-900 block">
                   Bank Account Number
                 </label>
-                <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-                  <CreditCard size={18} className="text-[#38bdf8] shrink-0" />
+                <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 transition-all">
+                  <CreditCard size={18} className="text-slate-400 shrink-0" />
                   <input
                     type="text"
                     value={accountNumber}
                     onChange={(e) => setAccountNumber(e.target.value)}
                     placeholder="Enter your bank account number"
-                    className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                    className="bg-transparent outline-none text-slate-900 font-mono text-[13.5px] font-semibold w-full placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
               </div>
@@ -309,7 +345,7 @@ export default function BindWalletPage() {
             <>
               {/* Select Network */}
               <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-white/90 block">
+                <label className="text-[13px] font-bold text-slate-900 block">
                   Select Crypto Network
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -318,10 +354,10 @@ export default function BindWalletPage() {
                       key={net}
                       type="button"
                       onClick={() => setUsdtNetwork(net)}
-                      className={`py-2.5 px-3 rounded-xl border text-[13px] font-bold transition-all cursor-pointer ${
+                      className={`py-2.5 px-3 rounded-md border text-[13px] font-bold transition-all cursor-pointer ${
                         usdtNetwork === net
-                          ? "bg-[#0284c7] text-white border-[#0284c7] shadow-sm"
-                          : "bg-[#0b0f19] text-gray-400 border-white/10 hover:border-white/20"
+                          ? "bg-[#0f172a] text-white border-[#0f172a] shadow-xs"
+                          : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
                       }`}
                     >
                       USDT-{net}
@@ -332,17 +368,17 @@ export default function BindWalletPage() {
 
               {/* USDT Address Input */}
               <div className="space-y-1.5">
-                <label className="text-[13px] font-semibold text-white/90 block">
+                <label className="text-[13px] font-bold text-slate-900 block">
                   USDT ({usdtNetwork}) Receiving Address
                 </label>
-                <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-                  <Wallet size={18} className="text-amber-400 shrink-0" />
+                <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 transition-all">
+                  <Wallet size={18} className="text-slate-400 shrink-0" />
                   <input
                     type="text"
                     value={usdtAddress}
                     onChange={(e) => setUsdtAddress(e.target.value)}
                     placeholder={`Enter your ${usdtNetwork} USDT wallet address...`}
-                    className="bg-transparent outline-none text-white font-mono text-[13px] w-full placeholder:text-gray-500"
+                    className="bg-transparent outline-none text-slate-900 font-mono text-[13px] font-semibold w-full placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
               </div>
@@ -352,29 +388,29 @@ export default function BindWalletPage() {
           {/* Withdrawal Password Confirmation Field */}
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center justify-between">
-              <label className="text-[13px] font-semibold text-white/90 block">
+              <label className="text-[13px] font-bold text-slate-900 block">
                 Withdrawal Password
               </label>
               <Link
                 href="/dashboard/account/withdrawal-password"
-                className="text-[11.5px] font-bold text-[#38bdf8] hover:underline hover:text-sky-300 transition-colors"
+                className="text-[11.5px] font-bold text-[#0f172a] hover:underline transition-colors"
               >
                 Set / Update Password
               </Link>
             </div>
-            <div className="flex items-center gap-3 bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
-              <Lock size={18} className="text-[#38bdf8] shrink-0" />
+            <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 transition-all">
+              <Lock size={18} className="text-slate-400 shrink-0" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter withdrawal password to confirm"
-                className="bg-transparent outline-none text-white text-[13.5px] w-full placeholder:text-gray-500"
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] font-semibold w-full placeholder:text-slate-400 placeholder:font-normal"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-gray-400 hover:text-white shrink-0"
+                className="text-slate-400 hover:text-slate-600 shrink-0 cursor-pointer"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -385,7 +421,7 @@ export default function BindWalletPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
+            className="w-full bg-[#0f172a] hover:bg-[#021d3c] text-white font-bold py-3.5 rounded-md text-[14.5px] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -396,18 +432,14 @@ export default function BindWalletPage() {
 
         </form>
 
-        {/* Friendly Reminder Notice Card */}
-        <div className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="bg-[#0284c7]/20 border border-[#0284c7]/30 text-[#38bdf8] px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider">
-              NOTICE
-            </span>
-            <h3 className="text-white/90 font-bold text-[14px]">
-              Friendly Reminder:
-            </h3>
+        {/* Important Guidelines Card */}
+        <div className="bg-white rounded-lg p-5 border border-slate-200/90 shadow-2xs space-y-3">
+          <div className="flex items-center gap-2 text-[#0f172a] font-bold text-[14px]">
+            <Info size={16} className="shrink-0 text-[#0f172a]" />
+            <span>Important Guidelines</span>
           </div>
 
-          <div className="space-y-2 text-[12px] text-gray-300 leading-relaxed pl-1">
+          <div className="space-y-2 text-[12px] text-slate-600 leading-relaxed pl-1 font-normal">
             <p>
               1. Please ensure you double-check your account details before saving to avoid withdrawal delays.
             </p>
@@ -422,7 +454,7 @@ export default function BindWalletPage() {
 
       </div>
 
-      {/* Bank Selection Bottom Sheet Modal */}
+      {/* Bank Selection Bottom Sheet Modal - Light Theme */}
       {showBankModal && (
         <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div 
@@ -430,43 +462,43 @@ export default function BindWalletPage() {
             onClick={() => setShowBankModal(false)}
           />
 
-          <div className="relative bg-[#111827] w-full max-w-[480px] mx-auto rounded-t-[24px] border-t border-white/10 overflow-hidden flex flex-col max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-300 shadow-2xl">
+          <div className="relative bg-white w-full max-w-[480px] mx-auto rounded-t-[20px] border-t border-slate-200 overflow-hidden flex flex-col max-h-[75vh] z-10 animate-in slide-in-from-bottom duration-300 shadow-2xl">
             
             {/* Modal Header */}
-            <div className="p-4 border-b border-white/5 flex items-center justify-between">
-              <h3 className="text-white text-[15px] font-bold">Select Bank</h3>
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="text-slate-900 text-[16px] font-bold">Select Bank</h3>
               <button
                 type="button"
                 onClick={() => setShowBankModal(false)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X size={16} />
               </button>
             </div>
 
             {/* Search Input */}
-            <div className="p-3 border-b border-white/5">
-              <div className="flex items-center gap-2 bg-[#0b0f19] border border-white/10 rounded-[10px] px-3 py-2">
-                <Search size={16} className="text-gray-400" />
+            <div className="p-3 border-b border-slate-100">
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-md px-3 py-2">
+                <Search size={16} className="text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search bank name..."
                   value={bankSearch}
                   onChange={(e) => setBankSearch(e.target.value)}
-                  className="bg-transparent outline-none text-white text-[13px] w-full placeholder:text-gray-500"
+                  className="bg-transparent outline-none text-slate-900 text-[13px] w-full placeholder:text-slate-400 font-medium"
                 />
                 {bankSearch && (
                   <button type="button" onClick={() => setBankSearch("")}>
-                    <X size={14} className="text-gray-400" />
+                    <X size={14} className="text-slate-400" />
                   </button>
                 )}
               </div>
             </div>
 
             {/* Bank List */}
-            <div className="overflow-y-auto flex-1 p-2 divide-y divide-white/5">
+            <div className="overflow-y-auto flex-1 p-2 divide-y divide-slate-100">
               {filteredBanks.length === 0 ? (
-                <div className="text-center py-8 text-gray-400 text-[13px]">
+                <div className="text-center py-8 text-slate-400 text-[13px]">
                   No bank found matching "{bankSearch}"
                 </div>
               ) : (
@@ -481,15 +513,15 @@ export default function BindWalletPage() {
                         setShowBankModal(false);
                         setBankSearch("");
                       }}
-                      className={`w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors cursor-pointer rounded-lg ${
-                        isSelected ? "bg-[#0284c7]/20 text-[#38bdf8]" : "text-white/90"
+                      className={`w-full px-4 py-3 flex items-center justify-between text-left hover:bg-slate-50 transition-colors cursor-pointer rounded-lg ${
+                        isSelected ? "bg-slate-100 text-slate-900 font-bold" : "text-slate-800"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Landmark size={16} className={isSelected ? "text-[#38bdf8]" : "text-gray-400"} />
-                        <span className="text-[13.5px] font-medium">{bank}</span>
+                        <Landmark size={16} className={isSelected ? "text-[#0f172a]" : "text-slate-400"} />
+                        <span className="text-[13.5px]">{bank}</span>
                       </div>
-                      {isSelected && <Check size={16} className="text-[#38bdf8]" />}
+                      {isSelected && <Check size={16} className="text-[#0f172a]" />}
                     </button>
                   );
                 })

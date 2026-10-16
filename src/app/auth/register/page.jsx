@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { setAuthToken } from "@/config/axiosInstance";
 import { useEffect, useState, Suspense } from "react";
-import { Smartphone } from "lucide-react";
+import { Smartphone, ArrowLeft } from "lucide-react";
 import logoImg from "../../../../public/logo.jpeg";
 
 function SignupForm() {
@@ -66,8 +66,8 @@ function SignupForm() {
 
   if (!isMounted || isLoadingSettings) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999]">
-        <div className="w-12 h-12 border-4 border-gray-100 border-t-[#4fb3ff] rounded-full animate-spin"></div>
+      <div className="fixed inset-0 flex items-center justify-center bg-black z-[9999]">
+        <div className="w-12 h-12 border-4 border-slate-800 border-t-amber-400 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -101,6 +101,16 @@ function SignupForm() {
       >
         {/* Soft bottom gradient to ensure pristine form field contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#080d1a]/60 to-[#080d1a]/95 pointer-events-none" />
+
+        {/* Back to Login Arrow Button */}
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="absolute top-5 left-5 z-30 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all cursor-pointer active:scale-95 shadow-sm"
+          aria-label="Back to Login"
+        >
+          <ArrowLeft size={16} />
+        </button>
 
         <div className="relative z-10">
           {/* Top clearance so the 3D gold logo emblem is showcased prominently */}
@@ -182,7 +192,7 @@ function SignupForm() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-105 active:brightness-95 rounded-full text-base font-bold transition-all shadow-lg shadow-sky-500/25 cursor-pointer flex items-center justify-center"
+              className="w-full h-12 bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.99] text-white rounded-full text-base font-bold transition-all shadow-lg shadow-black/20 border border-white/10 cursor-pointer flex items-center justify-center"
               disabled={signupMutation.isPending}
             >
               {signupMutation.isPending ? (
@@ -209,7 +219,7 @@ function SignupForm() {
             Already have an account?{" "}
             <Link
               href="/"
-              className="text-[#4fb3ff] font-bold hover:underline cursor-pointer"
+              className="text-amber-300 font-bold hover:underline cursor-pointer"
             >
               Sign in
             </Link>
@@ -222,7 +232,7 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-white"><div className="w-10 h-10 border-4 border-gray-100 border-t-[#4fb3ff] rounded-full animate-spin"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-black"><div className="w-10 h-10 border-4 border-slate-800 border-t-amber-400 rounded-full animate-spin"></div></div>}>
       <SignupForm />
     </Suspense>
   );

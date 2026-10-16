@@ -121,16 +121,16 @@ export default function BalancePage() {
 
       <div className="px-4 py-4 space-y-4 max-w-[480px] mx-auto w-full">
 
-        {/* Balance Hero Card - Clean Vibrant Blue */}
-        <div className="bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-[22px] p-5 text-white shadow-xl shadow-sky-950/20 relative overflow-hidden border border-sky-400/20">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
+        {/* Balance Hero Card - Luxury Graphite Titanium */}
+        <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] rounded-[22px] p-5 text-white shadow-xl shadow-black/15 relative overflow-hidden border border-slate-800">
+          <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
           
-          <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-xs border border-white/25 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-3">
+          <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 text-slate-200 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-3">
             ACCOUNT LEDGER
           </div>
 
           <div className="mb-4">
-            <p className="text-sky-100 text-[12px] font-medium mb-1">
+            <p className="text-slate-400 text-[12px] font-medium mb-1">
               Current Balance
             </p>
             <h2 className="text-[30px] font-black text-white tracking-tight leading-none">
@@ -140,20 +140,20 @@ export default function BalancePage() {
 
           {/* Stats Panels */}
           <div className="grid grid-cols-2 gap-3 pt-1">
-            <div className="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-3">
+            <div className="bg-white/5 backdrop-blur-xs border border-white/10 rounded-xl p-3">
               <div className="text-[18px] font-bold text-white leading-tight">
                 {displayedTransactions.length}
               </div>
-              <div className="text-sky-100 text-[11px] font-medium mt-0.5">
+              <div className="text-slate-400 text-[11px] font-medium mt-0.5">
                 All records
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl p-3">
+            <div className="bg-white/5 backdrop-blur-xs border border-white/10 rounded-xl p-3">
               <div className="text-[18px] font-bold text-white leading-tight">
                 {incomeTransactions.length}
               </div>
-              <div className="text-sky-100 text-[11px] font-medium mt-0.5">
+              <div className="text-slate-400 text-[11px] font-medium mt-0.5">
                 Income rows
               </div>
             </div>
@@ -167,7 +167,7 @@ export default function BalancePage() {
             onClick={() => setActiveTab("all")}
             className={`py-2.5 rounded-lg text-[13px] font-bold transition-all cursor-pointer text-center ${
               activeTab === "all"
-                ? "bg-gradient-to-r from-[#0284c7] to-[#0369a1] text-white shadow-md"
+                ? "bg-[#0f172a] text-white shadow-md border border-white/10"
                 : "text-gray-400 hover:text-white"
             }`}
           >
@@ -178,7 +178,7 @@ export default function BalancePage() {
             onClick={() => setActiveTab("income")}
             className={`py-2.5 rounded-lg text-[13px] font-bold transition-all cursor-pointer text-center ${
               activeTab === "income"
-                ? "bg-gradient-to-r from-[#0284c7] to-[#0369a1] text-white shadow-md"
+                ? "bg-[#0f172a] text-white shadow-md border border-white/10"
                 : "text-gray-400 hover:text-white"
             }`}
           >
@@ -190,7 +190,7 @@ export default function BalancePage() {
         <div className="mt-2">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-[#0284c7] mb-2" />
+              <Loader2 className="w-8 h-8 animate-spin text-[#0f172a] mb-2" />
               <span className="text-[12px] text-gray-500 font-medium">
                 Loading records...
               </span>
@@ -207,7 +207,7 @@ export default function BalancePage() {
                   <div
                     className={`absolute -left-6 w-6 h-6 rounded-full flex items-center justify-center border text-[11px] font-black z-10 ${
                       tx.isCredit
-                        ? "bg-[#0284c7]/20 text-[#38bdf8] border-[#0284c7]/40 shadow-[0_0_10px_rgba(2,132,199,0.3)]"
+                        ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
                         : "bg-red-500/20 text-red-400 border-red-500/40"
                     }`}
                   >
@@ -227,7 +227,7 @@ export default function BalancePage() {
 
                     <div
                       className={`text-[14px] font-extrabold whitespace-nowrap ${
-                        tx.isCredit ? "text-[#38bdf8]" : "text-red-400"
+                        tx.isCredit ? "text-emerald-400" : "text-red-400"
                       }`}
                     >
                       {tx.isCredit ? `+ ${tx.amount}` : `- ${tx.amount}`}

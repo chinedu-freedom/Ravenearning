@@ -52,7 +52,7 @@ export default function LoginPage() {
   if (!isMounted || isLoadingSettings) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black z-[9999]">
-        <div className="w-12 h-12 border-4 border-slate-800 border-t-[#4fb3ff] rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-slate-800 border-t-amber-400 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -160,7 +160,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full h-12 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-105 active:brightness-95 rounded-full text-base font-bold transition-all shadow-lg shadow-sky-500/25 cursor-pointer flex items-center justify-center"
+              className="w-full h-12 bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.99] text-white rounded-full text-base font-bold transition-all shadow-lg shadow-black/20 border border-white/10 cursor-pointer flex items-center justify-center"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -184,7 +184,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-slate-300 mt-6">
             Don’t have an account?{" "}
-            <Link href="/auth/register" className="text-[#4fb3ff] font-bold hover:underline cursor-pointer">
+            <Link href="/auth/register" className="text-amber-300 font-bold hover:underline cursor-pointer">
              Register
             </Link>
           </p>

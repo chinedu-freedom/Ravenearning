@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Wallet, X, Loader2, Sparkles } from "lucide-react";
+import { X, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useFetchData } from "@/hooks/useApi";
 import { postData } from "@/config/apiHelpers";
@@ -13,6 +13,7 @@ export default function MiningPlansPage() {
   const [investmentAmount, setInvestmentAmount] = useState("");
   const { data: plansRes, isLoading } = useFetchData("/plans", ["plans"]);
   const { data: userRes } = useFetchData("/users/me", ["user"]);
+  const { data: invRes } = useFetchData("/users/me/investments", ["my-investments"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   
@@ -26,6 +27,16 @@ export default function MiningPlansPage() {
     ? [...plansRes.data].sort((a, b) => Number(a.min_investment || 0) - Number(b.min_investment || 0))
     : [];
   const router = useRouter();
+
+  const productCount = (invRes?.data?.active?.length ?? 0) + (invRes?.data?.completed?.length ?? 0);
+  const totalRevenue = userRes?.user?.cumulative_income != null 
+    ? Number(userRes.user.cumulative_income) 
+    : Number(userRes?.user?.total_income || 0);
+  const currencySymbol = settings.currency_symbol || "R";
+
+  const formatRevenue = (val) => {
+    return Number(val || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  };
 
   const rawCategories = Array.from(new Set(
     plans
@@ -68,7 +79,7 @@ export default function MiningPlansPage() {
       });
       
       if (data?.success) {
-        toast.success(data.message || "Package activated successfully! Your investment is now running.");
+        toast.success(data.message || "Product purchased successfully! Your investment is now running.");
         setSelectedPlan(null);
         setInvestmentAmount("");
         setTimeout(() => {
@@ -115,23 +126,92 @@ export default function MiningPlansPage() {
     return `${symbol} ${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 
-  const defaultPlanImage = "/logo.png";
+  // Distinct sun image perspectives, designs, and colors for each package
+  const getPlanImage = (plan, idx) => {
+    if (plan?.image && plan.image !== "/logo.png" && !plan.image.includes("logo.png")) {
+      return plan.image;
+    }
+    
+    // Category check for activity plans
+    if (plan?.category?.toLowerCase().includes("activity")) {
+      const actIdx = (idx ?? 0) % 2;
+      return actIdx === 0 ? "/images/plans/activity1.jpg" : "/images/plans/activity2.jpg";
+    }
+
+    // VIP plans 1 through 8 with distinct perspectives, designs, and colors of the sun
+    const vipImages = [
+      "/images/plans/vip1.jpg", // Amber Gold Sun (Warm Sunrise)
+      "/images/plans/vip2.jpg", // Emerald Crystalline Sun (Isometric Crystal)
+      "/images/plans/vip3.jpg", // Royal Sapphire Cobalt Sun (Deep Blue Chrome)
+      "/images/plans/vip4.jpg", // Cosmic Amethyst Violet Sun (Neon Purple Corona)
+      "/images/plans/vip5.jpg", // Fiery Crimson Ruby Sun (Blazing Red Solar Flare)
+      "/images/plans/vip6.jpg", // Electric Cyan Turquoise Sun (High-Voltage Solar Crown)
+      "/images/plans/vip7.jpg", // Sunset Rose Gold Sun (Holographic Dusk)
+      "/images/plans/vip8.jpg", // Platinum Diamond Solar Crown (Ultra-Elite Radiant)
+    ];
+
+    return vipImages[(idx ?? 0) % vipImages.length] || "/images/plans/vip1.jpg";
+  };
+
+  const defaultPlanImage = "/images/plans/vip1.jpg";
 
   return (
-    <div className="flex flex-col h-full bg-[#f0f4f8] overflow-y-auto [&::-webkit-scrollbar]:hidden relative select-none">
+    <div className="flex flex-col h-full bg-[#f8fafc] overflow-y-auto [&::-webkit-scrollbar]:hidden relative select-none">
       {/* Page Title Header */}
       <div className="px-5 pt-4 pb-1 flex justify-between items-center max-w-[480px] mx-auto w-full">
-        <div>
-          <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
-            VIP Packages
-          </h1>
-          <p className="text-slate-500 text-[12.5px] font-medium mt-0.5">
-            Select a suncerestcapital package
-          </p>
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+          <div>
+            <h1 className="text-slate-900 text-[22px] font-black tracking-tight leading-tight">
+              Products
+            </h1>
+            <p className="text-slate-500 text-[12.5px] font-medium mt-0.5">
+              Select a suncerestcapital package
+            </p>
+          </div>
         </div>
-        <Link href="/dashboard/investments" className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200/80 shadow-xs">
-          <Wallet size={16} />
-        </Link>
+      </div>
+
+      {/* User Product Stats Sun Banner */}
+      <div className="px-5 pt-3 pb-1 max-w-[480px] mx-auto w-full">
+        <div 
+          onClick={() => router.push("/dashboard/investments")}
+          className="relative w-full rounded-2xl overflow-hidden shadow-sm cursor-pointer active:scale-[0.99] transition-transform bg-[#0a1122] h-[105px] flex items-center justify-between px-7 border border-slate-800/40"
+        >
+          {/* Background Sun Division Image */}
+          <img
+            src="/images/dashboard/product_sun_banner.jpg"
+            alt="Sun Horizon"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
+          />
+
+          {/* Soft Dark Gradient Overlay for optimal contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-slate-950/35 to-slate-950/65" />
+
+          {/* Left Column: My Product */}
+          <div className="relative z-10 flex flex-col justify-center">
+            <span className="text-white text-[28px] sm:text-[30px] font-black leading-none drop-shadow-sm">
+              {productCount}
+            </span>
+            <span className="text-slate-100 text-[13px] font-medium mt-1.5 drop-shadow-xs">
+              My Product
+            </span>
+          </div>
+
+          {/* Right Column: Total Revenue */}
+          <div className="relative z-10 flex flex-col items-start justify-center">
+            <span className="text-white text-[28px] sm:text-[30px] font-black leading-none drop-shadow-sm">
+              {currencySymbol} {formatRevenue(totalRevenue)}
+            </span>
+            <span className="text-slate-100 text-[13px] font-medium mt-1.5 drop-shadow-xs">
+              Total revenue
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Series / Category Filter Pills */}
@@ -144,10 +224,10 @@ export default function MiningPlansPage() {
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`flex-1 py-2.5 px-4 rounded-xl text-[13px] font-black transition-all cursor-pointer border text-center whitespace-nowrap ${
+                className={`flex-1 py-2.5 px-4 rounded-xl text-[13px] font-bold transition-all cursor-pointer border text-center whitespace-nowrap ${
                   isActive
-                    ? "bg-gradient-to-r from-[#4f8cff] to-[#2563eb] text-white border-blue-500 shadow-sm scale-[1.01]"
-                    : "bg-white text-slate-600 border-slate-200/80 hover:bg-slate-50"
+                    ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm scale-[1.01]"
+                    : "bg-white text-slate-600 border-slate-200/90 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 {cat}
@@ -161,7 +241,7 @@ export default function MiningPlansPage() {
       <div className="px-4 pt-2 pb-24 space-y-4 max-w-[480px] mx-auto w-full">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-            <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#4f8cff]" />
+            <Loader2 className="w-8 h-8 animate-spin mb-3 text-slate-800" />
             <p className="text-xs font-bold">Loading packages...</p>
           </div>
         ) : filteredPlans.length === 0 ? (
@@ -177,20 +257,17 @@ export default function MiningPlansPage() {
           const totalInc = plan.total_revenue ? Number(plan.total_revenue) : Number((dailyInc * Number(plan.duration || 0)).toFixed(2));
 
           return (
-            <div key={plan.id} className="bg-white rounded-[18px] p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col gap-4">
+            <div key={plan.id} className="bg-white rounded-[20px] p-4 sm:p-5 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex flex-col gap-4">
               
               {/* Upper Section: Flex Image + Details */}
               <div className="flex items-start gap-4">
                 {/* Left Product Image */}
-                <div className="w-[125px] h-[115px] rounded-[14px] overflow-hidden shrink-0 border border-slate-100 bg-slate-50 shadow-xs relative">
+                <div className="w-[125px] h-[115px] rounded-[14px] overflow-hidden shrink-0 border border-slate-200/70 bg-slate-900 shadow-xs relative">
                   <img
-                    src={plan.image || defaultPlanImage}
+                    src={getPlanImage(plan, index)}
                     alt={plan.name}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-amber-400 text-amber-950 font-black text-[10px] tracking-wider uppercase shadow-xs">
-                    VIP{index + 1}
-                  </div>
                 </div>
 
                 {/* Right Details Column */}
@@ -199,7 +276,7 @@ export default function MiningPlansPage() {
                     <h2 className="text-slate-900 font-extrabold text-[16px] tracking-tight leading-snug truncate">
                       {plan.name}
                     </h2>
-                    <p className="text-[#2563eb] font-black text-[16px] mt-1 leading-none">
+                    <p className="text-slate-950 font-black text-[17px] mt-1 leading-none tracking-tight">
                       {formatCurrency(minInv)}
                     </p>
                   </div>
@@ -207,15 +284,15 @@ export default function MiningPlansPage() {
                   <div className="space-y-1.5 mt-2">
                     <div className="flex justify-between items-center text-[12px]">
                       <span className="text-slate-500 font-medium">Duration:</span>
-                      <span className="text-slate-800 font-bold">{plan.duration}-DAYS</span>
+                      <span className="text-slate-900 font-bold">{plan.duration}-DAYS</span>
                     </div>
                     <div className="flex justify-between items-center text-[12px]">
                       <span className="text-slate-500 font-medium">Daily Income:</span>
-                      <span className="text-emerald-600 font-black">{formatCurrency(dailyInc)}</span>
+                      <span className="text-slate-900 font-bold">{formatCurrency(dailyInc)}</span>
                     </div>
                     <div className="flex justify-between items-center text-[12px]">
                       <span className="text-slate-500 font-medium">Total Revenue:</span>
-                      <span className="text-slate-900 font-black">{formatCurrency(totalInc)}</span>
+                      <span className="text-slate-950 font-black">{formatCurrency(totalInc)}</span>
                     </div>
                   </div>
                 </div>
@@ -225,16 +302,16 @@ export default function MiningPlansPage() {
               {plan.is_sold_out ? (
                 <button
                   disabled
-                  className="w-full bg-[#94a3b8] text-white font-black py-3 rounded-full text-[13.5px] uppercase tracking-wider flex items-center justify-center cursor-not-allowed shadow-none"
+                  className="w-full bg-slate-200 text-slate-400 font-bold py-3.5 rounded-full text-[13.5px] uppercase tracking-wider flex items-center justify-center cursor-not-allowed shadow-none"
                 >
                   <span>Sold Out</span>
                 </button>
               ) : (
                 <button
                   onClick={() => handleMineClick(plan)}
-                  className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-extrabold py-3 rounded-full transition-all text-[13.5px] shadow-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                  className="w-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-extrabold py-3.5 rounded-full transition-all text-[13.5px] shadow-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                 >
-                  <span>ACTIVATE PACKAGE</span>
+                  <span>Purchase Product</span>
                 </button>
               )}
             </div>
@@ -255,8 +332,8 @@ export default function MiningPlansPage() {
             {/* Modal Header */}
             <div className="flex justify-between items-center px-5 pb-3 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <div className="w-[42px] h-[42px] rounded-xl overflow-hidden shrink-0 border border-slate-100 bg-slate-50">
-                  <img src={selectedPlan.image || defaultPlanImage} alt={selectedPlan.name} className="w-full h-full object-cover" />
+                <div className="w-[42px] h-[42px] rounded-xl overflow-hidden shrink-0 border border-slate-100 bg-slate-900">
+                  <img src={getPlanImage(selectedPlan, filteredPlans.findIndex(p => p.id === selectedPlan.id))} alt={selectedPlan.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="font-extrabold text-slate-900 text-[15px] leading-tight">{selectedPlan.name}</h3>
@@ -277,7 +354,7 @@ export default function MiningPlansPage() {
 
               <div className="flex justify-between items-center py-3.5 bg-slate-50 rounded-2xl border border-slate-100 px-4">
                 <div className="text-center w-1/3">
-                  <div className="text-[#4f8cff] font-extrabold text-[14px]">
+                  <div className="text-slate-950 font-black text-[14px]">
                     {formatCurrency(selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0))}
                   </div>
                   <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Daily Income</div>
@@ -297,8 +374,8 @@ export default function MiningPlansPage() {
               {/* Available Balance */}
               <div>
                 <label className="block text-slate-500 text-[12px] font-medium mb-1.5">Available Balance</label>
-                <div className="w-full py-3.5 rounded-2xl border border-sky-100 bg-sky-50/50 flex flex-col items-center justify-center gap-0.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0284c7]">Wallet Balance</span>
+                <div className="w-full py-3.5 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col items-center justify-center gap-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Wallet Balance</span>
                   <span className="text-[20px] text-slate-900 font-black">{formatCurrency(balances.main)}</span>
                 </div>
               </div>
@@ -321,11 +398,11 @@ export default function MiningPlansPage() {
               <div className="space-y-3 pt-2">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                   <span className="text-slate-500 text-[12px] font-medium">Daily Income</span>
-                  <span className="text-emerald-600 text-[15px] font-extrabold">{formatCurrency(dailyIncome)}</span>
+                  <span className="text-slate-900 text-[15px] font-bold">{formatCurrency(dailyIncome)}</span>
                 </div>
                 <div className="flex justify-between items-center pb-1">
                   <span className="text-slate-500 text-[12px] font-medium">Total Expected Revenue</span>
-                  <span className="text-[#2563eb] text-[15px] font-black">{formatCurrency(totalReturn)}</span>
+                  <span className="text-slate-950 text-[15px] font-black">{formatCurrency(totalReturn)}</span>
                 </div>
               </div>
             </div>
@@ -335,9 +412,9 @@ export default function MiningPlansPage() {
               <button 
                 onClick={handleInvest}
                 disabled={isInvesting}
-                className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-extrabold py-3.5 rounded-full transition-all text-[15px] shadow-sm disabled:opacity-50 flex items-center justify-center cursor-pointer uppercase tracking-wider active:scale-[0.99]"
+                className="w-full bg-[#0f172a] hover:bg-[#1e293b] text-white font-extrabold py-3.5 rounded-full transition-all text-[15px] shadow-sm disabled:opacity-50 flex items-center justify-center cursor-pointer uppercase tracking-wider active:scale-[0.99]"
               >
-                {isInvesting ? <Loader2 className="w-5 h-5 animate-spin" /> : "CONFIRM ACTIVATION"}
+                {isInvesting ? <Loader2 className="w-5 h-5 animate-spin" /> : "CONFIRM PURCHASE"}
               </button>
             </div>
 

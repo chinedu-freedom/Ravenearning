@@ -17,8 +17,8 @@ export default function HowToPlayModal({ isOpen, setIsOpen }) {
         </button>
 
         <div className="flex items-center gap-2 px-6 pt-5 pb-3 border-b border-white/5">
-          <div className="w-6 h-6 rounded-full bg-[#4f8cff]/20 flex items-center justify-center">
-            <HelpCircle className="text-[#4f8cff] w-3.5 h-3.5" />
+          <div className="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center">
+            <HelpCircle className="text-amber-400 w-3.5 h-3.5" />
           </div>
           <h2 className="text-[16px] font-bold text-white/90">How to Play</h2>
         </div>
@@ -26,8 +26,8 @@ export default function HowToPlayModal({ isOpen, setIsOpen }) {
         <div className="p-6 space-y-4">
           {/* Item 1 */}
           <div className="flex gap-3.5 items-start">
-            <div className="w-9 h-9 rounded-[12px] bg-[#4f8cff]/10 flex items-center justify-center shrink-0">
-              <Pointer className="text-[#4f8cff] w-4 h-4" />
+            <div className="w-9 h-9 rounded-[12px] bg-amber-500/10 flex items-center justify-center shrink-0">
+              <Pointer className="text-amber-400 w-4 h-4" />
             </div>
             <div>
               <h3 className="text-[13px] font-bold text-white/90 mb-0.5">Tap to Spin</h3>
@@ -39,8 +39,8 @@ export default function HowToPlayModal({ isOpen, setIsOpen }) {
 
           {/* Item 2 */}
           <div className="flex gap-3.5 items-start">
-            <div className="w-9 h-9 rounded-[12px] bg-[#4f8cff]/10 flex items-center justify-center shrink-0">
-              <Gift className="text-[#4f8cff] w-4 h-4" />
+            <div className="w-9 h-9 rounded-[12px] bg-amber-500/10 flex items-center justify-center shrink-0">
+              <Gift className="text-amber-400 w-4 h-4" />
             </div>
             <div>
               <h3 className="text-[13px] font-bold text-white/90 mb-0.5">Win Prizes</h3>
@@ -52,8 +52,8 @@ export default function HowToPlayModal({ isOpen, setIsOpen }) {
 
           {/* Item 3 */}
           <div className="flex gap-3.5 items-start">
-            <div className="w-9 h-9 rounded-[12px] bg-[#4f8cff]/10 flex items-center justify-center shrink-0">
-              <Star className="text-[#4f8cff] w-4 h-4 fill-current" />
+            <div className="w-9 h-9 rounded-[12px] bg-amber-500/10 flex items-center justify-center shrink-0">
+              <Star className="text-amber-400 w-4 h-4 fill-current" />
             </div>
             <div>
               <h3 className="text-[13px] font-bold text-white/90 mb-0.5">Earn Free Spins</h3>
@@ -65,8 +65,8 @@ export default function HowToPlayModal({ isOpen, setIsOpen }) {
 
           {/* Item 4 */}
           <div className="flex gap-3.5 items-start">
-            <div className="w-9 h-9 rounded-[12px] bg-[#4f8cff]/10 flex items-center justify-center shrink-0">
-              <Crown className="text-[#4f8cff] w-4 h-4 fill-current" />
+            <div className="w-9 h-9 rounded-[12px] bg-amber-500/10 flex items-center justify-center shrink-0">
+              <Crown className="text-amber-400 w-4 h-4 fill-current" />
             </div>
             <div>
               <h3 className="text-[13px] font-bold text-white/90 mb-0.5">Hit the Jackpot</h3>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { usePost, useFetchData } from "@/hooks/useApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import logoImg from "../../../../public/logo.jpeg";
 
 export default function ResetPasswordPage() {
@@ -32,7 +33,7 @@ export default function ResetPasswordPage() {
   if (!isMounted || isLoadingSettings) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999]">
-        <div className="w-12 h-12 border-4 border-gray-100 border-t-[#4f8cff] rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-gray-100 border-t-[#0f172a] rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -100,6 +101,16 @@ export default function ResetPasswordPage() {
         {/* Soft bottom gradient to ensure pristine form field contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#080d1a]/60 to-[#080d1a]/95 pointer-events-none" />
 
+        {/* Back to Login Arrow Button */}
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="absolute top-5 left-5 z-30 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-all cursor-pointer active:scale-95 shadow-sm"
+          aria-label="Back to Login"
+        >
+          <ArrowLeft size={16} />
+        </button>
+
         <div className="relative z-10">
           {/* Top clearance so the 3D gold logo emblem is showcased prominently */}
           <div className="h-28 sm:h-32" />
@@ -132,7 +143,7 @@ export default function ResetPasswordPage() {
             <Button
               type="submit"
               disabled={resetPasswordMutation.isPending}
-              className="w-full h-12 bg-gradient-to-r from-[#4fb3ff] to-[#5ce3ff] text-white hover:brightness-105 active:brightness-95 rounded-full text-base font-bold transition-all shadow-lg shadow-sky-500/25 cursor-pointer disabled:opacity-70 flex items-center justify-center"
+              className="w-full h-12 bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.99] text-white rounded-full text-base font-bold transition-all shadow-lg shadow-black/20 border border-white/10 cursor-pointer disabled:opacity-70 flex items-center justify-center"
             >
               {resetPasswordMutation.isPending ? (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -156,7 +167,7 @@ export default function ResetPasswordPage() {
               Back to{" "}
               <Link
                 href="/"
-                className="text-[#4fb3ff] font-bold hover:underline cursor-pointer"
+                className="text-amber-300 font-bold hover:underline cursor-pointer"
               >
                 Login
               </Link>

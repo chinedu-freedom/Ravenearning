@@ -134,7 +134,7 @@ const Input = React.forwardRef(
           placeholder={placeholder || " "}
           className={cn(
             "peer block w-full h-12 rounded-full border border-white/20 bg-black/20 px-5 py-3 text-sm text-white placeholder-slate-400 backdrop-blur-sm",
-            "focus:border-[#4fb3ff] focus:outline-none focus:ring-2 focus:ring-[#4fb3ff]/30 transition-all duration-200",
+            "focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all duration-200",
             "disabled:cursor-not-allowed disabled:opacity-50",
             prefix ? (Icon ? "pl-[82px]" : "pl-[68px]") : "pl-5",
             isPassword ? "pr-12" : "",
@@ -151,14 +151,14 @@ const Input = React.forwardRef(
               "text-slate-400",
               (shouldFloatLabel || prefix)
                 ? [
-                    "-top-2.5 text-xs font-semibold text-[#4fb3ff]",
+                    "-top-2.5 text-xs font-semibold text-amber-300",
                     "bg-[#080d1a] px-2.5 rounded-full shadow-xs",
                   ].join(' ')
                 : [
                     "top-3.5 text-sm",
                     "bg-transparent"
                   ].join(' '),
-              "peer-focus:-top-2.5 peer-focus:text-xs peer-focus:font-semibold peer-focus:text-[#4fb3ff] peer-focus:bg-[#080d1a] peer-focus:px-2.5 peer-focus:rounded-full"
+              "peer-focus:-top-2.5 peer-focus:text-xs peer-focus:font-semibold peer-focus:text-amber-300 peer-focus:bg-[#080d1a] peer-focus:px-2.5 peer-focus:rounded-full"
             )}
           >
             {label}

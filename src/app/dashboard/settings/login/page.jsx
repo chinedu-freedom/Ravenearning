@@ -2,48 +2,58 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  Shield,
-  Lock,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-  Info,
-  Check,
-  Loader2
+import { 
+  ArrowLeft, 
+  Eye, 
+  EyeOff, 
+  Lock, 
+  KeyRound, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Loader2,
+  Info
 } from "lucide-react";
 import { usePut } from "@/hooks/useApi";
 import { toast } from "sonner";
 
 export default function SecuritySettingsPage() {
   const router = useRouter();
-  const { mutate: updatePassword, isPending } = usePut("/users/me/password");
 
-  // State for toggling password visibility
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const { mutate: updatePassword, isPending } = usePut("/users/me/password");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
+    if (!currentPassword) {
+      toast.error("Please enter your current password");
+      return;
+    }
+
+    if (!newPassword) {
+      toast.error("Please enter your new password");
+      return;
+    }
+
     if (newPassword.length < 8) {
       toast.error("Password must be at least 8 characters long");
       return;
     }
-    
+
     if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
       toast.error("Password must contain both letters and numbers");
       return;
     }
 
     if (newPassword === currentPassword) {
-      toast.error("Please do not reuse your current password");
+      toast.error("New password cannot be the same as your current password");
       return;
     }
 
@@ -52,158 +62,188 @@ export default function SecuritySettingsPage() {
       return;
     }
 
-    updatePassword({ currentPassword, newPassword }, {
-      onSuccess: () => {
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+    updatePassword(
+      {
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Password updated successfully");
+          setCurrentPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+          setTimeout(() => {
+            router.push("/dashboard/settings");
+          }, 800);
+        },
+        onError: (err) => {
+          toast.error("Password Update Failed", {
+            description: err?.response?.data?.message || err?.message || "Could not update password",
+          });
+        }
       }
-    });
+    );
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0b0f19] overflow-y-auto [&::-webkit-scrollbar]:hidden ">
-      {/* Header */}
-      <div className="bg-[#111827] px-4 py-3.5 flex items-center sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <button 
-          onClick={() => router.push('/dashboard/settings')}
-          className="mr-3 text-gray-400 hover:text-white transition-colors cursor-pointer"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <h1 className="text-white/90 text-[15px] font-bold">Security</h1>
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
+      
+      {/* Top Header Bar - White background, Text on left, Logo on right */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push("/dashboard/settings")}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back to Settings"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            Change Password
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-6 max-w-[480px] mx-auto w-full">
-
-        {/* Top Icon Area */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-[60px] h-[60px] bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] rounded-[18px] flex items-center justify-center text-white mb-3 shadow-md">
-            <Shield size={28} className="fill-white" />
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
+        
+        {/* Security Overview Stats Card */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
+          <div>
+            <div className="text-[20px] sm:text-[22px] font-black text-slate-900 tracking-tight leading-tight">
+              Login Security
+            </div>
+            <p className="text-[13px] text-slate-500 font-medium mt-1">
+              Protect your account & withdrawals
+            </p>
           </div>
-          <h2 className="text-white/90 text-[18px] font-bold">Change Password</h2>
-          <p className="text-gray-400 text-[12.5px] mt-1">Update your account password</p>
+          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+            <ShieldCheck size={24} className="stroke-[2.2]" />
+          </div>
         </div>
 
-        {/* Form Card */}
-        <div className="bg-[#111827] rounded-[16px] border border-white/5 shadow-sm p-4 mb-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
-
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-1.5 text-white/80 mb-2">
-                <Lock size={14} className="text-[#4f8cff]" />
-                <label className="text-[12px] font-medium">Login Password</label>
-              </div>
-              <div className="relative">
-                <input
-                  type={showCurrent ? "text" : "password"}
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter your withdrawal password"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[13px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-[#4f8cff] transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowCurrent(!showCurrent)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                >
-                  {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+        {/* Change Password Form */}
+        <form onSubmit={handleSubmit} className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+          
+          {/* Current Password Field */}
+          <div className="space-y-1.5">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              Current Password
+            </label>
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
+              <KeyRound size={17} className="text-slate-400 shrink-0 mr-2.5" />
+              <input
+                type={showCurrent ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter current password"
+                disabled={isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrent(!showCurrent)}
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
+              >
+                {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-1.5 text-white/80 mb-2">
-                <Lock size={14} className="text-[#4f8cff]" />
-                <label className="text-[12px] font-medium">New Password</label>
-              </div>
-              <div className="relative">
-                <input
-                  type={showNew ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter your new password"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[13px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-[#4f8cff] transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNew(!showNew)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                >
-                  {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-1.5 pb-2">
-              <div className="flex items-center gap-1.5 text-white/80 mb-2">
-                <CheckCircle2 size={14} className="text-[#4f8cff]" />
-                <label className="text-[12px] font-medium">Confirm Password</label>
-              </div>
-              <div className="relative">
-                <input
-                  type={showConfirm ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Re-enter your new password"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[13px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-[#4f8cff] transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                >
-                  {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isPending}
-              className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-bold text-[14px] py-3 rounded-[10px] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  Save Changes
-                  <div className="w-[14px] h-[14px] bg-white rounded-full flex items-center justify-center">
-                    <Check size={10} className="text-[#4f8cff] stroke-[4]" />
-                  </div>
-                </>
-              )}
-            </button>
-          </form>
-        </div>
-
-        {/* Requirements Box */}
-        <div className="bg-blue-900/20 rounded-[16px] border border-[#4f8cff]/20 p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-[18px] h-[18px] bg-[#4f8cff] rounded-full flex items-center justify-center text-white">
-              <Info size={12} strokeWidth={3} />
-            </div>
-            <h3 className="text-blue-200 text-[13px] font-bold">Password Requirements</h3>
           </div>
-          <ul className="space-y-2.5">
-            {[
-              "Minimum 8 characters",
-              "Use a combination of letters and numbers",
-              "Avoid using personal information",
-              "Don't reuse old passwords"
-            ].map((req, idx) => (
-              <li key={idx} className="flex items-center gap-2.5 text-[#4f8cff] text-[12px]">
-                <Check size={14} className="shrink-0" />
-                <span>{req}</span>
-              </li>
-            ))}
+
+          {/* New Password Field */}
+          <div className="space-y-1.5">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              New Password
+            </label>
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
+              <Lock size={17} className="text-slate-400 shrink-0 mr-2.5" />
+              <input
+                type={showNew ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="At least 8 characters with letters & numbers"
+                disabled={isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNew(!showNew)}
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
+              >
+                {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Confirm Password Field */}
+          <div className="space-y-1.5">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              Confirm New Password
+            </label>
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
+              <CheckCircle2 size={17} className="text-slate-400 shrink-0 mr-2.5" />
+              <input
+                type={showConfirm ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Re-enter your new password"
+                disabled={isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
+              >
+                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Action Submit Button */}
+          <button
+            type="submit"
+            disabled={isPending || !currentPassword || !newPassword || !confirmPassword}
+            className="w-full bg-[#0f172a] hover:bg-[#021d3c] disabled:opacity-50 text-white font-bold py-3.5 rounded-xl text-[14.5px] shadow-md shadow-blue-950/15 cursor-pointer active:scale-[0.98] transition-all flex items-center justify-center gap-2 pt-3"
+          >
+            {isPending ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>
+                <ShieldCheck size={17} />
+                <span>Update Password</span>
+              </>
+            )}
+          </button>
+
+        </form>
+
+        {/* Security Guidelines Card */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs space-y-2">
+          <div className="flex items-center gap-1.5 text-slate-800 font-bold text-[13px]">
+            <Info size={15} className="text-slate-500" />
+            <span>Security Guidelines</span>
+          </div>
+          <ul className="text-[12px] text-slate-500 leading-relaxed space-y-1.5 pl-5 list-disc">
+            <li>Password must be at least 8 characters long.</li>
+            <li>Must contain a mix of both letters (A-Z) and numbers (0-9).</li>
+            <li>Do not reuse your current password or easily guessable dates.</li>
+            <li>Platform admins will never ask you for your login password.</li>
           </ul>
         </div>
 
       </div>
+
     </div>
   );
 }

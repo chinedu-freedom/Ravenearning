@@ -84,7 +84,7 @@ export default function PaymentSettingsPage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-[#4f8cff] transition-all"
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-amber-400 transition-all"
                 />
                 <button
                   type="button"
@@ -104,7 +104,7 @@ export default function PaymentSettingsPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-[#4f8cff] transition-all"
+                  className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-amber-400 transition-all"
                 />
                 <button
                   type="button"
@@ -119,7 +119,7 @@ export default function PaymentSettingsPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] hover:opacity-95 text-white font-bold text-[14px] py-3 rounded-[12px] transition-all shadow-md cursor-pointer disabled:opacity-50"
+              className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:opacity-95 text-white font-bold text-[14px] py-3 rounded-[12px] transition-all shadow-md shadow-amber-500/20 cursor-pointer disabled:opacity-50"
             >
               {isPending ? <Loader2 size={20} className="animate-spin" /> : (hasPin ? "Update Password" : "Set Password")}
             </button>

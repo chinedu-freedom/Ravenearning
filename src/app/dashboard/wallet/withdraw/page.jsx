@@ -4,7 +4,6 @@ import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  RotateCcw,
   Landmark,
   Building2,
   ChevronRight,
@@ -135,24 +134,26 @@ function WithdrawContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7fb] flex flex-col justify-start">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start">
       
       {/* Top Header Bar */}
-      <div className="sticky top-0 z-40 bg-[#03254c] text-white px-4 h-14 flex items-center justify-between shadow-md">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer -ml-1"
-          aria-label="Go Back"
-        >
-          <ArrowLeft size={19} />
-        </button>
-        <h1 className="text-white text-[17px] font-bold tracking-tight">
-          Withdrawal
-        </h1>
+      <div className="sticky top-0 z-40 bg-white text-slate-900 px-5 h-16 flex items-center justify-between border-b border-slate-100 shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight">
+            Withdrawal
+          </h1>
+        </div>
         <Link
-          href="/dashboard/transactions"
-          className="text-[#f59e0b] hover:text-amber-300 text-[13px] font-bold transition-colors cursor-pointer"
+          href="/dashboard/account/withdrawal"
+          className="px-3.5 py-1.5 rounded-full text-[13px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 transition-all shadow-2xs cursor-pointer flex items-center gap-1 active:scale-95"
         >
           History
         </Link>
@@ -160,107 +161,141 @@ function WithdrawContent() {
 
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
         
-        {/* Withdrawable Balance Card */}
-        <div className="bg-[#03254c] rounded-[18px] p-5 text-white shadow-lg shadow-blue-950/20 relative overflow-hidden border border-white/10">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
-          
-          <div className="text-sky-100 text-[13px] font-medium flex items-center justify-between">
-            <span>Withdrawable Balance</span>
-            <span className="bg-emerald-500/20 text-emerald-300 text-[10.5px] font-bold px-2 py-0.5 rounded-full border border-emerald-400/30">
-              Available
-            </span>
+        {/* Balances Container - No background */}
+        <div className="py-1 space-y-3">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            {/* Total Balance */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="text-[26px] sm:text-[28px] font-black text-slate-900 tracking-tight leading-none">
+                {currencySymbol} {formatAmount(availableBalance)}
+              </div>
+              <p className="text-[13px] text-slate-500 font-medium mt-2">
+                Total Balance
+              </p>
+            </div>
+
+            {/* Withdrawable Balance */}
+            <div className="flex flex-col items-center justify-center border-l border-slate-200">
+              <div className="text-[26px] sm:text-[28px] font-black text-slate-900 tracking-tight leading-none">
+                {currencySymbol} {formatAmount(withdrawableBalance)}
+              </div>
+              <p className="text-[13px] text-slate-500 font-medium mt-2">
+                Withdrawable Balance
+              </p>
+            </div>
           </div>
 
-          <div className="text-[#f59e0b] text-[34px] font-black tracking-tight mt-1 mb-3 leading-none">
-            {currencySymbol}{formatAmount(withdrawableBalance)}
-          </div>
-
-          <div className="flex items-center justify-between text-white/80 text-[12px] pt-1 border-t border-white/10">
-            <span>Withdrawal Handling Fee:</span>
-            <span className="font-bold text-white">{feePercent}%</span>
+          {/* Withdrawal Handling Fee */}
+          <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between text-[13px] text-slate-500 px-1">
+            <span className="font-medium">Withdrawal Handling Fee:</span>
+            <span className="font-bold text-slate-900">{feePercent}%</span>
           </div>
         </div>
 
-        {/* Withdrawal Method Selection */}
-        <div>
-          <h2 className="text-slate-900 text-[15px] font-bold tracking-tight mb-2.5">
+        {/* Withdrawal Destination Selection using Full Width Radio Selectable Divs */}
+        <div className="space-y-2">
+          <label className="text-slate-900 text-[15px] font-bold tracking-tight block">
             Select Withdrawal Destination
-          </h2>
-          
-          <div className="grid grid-cols-2 gap-2.5 mb-3">
-            {/* Bank Payout Option */}
-            <button
-              type="button"
+          </label>
+
+          <div className="space-y-2">
+            {/* South Africa Bank Option */}
+            <div
               onClick={() => setWithdrawType("bank")}
-              className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+              className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
                 withdrawType === "bank"
-                  ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
-                  : "bg-white/80 border-slate-200 text-slate-600 hover:bg-white"
+                  ? "bg-slate-50/80 border-[#0f172a] shadow-xs"
+                  : "bg-white border-slate-200 hover:border-slate-300"
               }`}
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <Landmark size={17} className="text-[#03254c]" />
-                <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                  withdrawType === "bank" ? "border-[#03254c] bg-[#03254c]" : "border-slate-300"
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                  withdrawType === "bank" ? "bg-[#0f172a] text-white" : "bg-slate-100 text-slate-600"
                 }`}>
-                  {withdrawType === "bank" && <div className="w-1 h-1 rounded-full bg-white" />}
+                  <Landmark size={18} />
+                </div>
+                <div>
+                  <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
+                    South Africa Bank (Rand)
+                  </span>
+                  <span className="text-[11.5px] text-slate-500 font-medium">
+                    Withdraw directly to your linked bank account
+                  </span>
                 </div>
               </div>
-              <span className="font-bold text-[13px] text-slate-900 block leading-tight">
-                South Africa Bank
-              </span>
-              <span className="text-[11px] text-slate-500 font-medium">
-                ZAR Account
-              </span>
-            </button>
 
-            {/* USDT Payout Option */}
-            <button
-              type="button"
+              {/* Radio Indicator */}
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                withdrawType === "bank" ? "border-[#0f172a]" : "border-slate-300"
+              }`}>
+                {withdrawType === "bank" && (
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a]" />
+                )}
+              </div>
+            </div>
+
+            {/* USDT Crypto Option */}
+            <div
               onClick={() => setWithdrawType("usdt")}
-              className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+              className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
                 withdrawType === "usdt"
-                  ? "bg-white border-amber-500 ring-2 ring-amber-500/10 shadow-sm"
-                  : "bg-white/80 border-slate-200 text-slate-600 hover:bg-white"
+                  ? "bg-slate-50/80 border-[#0f172a] shadow-xs"
+                  : "bg-white border-slate-200 hover:border-slate-300"
               }`}
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <Globe size={17} className="text-amber-600" />
-                <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                  withdrawType === "usdt" ? "border-amber-500 bg-amber-500" : "border-slate-300"
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                  withdrawType === "usdt" ? "bg-[#0f172a] text-white" : "bg-slate-100 text-slate-600"
                 }`}>
-                  {withdrawType === "usdt" && <div className="w-1 h-1 rounded-full bg-white" />}
+                  <Wallet size={18} />
+                </div>
+                <div>
+                  <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
+                    USDT Wallet (Crypto)
+                  </span>
+                  <span className="text-[11.5px] text-slate-500 font-medium">
+                    Payout in USDT TRC20 / BEP20
+                  </span>
                 </div>
               </div>
-              <span className="font-bold text-[13px] text-slate-900 block leading-tight">
-                USDT Wallet
-              </span>
-              <span className="text-[11px] text-amber-600 font-bold">
-                Crypto Payout
-              </span>
-            </button>
-          </div>
 
-          {/* Bound Account Display Card */}
+              {/* Radio Indicator */}
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                withdrawType === "usdt" ? "border-[#0f172a]" : "border-slate-300"
+              }`}>
+                {withdrawType === "usdt" && (
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a]" />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dedicated Section for Selecting Wallets / Banks */}
+        <div className="space-y-2">
+          <label className="text-slate-900 text-[15px] font-bold tracking-tight block">
+            {withdrawType === "bank" ? "Select Bank" : "Select Wallet"}
+          </label>
+
           {withdrawType === "bank" ? (
             hasLinkedBank ? (
-              <div className="bg-white border border-slate-200 rounded-[14px] p-3.5 flex items-center justify-between shadow-2xs">
+              <div className="bg-white border border-slate-200 rounded-md p-3.5 flex items-center justify-between shadow-2xs">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#03254c] flex items-center justify-center font-bold">
+                  <div className="w-9 h-9 rounded-md bg-slate-100 text-[#0f172a] flex items-center justify-center font-bold shrink-0">
                     <Landmark size={18} />
                   </div>
                   <div>
-                    <span className="font-bold text-[13.5px] text-slate-900 block leading-tight">
+                    <span className="font-bold text-[14px] text-slate-900 block leading-tight">
                       {bankName}
                     </span>
-                    <span className="text-[12px] text-slate-500 font-mono">
-                      {accountNumber} ({accountName})
+                    <span className="text-[12px] text-slate-500 font-mono mt-0.5 block">
+                      {accountNumber} {accountName ? `(${accountName})` : ""}
                     </span>
                   </div>
                 </div>
                 <Link
                   href="/dashboard/account/bind"
-                  className="text-xs font-bold text-[#03254c] hover:underline shrink-0"
+                  className="text-xs font-bold text-[#0f172a] hover:underline shrink-0 px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition-colors"
                 >
                   Change
                 </Link>
@@ -268,36 +303,36 @@ function WithdrawContent() {
             ) : (
               <Link
                 href="/dashboard/account/bind"
-                className="bg-amber-50 border border-amber-200 rounded-[14px] p-3.5 flex items-center justify-between hover:bg-amber-100/60 transition-all cursor-pointer"
+                className="bg-amber-50/70 border border-amber-200 rounded-md p-3.5 flex items-center justify-between hover:bg-amber-100/60 transition-all cursor-pointer"
               >
-                <div className="flex items-center gap-2.5 text-amber-800 text-[13px] font-bold">
+                <div className="flex items-center gap-2.5 text-amber-900 text-[13px] font-bold">
                   <AlertCircle size={17} className="text-amber-600" />
                   <span>No South Africa Bank bound yet</span>
                 </div>
-                <span className="bg-amber-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
-                  Bind Now
+                <span className="bg-[#0f172a] text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
+                  Choose Bank
                 </span>
               </Link>
             )
           ) : (
             hasLinkedUsdt ? (
-              <div className="bg-white border border-amber-200 rounded-[14px] p-3.5 flex items-center justify-between shadow-2xs">
+              <div className="bg-white border border-slate-200 rounded-md p-3.5 flex items-center justify-between shadow-2xs">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold shrink-0">
+                  <div className="w-9 h-9 rounded-md bg-slate-100 text-[#0f172a] flex items-center justify-center font-bold shrink-0">
                     <Wallet size={18} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="font-bold text-[13.5px] text-slate-900 block leading-tight">
+                    <span className="font-bold text-[14px] text-slate-900 block leading-tight">
                       USDT ({usdtNetwork}) Address
                     </span>
-                    <span className="text-[11.5px] text-amber-700 font-mono truncate block">
+                    <span className="text-[11.5px] text-slate-500 font-mono truncate block mt-0.5">
                       {usdtAddress}
                     </span>
                   </div>
                 </div>
                 <Link
                   href="/dashboard/account/bind"
-                  className="text-xs font-bold text-amber-700 hover:underline shrink-0 ml-2"
+                  className="text-xs font-bold text-[#0f172a] hover:underline shrink-0 ml-2 px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition-colors"
                 >
                   Change
                 </Link>
@@ -305,14 +340,14 @@ function WithdrawContent() {
             ) : (
               <Link
                 href="/dashboard/account/bind"
-                className="bg-amber-50 border border-amber-200 rounded-[14px] p-3.5 flex items-center justify-between hover:bg-amber-100/60 transition-all cursor-pointer"
+                className="bg-amber-50/70 border border-amber-200 rounded-md p-3.5 flex items-center justify-between hover:bg-amber-100/60 transition-all cursor-pointer"
               >
-                <div className="flex items-center gap-2.5 text-amber-800 text-[13px] font-bold">
+                <div className="flex items-center gap-2.5 text-amber-900 text-[13px] font-bold">
                   <AlertCircle size={17} className="text-amber-600" />
                   <span>No USDT Address bound yet</span>
                 </div>
-                <span className="bg-amber-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
-                  Bind Now
+                <span className="bg-[#0f172a] text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
+                  Bind Wallet
                 </span>
               </Link>
             )
@@ -325,7 +360,7 @@ function WithdrawContent() {
             Withdrawal Amount
           </h2>
           
-          <div className="bg-white border border-slate-200 rounded-[14px] px-4 py-3 flex items-center shadow-2xs focus-within:border-[#03254c] focus-within:ring-1 focus-within:ring-[#03254c] transition-all">
+          <div className="bg-white border border-slate-200 rounded-md px-4 py-3 flex items-center shadow-2xs focus-within:border-[#0f172a] focus-within:ring-1 focus-within:ring-[#0f172a] transition-all">
             <span className="text-slate-800 font-bold text-[18px] mr-2 shrink-0">
               {currencySymbol}
             </span>
@@ -339,14 +374,14 @@ function WithdrawContent() {
             <button
               type="button"
               onClick={() => setAmount(withdrawableBalance.toString())}
-              className="text-[#03254c] bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md text-[12px] font-bold transition-colors cursor-pointer shrink-0"
+              className="text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-2.5 py-1 rounded-md text-[12px] font-bold transition-colors cursor-pointer shrink-0"
             >
-              All
+              Max
             </button>
           </div>
 
           {/* Amount Calculation Summary */}
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mt-3 space-y-1.5 text-[12.5px]">
+          <div className="bg-slate-50 border border-slate-200 rounded-md p-3 mt-3 space-y-1.5 text-[12.5px]">
             <div className="flex items-center justify-between text-slate-600">
               <span>Requested Amount:</span>
               <span className="font-bold text-slate-900">{currencySymbol}{formatAmount(numAmount)}</span>
@@ -371,7 +406,7 @@ function WithdrawContent() {
           <button
             type="button"
             onClick={handleOpenConfirm}
-            className="w-full bg-[#03254c] hover:bg-[#021d3c] active:scale-[0.99] transition-all text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-md shadow-blue-950/15 cursor-pointer flex items-center justify-center gap-2"
+            className="w-full bg-[#0f172a] hover:bg-[#021d3c] active:scale-[0.99] transition-all text-white font-bold py-3.5 rounded-md text-[15px] shadow-md shadow-blue-950/15 cursor-pointer flex items-center justify-center gap-2"
           >
             <span>Submit Withdrawal Request</span>
           </button>
@@ -382,7 +417,7 @@ function WithdrawContent() {
       {/* Confirm Withdrawal Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-[420px] rounded-[22px] shadow-2xl overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-200 p-5 space-y-4">
+          <div className="bg-white w-full max-w-[420px] rounded-xl shadow-2xl overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-200 p-5 space-y-4">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-slate-900 font-bold text-[16px]">Confirm Withdrawal</h3>
@@ -395,7 +430,7 @@ function WithdrawContent() {
               </button>
             </div>
 
-            <div className="space-y-2 text-[13px] bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div className="space-y-2 text-[13px] bg-slate-50 p-3.5 rounded-lg border border-slate-200">
               <div className="flex justify-between text-slate-600">
                 <span>Method:</span>
                 <span className="font-bold text-slate-900">{withdrawType === "usdt" ? `USDT (${usdtNetwork})` : bankName}</span>
@@ -419,7 +454,7 @@ function WithdrawContent() {
               <label className="text-[13px] font-bold text-slate-800 block">
                 Withdrawal Password
               </label>
-              <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-[#03254c] transition-all">
+              <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 focus-within:border-[#0f172a] transition-all">
                 <Lock size={16} className="text-slate-400 mr-2 shrink-0" />
                 <input
                   type={showPassword ? "text" : "password"}
@@ -442,7 +477,7 @@ function WithdrawContent() {
               type="button"
               onClick={handleConfirmWithdraw}
               disabled={isPending}
-              className="w-full bg-[#03254c] hover:bg-[#021d3c] text-white font-bold py-3.5 rounded-xl text-[14px] shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-75"
+              className="w-full bg-[#0f172a] hover:bg-[#021d3c] text-white font-bold py-3.5 rounded-lg text-[14px] shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-75"
             >
               {isPending ? (
                 <>
@@ -466,7 +501,7 @@ export default function WithdrawPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#f4f7fb] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#03254c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#0f172a]" />
       </div>
     }>
       <WithdrawContent />

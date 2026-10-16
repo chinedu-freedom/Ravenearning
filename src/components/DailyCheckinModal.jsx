@@ -36,7 +36,7 @@ export default function DailyCheckinModal() {
         this.resize();
         this.canvas.style.display = 'block';
         this.particles = [];
-        const colors = ['#4f8cff', '#2563eb', '#6ee7ff', '#10b981', '#3b82f6', '#f59e0b'];
+        const colors = ['#0f172a', '#10b981', '#3b82f6', '#f59e0b', '#06b6d4', '#64748b'];
         for (let i = 0; i < count; i++) {
           this.particles.push({
             x: Math.random() * this.canvas.width,
@@ -159,51 +159,53 @@ export default function DailyCheckinModal() {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-[460px] p-0 overflow-hidden bg-[#111827] rounded-3xl border border-white/10 shadow-2xl z-[100]">
+        <DialogContent className="sm:max-w-[430px] max-w-[94vw] p-0 overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-2xl z-[100] text-slate-900">
           {isLoading || !data ? (
             <div className="p-12 flex flex-col items-center justify-center space-y-4">
-              <Loader2 className="w-10 h-10 text-[#4f8cff] animate-spin" />
-              <p className="text-gray-300 text-sm font-bold">Loading daily rewards...</p>
+              <Loader2 className="w-8 h-8 text-[#0f172a] animate-spin" />
+              <p className="text-slate-500 text-sm font-bold">Loading daily rewards...</p>
             </div>
           ) : (
-            <div className="p-8 flex flex-col items-center">
+            <div className="pt-7 pb-8 px-5 sm:pt-8 sm:pb-9 sm:px-6 flex flex-col items-center">
               
-              {/* Taller, prominent brand gift badge */}
-              <div className="w-20 h-20 bg-gradient-to-br from-[#4f8cff]/25 to-[#2563eb]/25 rounded-3xl border border-[#4f8cff]/30 flex items-center justify-center mb-4 text-[#4f8cff] shadow-lg shadow-[#4f8cff]/15 relative overflow-hidden">
-                <Gift className="w-10 h-10" />
+              {/* Brand Gift Badge */}
+              <div className="w-16 h-16 bg-slate-100 text-[#0f172a] rounded-2xl border border-slate-200/90 flex items-center justify-center mb-4 shadow-2xs">
+                <Gift className="w-8 h-8 text-[#0f172a]" />
               </div>
               
-              <h2 className="text-2xl font-black text-white tracking-tight mb-1.5 text-center">Daily Check-in Rewards</h2>
-              <p className="text-sm text-gray-300 mb-7 text-center px-2 font-medium leading-relaxed">
+              <h2 className="text-[22px] sm:text-[24px] font-black text-slate-900 tracking-tight mb-1 text-center">
+                Daily Check-in Rewards
+              </h2>
+              <p className="text-[13px] text-slate-500 mb-6.5 text-center px-2 font-medium leading-relaxed">
                 Check in for 7 consecutive days to claim maximum earnings. Missing a day resets your streak!
               </p>
               
               {/* Row 1: Days 1 to 4 */}
-              <div className="grid grid-cols-4 gap-3 w-full mb-3.5">
+              <div className="grid grid-cols-4 gap-2.5 w-full mb-3.5">
                 {rewards.slice(0, 4).map((reward) => (
                   <RewardCard key={reward.day} reward={reward} isNext={reward.day === displayDay && !claimedToday} settings={settings} />
                 ))}
               </div>
 
               {/* Row 2: Days 5 to 7 */}
-              <div className="grid grid-cols-3 gap-3 w-full max-w-[340px] mb-8">
+              <div className="grid grid-cols-3 gap-2.5 w-full max-w-[315px] mb-6.5">
                 {rewards.slice(4, 7).map((reward) => (
                   <RewardCard key={reward.day} reward={reward} isNext={reward.day === displayDay && !claimedToday} settings={settings} />
                 ))}
               </div>
 
               {claimedToday ? (
-                <div className="w-full bg-[#1e293b]/90 text-[#4f8cff] border border-[#4f8cff]/30 rounded-2xl py-4 font-black text-center tracking-[0.25em] shadow-inner text-lg">
+                <div className="w-full bg-slate-50 text-slate-700 border border-slate-200 rounded-xl py-4 font-bold text-center tracking-[0.2em] font-mono text-[14px] shadow-2xs">
                   Next Claim: {timeLeft}
                 </div>
               ) : (
                 <Button 
                   onClick={handleClaim} 
                   disabled={claimMutation.isPending}
-                  className="w-full bg-gradient-to-r from-[#4f8cff] via-[#3b82f6] to-[#2563eb] hover:opacity-95 text-white rounded-2xl py-6 font-black text-base shadow-xl shadow-[#4f8cff]/30 transition-all active:scale-[0.98]"
+                  className="w-full bg-[#0f172a] hover:bg-[#021d3c] text-white rounded-xl py-6.5 font-bold text-[15px] shadow-md shadow-blue-950/15 transition-all active:scale-[0.98] cursor-pointer"
                 >
                   {claimMutation.isPending ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     `Claim Day ${displayDay}`
                   )}
@@ -237,31 +239,31 @@ function RewardCard({ reward, isNext, settings }) {
   
   return (
     <div className={`
-      flex flex-col items-center justify-center p-3.5 rounded-2xl border-2 transition-all select-none min-h-[96px]
-      ${isClaimed ? 'border-[#10b981] bg-[#10b981]/15 shadow-sm' : ''}
-      ${isAvailable ? 'border-[#4f8cff] bg-gradient-to-b from-[#4f8cff]/25 to-[#2563eb]/15 shadow-lg shadow-[#4f8cff]/20 scale-105 z-10 relative' : ''}
-      ${reward.status === 'locked' && !isNext ? 'border-white/5 bg-white/5 opacity-50' : ''}
+      flex flex-col items-center justify-center py-3.5 px-2 rounded-xl border-2 transition-all select-none min-h-[98px]
+      ${isClaimed ? 'border-emerald-500/80 bg-emerald-50/70 shadow-2xs' : ''}
+      ${isAvailable ? 'border-[#0f172a] bg-slate-50/90 shadow-md ring-2 ring-[#0f172a]/15 scale-105 z-10 relative' : ''}
+      ${reward.status === 'locked' && !isNext ? 'border-slate-200/80 bg-slate-50/50 opacity-60' : ''}
     `}>
-      <span className={`text-[11px] font-extrabold tracking-wider uppercase mb-2 
-        ${isClaimed ? 'text-[#10b981]' : isAvailable ? 'text-[#4f8cff]' : 'text-gray-400'}
+      <span className={`text-[10.5px] font-extrabold tracking-wider uppercase mb-1.5 
+        ${isClaimed ? 'text-emerald-700' : isAvailable ? 'text-[#0f172a]' : 'text-slate-400'}
       `}>
         Day {reward.day}
       </span>
       
-      <div className={`w-9 h-9 rounded-full flex items-center justify-center mb-2 shadow-sm
-        ${isClaimed ? 'bg-[#10b981] text-white' : isAvailable ? 'bg-[#4f8cff] text-white shadow-md shadow-[#4f8cff]/40' : 'bg-white/10 text-gray-400'}
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1.5 shadow-2xs
+        ${isClaimed ? 'bg-emerald-600 text-white' : isAvailable ? 'bg-[#0f172a] text-white shadow-sm' : 'bg-slate-200/80 text-slate-400'}
       `}>
         {isClaimed ? (
-          <Check className="w-5 h-5" strokeWidth={3} />
+          <Check className="w-4 h-4" strokeWidth={3} />
         ) : isAvailable ? (
           <Coins className="w-4 h-4" />
         ) : (
-          <Lock className="w-4 h-4" />
+          <Lock className="w-3.5 h-3.5" />
         )}
       </div>
       
-      <span className={`text-xs font-black 
-        ${isClaimed ? 'text-[#10b981]' : isAvailable ? 'text-white' : 'text-gray-400'}
+      <span className={`text-[11.5px] font-black font-mono
+        ${isClaimed ? 'text-emerald-700' : isAvailable ? 'text-slate-900' : 'text-slate-400'}
       `}>
         +{symbol}{parseFloat(reward.amount || 0).toFixed(0)}
       </span>

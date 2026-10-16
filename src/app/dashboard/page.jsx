@@ -47,22 +47,24 @@ export default function DashboardPage() {
         />
 
         {/* Hero Overlay Text & Shop Now Button */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex items-end justify-between p-4 pb-4">
-          <div className="flex flex-col pr-2">
-            <h2 className="text-white text-[17px] font-bold tracking-tight leading-tight drop-shadow-sm">
-              Headphones Built for Sport
-            </h2>
-            <p className="text-white/85 text-[11px] font-normal mt-0.5 drop-shadow-sm">
-              Purchase to obtain high returns
-            </p>
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent flex flex-col justify-end px-4 pb-7">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-col pr-2">
+              <h2 className="text-white text-[16.5px] font-bold tracking-tight leading-tight drop-shadow-sm">
+                Harness the Power of the Sun
+              </h2>
+              <p className="text-white/85 text-[11px] font-normal mt-0.5 drop-shadow-sm">
+                Invest today for bright daily returns
+              </p>
+            </div>
 
-          <button
-            onClick={() => router.push("/dashboard/mining")}
-            className="shrink-0 px-4 py-1.5 rounded-full bg-slate-400/50 hover:bg-slate-400/70 active:scale-95 backdrop-blur-md text-white text-[12px] font-medium transition-all shadow-sm cursor-pointer"
-          >
-            Shop Now
-          </button>
+            <button
+              onClick={() => router.push("/dashboard/mining")}
+              className="shrink-0 px-4 py-1.5 rounded-full bg-slate-400/50 hover:bg-slate-400/70 active:scale-95 backdrop-blur-md text-white text-[12px] font-medium transition-all shadow-sm cursor-pointer whitespace-nowrap"
+            >
+              Shop Now
+            </button>
+          </div>
         </div>
       </div>
 
@@ -138,16 +140,14 @@ export default function DashboardPage() {
             >
               <div className="w-12 h-12 flex items-center justify-center text-[#64748b] group-hover:text-slate-900 transition-colors">
                 <svg viewBox="0 0 48 48" className="w-9 h-9" fill="none">
-                  <rect x="11" y="12" width="26" height="25" rx="4" stroke="currentColor" strokeWidth="2.5" />
-                  <line x1="11" y1="20" x2="37" y2="20" stroke="currentColor" strokeWidth="2.5" />
-                  <line x1="18" y1="9" x2="18" y2="14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  <line x1="30" y1="9" x2="30" y2="14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  <circle cx="17.5" cy="25.5" r="1.5" fill="currentColor" />
-                  <circle cx="24" cy="25.5" r="1.5" fill="currentColor" />
-                  <circle cx="30.5" cy="25.5" r="1.5" fill="currentColor" />
-                  <circle cx="17.5" cy="31.5" r="1.5" fill="currentColor" />
-                  <circle cx="24" cy="31.5" r="1.5" fill="currentColor" />
-                  <circle cx="30.5" cy="31.5" r="1.5" fill="currentColor" />
+                  {/* Calendar Outline */}
+                  <rect x="11" y="11" width="26" height="26" rx="4" stroke="currentColor" strokeWidth="2.5" />
+                  <line x1="11" y1="19.5" x2="37" y2="19.5" stroke="currentColor" strokeWidth="2.5" />
+                  {/* Binder rings */}
+                  <line x1="18" y1="8" x2="18" y2="13.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="30" y1="8" x2="30" y2="13.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  {/* Checkmark */}
+                  <path d="M18.5 28 L22.5 32 L29.5 24.5" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
               <span className="text-[12px] text-gray-700 font-medium mt-1 leading-tight text-center">
@@ -172,6 +172,27 @@ export default function DashboardPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-4">
             <h3 className="text-white text-[18px] font-bold tracking-tight leading-tight drop-shadow-sm">
               Task Center
+            </h3>
+            <button className="mt-2 w-fit px-6 py-1 bg-white text-gray-900 font-bold text-[13px] rounded-full shadow hover:bg-gray-100 transition-all cursor-pointer">
+              Go
+            </button>
+          </div>
+        </div>
+
+        {/* 3b. Active Package Banner Card */}
+        <div
+          onClick={() => router.push("/dashboard/investments")}
+          className="relative w-full h-[100px] rounded-2xl overflow-hidden shadow-sm cursor-pointer group active:scale-[0.99] transition-transform"
+        >
+          <img
+            src="/images/dashboard/active_pkg_banner.jpg"
+            alt="Active Package"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-4">
+            <h3 className="text-white text-[18px] font-bold tracking-tight leading-tight drop-shadow-sm">
+              Active Package
             </h3>
             <button className="mt-2 w-fit px-6 py-1 bg-white text-gray-900 font-bold text-[13px] rounded-full shadow hover:bg-gray-100 transition-all cursor-pointer">
               Go

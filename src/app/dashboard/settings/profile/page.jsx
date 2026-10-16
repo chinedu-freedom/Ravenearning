@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useFetchData } from "@/hooks/useApi";
@@ -41,7 +41,7 @@ export default function ProfilePage() {
                 <div className="p-4">
                   <div className="text-gray-400 text-[10px] font-medium tracking-wide uppercase mb-1.5">Phone Number</div>
                   <div className="flex items-center gap-3">
-                    <Smartphone size={16} className="text-[#4f8cff]" />
+                    <Smartphone size={16} className="text-amber-400" />
                     <span className="text-white/90 text-[14px]">{user.phone || "N/A"}</span>
                   </div>
                 </div>
@@ -50,7 +50,7 @@ export default function ProfilePage() {
                 <div className="p-4">
                   <div className="text-gray-400 text-[10px] font-medium tracking-wide uppercase mb-1.5">Referral Code</div>
                   <div className="flex items-center gap-3">
-                    <Share2 size={16} className="text-[#4f8cff]" />
+                    <Share2 size={16} className="text-amber-400" />
                     <span className="text-white/90 text-[14px]">{user.referral_code || "N/A"}</span>
                   </div>
                 </div>
@@ -59,7 +59,7 @@ export default function ProfilePage() {
                 <div className="p-4">
                   <div className="text-gray-400 text-[10px] font-medium tracking-wide uppercase mb-1.5">Member Since</div>
                   <div className="flex items-center gap-3">
-                    <Calendar size={16} className="text-[#4f8cff]" />
+                    <Calendar size={16} className="text-amber-400" />
                     <span className="text-white/90 text-[14px]">{user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : "N/A"}</span>
                   </div>
                 </div>

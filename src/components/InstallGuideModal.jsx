@@ -46,7 +46,7 @@ export default function InstallGuideModal() {
         <div className="p-6 flex flex-col">
           {/* Header */}
           <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-8 h-8 bg-[#4f8cff]/10 rounded-lg flex items-center justify-center text-[#4f8cff]">
+            <div className="w-8 h-8 bg-amber-500/10 rounded-lg flex items-center justify-center text-amber-400">
               <Download size={18} />
             </div>
             <h2 className="text-[17px] font-bold text-white/90">Install App</h2>

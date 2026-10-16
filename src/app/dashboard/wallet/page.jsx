@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Wallet, Eye, EyeOff, ChevronDown, ChevronUp, Download, Upload, Clock, ArrowRight, Receipt, Loader2, ArrowUpRight, ArrowDownLeft, ArrowLeft } from "lucide-react";
+import { Wallet, Eye, EyeOff, ChevronDown, ChevronUp, Download, Upload, Clock, ArrowRight, ArrowRightLeft, Loader2, ArrowUpRight, ArrowDownLeft, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFetchData } from "@/hooks/useApi";
@@ -111,23 +111,23 @@ export default function WalletPage() {
           </button>
           <h1 className="text-white/90 text-[15px] font-bold">Wallet</h1>
         </div>
-        <Link href="/dashboard/wallet" className="w-8 h-8 bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] rounded-xl flex items-center justify-center text-white shadow-sm cursor-pointer">
+        <Link href="/dashboard/wallet" className="w-8 h-8 bg-white/10 border border-white/15 rounded-xl flex items-center justify-center text-amber-300 shadow-sm cursor-pointer">
           <Wallet size={14} />
         </Link>
       </div>
 
       <div className="px-4 pt-4 pb-4 space-y-3 max-w-[480px] mx-auto w-full">
         {/* Balance Card */}
-        <div className="bg-gradient-to-br from-[#4f8cff] via-[#2563eb] to-[#0f172a] rounded-[16px] p-[16px] text-white shadow-lg relative overflow-hidden border border-white/10">
+        <div className="bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] rounded-[16px] p-[16px] text-white shadow-lg relative overflow-hidden border border-slate-800">
           {/* Background decoration */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-2xl"></div>
 
           {/* Top section */}
           <div className="flex justify-between items-start mb-1 relative z-10">
-            <span className="text-[10px] text-white/90">Total Balance</span>
+            <span className="text-[10px] text-slate-400">Total Balance</span>
             <button
               onClick={toggleCurrency}
-              className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-[9px] font-bold hover:bg-white/20 transition-colors cursor-pointer border border-white/10 backdrop-blur-sm"
+              className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-[9px] font-bold hover:bg-white/20 transition-colors cursor-pointer border border-white/10 backdrop-blur-sm text-slate-200"
             >
               {(currency === "USDT" || currency === (settings.currency_name || "USDT")) ? (settings.currency_name || "USDT") : (user?.country?.currency_code || "ZAR")} {(currency === "USDT" || currency === (settings.currency_name || "USDT")) ? <ChevronDown size={10} /> : <ChevronUp size={10} />}
             </button>
@@ -135,7 +135,7 @@ export default function WalletPage() {
 
           {/* Main Balance */}
           <div className="flex items-center gap-2 mb-4 relative z-10">
-            <span className="text-[24px] font-bold tracking-tight">
+            <span className="text-[24px] font-bold tracking-tight text-white">
               {loadingUser ? <Loader2 className="w-5 h-5 animate-spin" /> : showBalance ? currentBalance.total : "****"}
             </span>
             <button
@@ -148,13 +148,13 @@ export default function WalletPage() {
 
           {/* Sub Balances */}
           <div className="flex gap-2 mb-3.5 relative z-10">
-            <div className="bg-white/10 rounded-lg p-2 flex-1 border border-white/10 backdrop-blur-sm">
-              <div className="text-[7px] font-bold text-white/80 uppercase tracking-wide mb-1">Deposit</div>
-              <div className="text-[10px] font-bold">{loadingUser ? "..." : showBalance ? currentBalance.deposit : "****"}</div>
+            <div className="bg-white/5 rounded-lg p-2 flex-1 border border-white/10 backdrop-blur-sm">
+              <div className="text-[7px] font-bold text-slate-400 uppercase tracking-wide mb-1">Deposit</div>
+              <div className="text-[10px] font-bold text-white">{loadingUser ? "..." : showBalance ? currentBalance.deposit : "****"}</div>
             </div>
-            <div className="bg-white/10 rounded-lg p-2 flex-1 border border-white/10 backdrop-blur-sm">
-              <div className="text-[7px] font-bold text-white/80 uppercase tracking-wide mb-1">Earning</div>
-              <div className="text-[10px] font-bold">{loadingUser ? "..." : showBalance ? currentBalance.main : "****"}</div>
+            <div className="bg-white/5 rounded-lg p-2 flex-1 border border-white/10 backdrop-blur-sm">
+              <div className="text-[7px] font-bold text-slate-400 uppercase tracking-wide mb-1">Earning</div>
+              <div className="text-[10px] font-bold text-white">{loadingUser ? "..." : showBalance ? currentBalance.main : "****"}</div>
             </div>
           </div>
 
@@ -162,13 +162,13 @@ export default function WalletPage() {
           <div className="flex gap-2.5 relative z-10">
             <button 
               onClick={() => handleAction("/dashboard/wallet/deposit")}
-              className="cursor-pointer flex-1 bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] text-white flex items-center justify-center gap-1.5 py-2 rounded-[8px] text-[11px] font-bold hover:opacity-95 transition-all shadow-sm"
+              className="cursor-pointer flex-1 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-1.5 py-2 rounded-[8px] text-[11px] font-bold transition-all border border-white/15 backdrop-blur-sm"
             >
               <Download size={12} /> Deposit
             </button>
             <button 
               onClick={() => handleAction("/dashboard/wallet/withdraw")}
-              className="cursor-pointer flex-1 bg-white/10 text-white flex items-center justify-center gap-1.5 py-2 rounded-[8px] text-[11px] font-bold hover:bg-white/20 transition-colors border border-white/15 backdrop-blur-sm"
+              className="cursor-pointer flex-1 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-1.5 py-2 rounded-[8px] text-[11px] font-bold transition-colors border border-white/15 backdrop-blur-sm"
             >
               <Upload size={12} /> Withdraw
             </button>
@@ -179,10 +179,10 @@ export default function WalletPage() {
         <div className="bg-[#111827] rounded-[16px] p-[16px] border border-white/5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] min-h-[180px] flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-1.5">
-              <Clock size={14} className="text-[#4f8cff]" />
+              <Clock size={14} className="text-amber-400" />
               <h2 className="text-white/90 font-bold text-[13px]">Recent Transactions</h2>
             </div>
-            <Link href="/dashboard/transactions" className="flex items-center gap-1 text-[#4f8cff] text-[10px] font-medium hover:text-[#38bdf8] transition-colors cursor-pointer">
+            <Link href="/dashboard/transactions" className="flex items-center gap-1 text-amber-400 text-[10px] font-medium hover:text-amber-300 transition-colors cursor-pointer">
               View All <ArrowRight size={10} />
             </Link>
           </div>
@@ -195,8 +195,8 @@ export default function WalletPage() {
                  {transactions.slice(0, 10).map((tx) => (
                    <div key={tx.id} className="flex justify-between items-center bg-white/5 rounded-xl p-3 border border-white/5">
                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'DEPOSIT' ? 'bg-green-900/20 text-green-400' : tx.type === 'WITHDRAWAL' ? 'bg-red-900/20 text-red-400' : 'bg-blue-900/20 text-[#4f8cff]'}`}>
-                          {tx.type === 'DEPOSIT' ? <ArrowDownLeft size={14} /> : tx.type === 'WITHDRAWAL' ? <ArrowUpRight size={14} /> : <Receipt size={14} />}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'DEPOSIT' ? 'bg-green-900/20 text-green-400' : tx.type === 'WITHDRAWAL' ? 'bg-red-900/20 text-red-400' : 'bg-amber-400/20 text-amber-300'}`}>
+                          {tx.type === 'DEPOSIT' ? <ArrowDownLeft size={14} /> : tx.type === 'WITHDRAWAL' ? <ArrowUpRight size={14} /> : <ArrowRightLeft size={14} />}
                         </div>
                         <div>
                           <div className="text-[12px] font-bold text-white/90 capitalize">{tx.type.replace(/_/g, ' ').toLowerCase()}</div>
@@ -216,7 +216,7 @@ export default function WalletPage() {
             ) : (
                <>
                  <div className="w-10 h-10 bg-[#111827] rounded-xl flex items-center justify-center border border-white/5 shadow-sm">
-                   <Receipt size={18} className="text-gray-500" />
+                   <Wallet size={18} className="text-gray-500" />
                  </div>
                  <span className="text-[11px] text-gray-400 font-medium">No transactions yet</span>
                </>

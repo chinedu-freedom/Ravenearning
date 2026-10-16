@@ -62,7 +62,7 @@ export default function HelpCenterPage() {
       answer: "Yes, your account is highly secure. We use industry-standard encryption protocols, and you can further secure your account by setting up a secure withdrawal pin.",
       icon: ShieldCheck,
       iconBg: "bg-[#ede9fe]",
-      iconColor: "text-[#4f8cff]"
+      iconColor: "text-amber-400"
     },
     {
       id: 4,
@@ -98,8 +98,8 @@ export default function HelpCenterPage() {
 
         {/* Top Hero */}
         <div className="flex flex-col items-center text-center">
-          <div className="w-[60px] h-[60px] bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] rounded-[18px] flex items-center justify-center mb-4 shadow-[0_4px_12px_rgba(79,140,255,0.3)]">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-[18px]">
+          <div className="w-[60px] h-[60px] bg-[#0f172a] border border-amber-500/30 rounded-[18px] flex items-center justify-center mb-4 shadow-md text-amber-400">
+            <div className="w-8 h-8 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-300 font-bold text-[18px]">
               ?
             </div>
           </div>
@@ -117,14 +117,14 @@ export default function HelpCenterPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for help..."
-            className="w-full bg-[#111827] border border-white/5 rounded-[14px] pl-10 pr-4 py-3.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-[#4f8cff] focus:ring-1 focus:ring-[#4f8cff] transition-all shadow-sm"
+            className="w-full bg-[#111827] border border-white/5 rounded-[14px] pl-10 pr-4 py-3.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all shadow-sm"
           />
         </div>
 
         {/* Contact Support */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <MessageCircle size={14} className="text-[#4f8cff] fill-[#4f8cff]/20" />
+            <MessageCircle size={14} className="text-amber-400 fill-amber-400/20" />
             <h3 className="text-white/90 text-[13px] font-bold">Contact Support</h3>
           </div>
           <div className="grid grid-cols-1 gap-3">
@@ -132,8 +132,8 @@ export default function HelpCenterPage() {
               onClick={() => handleLink(settings.telegram_support || settings.telegram_support_link)}
               className="w-full cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex items-center gap-4 hover:bg-white/5 transition-colors"
             >
-              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-full flex items-center justify-center text-[#4f8cff] shrink-0">
-                <Send size={20} className="fill-[#4f8cff] -ml-0.5" />
+              <div className="w-[42px] h-[42px] bg-amber-500/10 rounded-full flex items-center justify-center text-amber-400 shrink-0">
+                <Send size={20} className="fill-amber-400 -ml-0.5" />
               </div>
               <div className="text-left flex-1">
                 <span className="text-white/90 text-[14px] font-bold block">Telegram Support</span>
@@ -144,8 +144,8 @@ export default function HelpCenterPage() {
               onClick={() => handleLink(settings.telegram_group || settings.telegram_group_chat || settings.telegram_link)}
               className="w-full cursor-pointer bg-[#111827] rounded-[16px] border border-white/5 shadow-md p-4 flex items-center gap-4 hover:bg-white/5 transition-colors"
             >
-              <div className="w-[42px] h-[42px] bg-blue-900/20 rounded-full flex items-center justify-center text-[#4f8cff] shrink-0">
-                <Users size={20} className="text-[#4f8cff]" />
+              <div className="w-[42px] h-[42px] bg-amber-500/10 rounded-full flex items-center justify-center text-amber-400 shrink-0">
+                <Users size={20} className="text-amber-400" />
               </div>
               <div className="text-left flex-1">
                 <span className="text-white/90 text-[14px] font-bold block">Telegram Group</span>
@@ -158,7 +158,7 @@ export default function HelpCenterPage() {
         {/* Quick Actions */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <Zap size={14} className="text-[#4f8cff] fill-[#4f8cff]" />
+            <Zap size={14} className="text-amber-400 fill-amber-400" />
             <h3 className="text-white/90 text-[13px] font-bold">Quick Actions</h3>
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -173,8 +173,8 @@ export default function HelpCenterPage() {
                 onClick={action.action}
                 className="cursor-pointer bg-[#111827] rounded-[12px] border border-white/5 shadow-md p-2.5 flex flex-col items-center justify-center gap-2 hover:bg-white/5 transition-colors"
               >
-                <div className="text-[#4f8cff]">
-                  <action.icon size={18} className="fill-[#4f8cff]/20" />
+                <div className="text-amber-400">
+                  <action.icon size={18} className="fill-amber-400/20" />
                 </div>
                 <span className="text-gray-400 text-[10px] font-medium">{action.label}</span>
               </button>
@@ -185,7 +185,7 @@ export default function HelpCenterPage() {
         {/* Frequently Asked Questions */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <FileText size={14} className="text-[#4f8cff] fill-[#4f8cff]/20" />
+            <FileText size={14} className="text-amber-400 fill-amber-400/20" />
             <h3 className="text-white/90 text-[13px] font-bold">Frequently Asked Questions</h3>
           </div>
           <div className="space-y-2.5">
@@ -199,14 +199,14 @@ export default function HelpCenterPage() {
               return (
                 <div 
                   key={faq.id} 
-                  className={`w-full bg-[#111827] rounded-[16px] border ${isOpen ? 'border-[#4f8cff] shadow-[0_2px_12px_-4px_rgba(79,140,255,0.2)]' : 'border-white/5 shadow-md'} transition-all text-left overflow-hidden`}
+                  className={`w-full bg-[#111827] rounded-[16px] border ${isOpen ? 'border-amber-500/50 shadow-md' : 'border-white/5 shadow-md'} transition-all text-left overflow-hidden`}
                 >
                   <button 
                     onClick={() => setOpenFaq(isOpen ? null : faq.id)}
                     className="cursor-pointer w-full p-3 flex items-center justify-between hover:bg-white/5 transition-colors"
                   >
                     <div className="flex items-center gap-3.5">
-                      <div className={`w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 ${faq.iconBg.replace('amber', 'blue')} ${faq.iconColor.replace('amber', 'blue')}`}>
+                      <div className={`w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 ${faq.iconBg} ${faq.iconColor}`}>
                         <faq.icon size={18} />
                       </div>
                       <div className="text-left">
@@ -214,7 +214,7 @@ export default function HelpCenterPage() {
                         <p className="text-gray-400 text-[11px]">{faq.desc}</p>
                       </div>
                     </div>
-                    {isOpen ? <ChevronUp size={16} className="text-[#4f8cff] shrink-0 ml-2" /> : <ChevronDown size={16} className="text-gray-500 shrink-0 ml-2" />}
+                    {isOpen ? <ChevronUp size={16} className="text-amber-400 shrink-0 ml-2" /> : <ChevronDown size={16} className="text-gray-500 shrink-0 ml-2" />}
                   </button>
                   
                   {isOpen && (
@@ -231,19 +231,19 @@ export default function HelpCenterPage() {
         </div>
 
         {/* Bottom Support Banner */}
-        <div className="bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] rounded-[20px] p-6 text-center text-white shadow-[0_8px_20px_rgba(79,140,255,0.25)] relative overflow-hidden mt-8">
+        <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] border border-amber-500/30 rounded-[20px] p-6 text-center text-white shadow-xl relative overflow-hidden mt-8">
           {/* Decorative subtle circles */}
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
 
           <div className="relative z-10 flex flex-col items-center">
-            <div className="inline-flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full text-[11px] font-bold mb-4 backdrop-blur-sm border border-white/10">
+            <div className="inline-flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full text-[11px] font-bold mb-4 backdrop-blur-sm border border-white/10 text-amber-300">
               <div className="w-1.5 h-1.5 bg-[#4ade80] rounded-full shadow-[0_0_8px_rgba(74,222,128,0.8)]"></div>
               Online Now
             </div>
 
             <h3 className="text-[18px] font-bold mb-2">24/7 Customer Support</h3>
-            <p className="text-white/90 text-[13px] leading-relaxed max-w-[280px]">
+            <p className="text-white/80 text-[13px] leading-relaxed max-w-[280px]">
               Our dedicated support team is always ready to help you with any questions or concerns.
             </p>
           </div>

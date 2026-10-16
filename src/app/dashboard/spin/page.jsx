@@ -317,7 +317,7 @@ export default function SpinPage() {
               </div>
               <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Deposit Balance</span>
             </div>
-            <div className="text-[20px] font-bold text-[#4f8cff]">
+            <div className="text-[20px] font-bold text-amber-400">
               {settings.currency_symbol || "R"}{Number(currentBalance).toFixed(2)}
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function SpinPage() {
               <Ticket className="text-gray-400 w-4 h-4" />
               <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Free Spins</span>
             </div>
-            <div className="text-[20px] font-bold text-[#4f8cff]">
+            <div className="text-[20px] font-bold text-amber-400">
               {freeSpins}
             </div>
           </div>
@@ -344,10 +344,10 @@ export default function SpinPage() {
         {/* Wheel Container */}
         <div className="flex justify-center items-center py-6">
           <div className="relative w-[320px] h-[320px]">
-            {/* The Outer Blue Ring with Lights */}
-            <div className="absolute inset-0 rounded-full bg-[#2563eb] shadow-[0_0_20px_rgba(79,140,255,0.4)] border-4 border-[#60a5fa] overflow-hidden">
+            {/* The Outer Gold Ring with Lights */}
+            <div className="absolute inset-0 rounded-full bg-[#0f172a] shadow-[0_0_20px_rgba(245,158,11,0.35)] border-4 border-amber-400 overflow-hidden">
               {/* Fake lights using CSS repeating conic gradient or positioned dots */}
-              <div className="absolute inset-1 rounded-full border border-blue-400/50"></div>
+              <div className="absolute inset-1 rounded-full border border-amber-300/40"></div>
               {Array.from({ length: 24 }).map((_, i) => (
                 <div 
                   key={i}
@@ -419,10 +419,10 @@ export default function SpinPage() {
             {/* Center Start Button */}
             <div 
               onClick={handleSpin}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] bg-gradient-to-b from-[#4f8cff] to-[#1d4ed8] rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] z-30 border-[4px] border-[#6ee7ff] hover:scale-105 active:scale-95 transition-all"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] bg-gradient-to-b from-amber-500 to-amber-700 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] z-30 border-[4px] border-amber-300 hover:scale-105 active:scale-95 transition-all"
             >
               {/* Pointer Triangle */}
-              <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[16px] border-b-[#6ee7ff]"></div>
+              <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[16px] border-b-amber-300"></div>
               
               <span className="text-white font-bold text-[16px] drop-shadow-md">Start</span>
             </div>
@@ -433,8 +433,8 @@ export default function SpinPage() {
         {/* Recent Wins */}
         <div className="mt-8">
           <div className="flex items-center gap-2 mb-4 px-1">
-            <History className="text-[#4f8cff]" size={18} />
-            <h3 className="font-bold text-slate-900 text-[16px]">Recent Wins</h3>
+            <History className="text-amber-400" size={18} />
+            <h3 className="font-bold text-white text-[16px]">Recent Wins</h3>
           </div>
 
           <div className="space-y-3">
@@ -473,10 +473,10 @@ export default function SpinPage() {
       {/* Floating Help Button */}
       <button 
         onClick={() => setIsHowToPlayOpen(true)}
-        className="fixed bottom-[80px] right-4 w-[60px] h-[60px] bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] rounded-full shadow-[0_4px_16px_rgba(79,140,255,0.5)] flex items-center justify-center z-40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+        className="fixed bottom-[80px] right-4 w-[60px] h-[60px] bg-gradient-to-r from-amber-500 to-amber-600 rounded-full shadow-[0_4px_16px_rgba(245,158,11,0.4)] flex items-center justify-center z-40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
       >
         <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-          <span className="text-[#4f8cff] font-bold text-[18px]">?</span>
+          <span className="text-amber-500 font-bold text-[18px]">?</span>
         </div>
       </button>
 
@@ -515,8 +515,8 @@ export default function SpinPage() {
                 <p className="text-[#64748b] text-[14px]">
                   {resultData.message}
                 </p>
-                <p className="text-[#4f8cff] text-[13px] mt-2 mb-4 flex items-center gap-1.5 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-[#4f8cff] text-white flex items-center justify-center text-[10px]">âœ“</span>
+                <p className="text-amber-400 text-[13px] mt-2 mb-4 flex items-center gap-1.5 font-medium">
+                  <span className="w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">✓</span>
                   Added to withdrawable balance
                 </p>
               </div>
@@ -533,7 +533,7 @@ export default function SpinPage() {
             
             <button 
               onClick={() => setShowResultModal(false)}
-              className="w-full bg-gradient-to-r from-[#4f8cff] to-[#6ee7ff] text-white font-semibold rounded-[12px] py-3.5 hover:opacity-95 shadow-[0_8px_20px_rgba(79,140,255,0.3)] transition-all cursor-pointer"
+              className="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white font-semibold rounded-[12px] py-3.5 hover:opacity-95 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
             >
               Continue
             </button>

@@ -13,6 +13,7 @@ import {
   Check,
   Loader2,
   Building2,
+  Landmark,
   Wallet,
   Upload,
   Globe,
@@ -146,104 +147,121 @@ function RechargeContent() {
   return (
     <div className="min-h-screen bg-[#f4f7fb] flex flex-col justify-start">
       
-      {/* Top Header Bar - Deep Royal Navy */}
-      <div className="sticky top-0 z-40 bg-[#03254c] text-white px-4 h-14 flex items-center justify-between shadow-md">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer -ml-1"
-          aria-label="Go Back"
-        >
-          <ArrowLeft size={19} />
-        </button>
-        <h1 className="text-white text-[17px] font-bold tracking-tight">
-          Recharge
-        </h1>
-        <div className="w-9" />
+      {/* Top Header Bar - Clean White */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/80 px-5 h-16 flex items-center justify-between shadow-xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            Recharge
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
         
-        {/* Available Balance Card */}
-        <div className="bg-[#03254c] rounded-[18px] p-5 text-white shadow-lg shadow-blue-950/20 relative overflow-hidden border border-white/10">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
-          
-          <div className="text-sky-100 text-[13px] font-medium">
-            Available Balance
+        {/* Available Balance Card - Exact format as withdrawal history stats card */}
+        <div className="bg-white border border-slate-200/90 rounded-lg p-5 shadow-2xs flex items-center justify-between">
+          <div>
+            <div className="text-[28px] sm:text-[32px] font-black text-emerald-600 tracking-tight leading-none font-mono">
+              {currencySymbol}{formatAmount(currentBalance)}
+            </div>
+            <p className="text-[13px] text-slate-500 font-medium mt-1.5">
+              Available Balance
+            </p>
           </div>
-
-          <div className="text-[#f59e0b] text-[34px] font-black tracking-tight mt-1 mb-3 leading-none">
-            {currencySymbol}{formatAmount(currentBalance)}
-          </div>
-
-          <div className="flex items-center gap-2 text-white/85 text-[12px] font-normal">
-            <User size={14} className="text-white/80 shrink-0" />
-            <span>Instant credit after confirmation</span>
+          <div className="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+            <Wallet size={22} className="stroke-[2.5]" />
           </div>
         </div>
 
-                {/* Payment Channel Selector */}
-        <div className="pt-1">
-          <h2 className="text-slate-900 text-[16px] font-bold tracking-tight mb-3">
+        {/* Payment Channel Selector */}
+        <div className="pt-1 space-y-2">
+          <label className="text-slate-900 text-[15px] font-bold tracking-tight block">
             Select Payment Method
-          </h2>
+          </label>
           
-          <div className="grid grid-cols-2 gap-3">
-            {/* QuickPay Bank / Card Option */}
+          <div className="space-y-2">
+            {/* South Africa Bank Option */}
             <div
               onClick={() => handleSwitchMethod("bank")}
-              className={`p-4 rounded-[16px] border cursor-pointer transition-all flex flex-col justify-between ${
+              className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
                 selectedMethod === "bank"
-                  ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
-                  : "bg-white/80 border-slate-200 text-slate-600 hover:bg-white"
+                  ? "bg-slate-50/80 border-[#0f172a] shadow-xs"
+                  : "bg-white border-slate-200 hover:border-slate-300"
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#03254c] flex items-center justify-center font-bold">
-                  <CreditCard size={19} />
-                </div>
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                  selectedMethod === "bank" ? "border-[#03254c] bg-[#03254c]" : "border-slate-300"
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                  selectedMethod === "bank" ? "bg-[#0f172a] text-white" : "bg-slate-100 text-slate-600"
                 }`}>
-                  {selectedMethod === "bank" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  <Landmark size={18} />
+                </div>
+                <div>
+                  <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
+                    South Africa Bank (Rand)
+                  </span>
+                  <span className="text-[11.5px] text-slate-500 font-medium">
+                    Instant automated online bank transfer
+                  </span>
                 </div>
               </div>
-              <div>
-                <span className="font-bold text-[14px] text-slate-900 block leading-tight">
-                  Bank Deposit
-                </span>
-                <span className="text-[11px] text-slate-500 font-medium">
-                  South Africa Bank (ZAR)
-                </span>
+
+              {/* Radio Indicator */}
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                selectedMethod === "bank" ? "border-[#0f172a]" : "border-slate-300"
+              }`}>
+                {selectedMethod === "bank" && (
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a]" />
+                )}
               </div>
             </div>
 
-            {/* Manual USDT Deposit Option */}
+            {/* USDT Crypto Option */}
             <div
               onClick={() => handleSwitchMethod("usdt")}
-              className={`p-4 rounded-[16px] border cursor-pointer transition-all flex flex-col justify-between ${
+              className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
                 selectedMethod === "usdt"
-                  ? "bg-white border-[#03254c] ring-2 ring-[#03254c]/10 shadow-sm"
-                  : "bg-white/80 border-slate-200 text-slate-600 hover:bg-white"
+                  ? "bg-slate-50/80 border-[#0f172a] shadow-xs"
+                  : "bg-white border-slate-200 hover:border-slate-300"
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                  <Wallet size={19} />
-                </div>
-                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                  selectedMethod === "usdt" ? "border-[#03254c] bg-[#03254c]" : "border-slate-300"
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 transition-colors ${
+                  selectedMethod === "usdt" ? "bg-[#0f172a] text-white" : "bg-slate-100 text-slate-600"
                 }`}>
-                  {selectedMethod === "usdt" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                  <Wallet size={18} />
+                </div>
+                <div>
+                  <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
+                    USDT Wallet (Crypto)
+                  </span>
+                  <span className="text-[11.5px] text-slate-500 font-medium">
+                    TRC20 / BEP20 cryptocurrency deposit
+                  </span>
                 </div>
               </div>
-              <div>
-                <span className="font-bold text-[14px] text-slate-900 block leading-tight">
-                  Usdt Deposit
-                </span>
-                <span className="text-[11px] text-amber-600 font-bold">
-                  Crypto Deposit (USDT)
-                </span>
+
+              {/* Radio Indicator */}
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                selectedMethod === "usdt" ? "border-[#0f172a]" : "border-slate-300"
+              }`}>
+                {selectedMethod === "usdt" && (
+                  <div className="w-2 h-2 rounded-full bg-[#0f172a]" />
+                )}
               </div>
             </div>
           </div>
@@ -251,7 +269,7 @@ function RechargeContent() {
 
         {/* USDT Manual Payment Details Card */}
         {selectedMethod === "usdt" && (
-          <div className="bg-white border border-amber-200 rounded-[20px] p-5 shadow-sm space-y-4">
+          <div className="bg-white border border-amber-200 rounded-lg p-5 shadow-sm space-y-4">
 
 
             {/* Network Selector */}
@@ -265,9 +283,9 @@ function RechargeContent() {
                     key={net}
                     type="button"
                     onClick={() => setUsdtNetwork(net)}
-                    className={`py-2 px-3 rounded-xl border text-[13px] font-bold transition-all cursor-pointer ${
+                    className={`py-2 px-3 rounded-md border text-[13px] font-bold transition-all cursor-pointer ${
                       usdtNetwork === net
-                        ? "bg-[#03254c] text-white border-[#03254c]"
+                        ? "bg-[#0f172a] text-white border-[#0f172a]"
                         : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
                     }`}
                   >
@@ -278,18 +296,18 @@ function RechargeContent() {
             </div>
 
             {/* Deposit Address Box */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+            <div className="bg-slate-50 border border-slate-200 rounded-md p-3.5 space-y-2">
               <span className="text-slate-500 text-[11px] font-semibold block">
                 Official USDT ({usdtNetwork}) Receiving Address
               </span>
-              <div className="flex items-center justify-between bg-white border border-slate-200 rounded-lg p-2.5">
+              <div className="flex items-center justify-between bg-white border border-slate-200 rounded-md p-2.5">
                 <span className="font-mono text-[12px] font-bold text-slate-800 truncate pr-2">
                   {activeUsdtAddress}
                 </span>
                 <button
                   type="button"
                   onClick={() => handleCopy(activeUsdtAddress, "usdt_addr")}
-                  className="bg-[#03254c] hover:bg-[#021d3c] text-white text-[11px] font-bold px-2.5 py-1.5 rounded-md flex items-center gap-1 shrink-0 cursor-pointer"
+                  className="bg-[#0f172a] hover:bg-[#021d3c] text-white text-[11px] font-bold px-2.5 py-1.5 rounded-md flex items-center gap-1 shrink-0 cursor-pointer"
                 >
                   {copiedField === "usdt_addr" ? <Check size={12} /> : <Copy size={12} />}
                   <span>{copiedField === "usdt_addr" ? "Copied" : "Copy"}</span>
@@ -325,25 +343,22 @@ function RechargeContent() {
                   key={preset}
                   type="button"
                   onClick={() => handleSelectPreset(preset)}
-                  className={`relative rounded-[12px] py-3.5 px-2 text-center text-[15px] font-bold transition-all cursor-pointer ${
+                  className={`relative rounded-md py-3.5 px-2 text-center text-[15px] font-bold transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-[#03254c] text-white shadow-sm"
+                      ? "bg-[#0f172a] text-white shadow-sm"
                       : "bg-white text-slate-800 border border-slate-200 hover:border-slate-300 shadow-2xs"
                   }`}
                 >
                   <span>
                     {selectedMethod === "usdt" ? `${preset} USDT` : `${currencySymbol}${preset.toLocaleString()}`}
                   </span>
-                  {isSelected && (
-                    <div className="absolute bottom-0 left-0 right-0 h-[3.5px] bg-[#f59e0b] rounded-full" />
-                  )}
                 </button>
               );
             })}
           </div>
 
           {/* Custom Amount Input Box */}
-          <div className="bg-white border border-slate-200 rounded-[12px] px-4 py-3 flex items-center shadow-2xs mt-3 focus-within:border-[#03254c] focus-within:ring-1 focus-within:ring-[#03254c] transition-all">
+          <div className="bg-white border border-slate-200 rounded-md px-4 py-3 flex items-center shadow-2xs mt-3 focus-within:border-[#0f172a] focus-within:ring-1 focus-within:ring-[#0f172a] transition-all">
             <span className="text-slate-800 font-bold text-[16px] mr-2 shrink-0">
               {selectedMethod === "usdt" ? "USDT" : currencySymbol}
             </span>
@@ -368,7 +383,7 @@ function RechargeContent() {
 
           {/* Dynamic Conversion Display for USDT */}
           {selectedMethod === "usdt" ? (
-            <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-3 mt-2.5 flex items-center justify-between">
+            <div className="bg-amber-50/80 border border-amber-200/80 rounded-md p-3 mt-2.5 flex items-center justify-between">
               <span className="text-slate-600 text-[12px] font-medium">Converted Rand Value:</span>
               <span className="text-amber-700 font-black text-[15px] font-mono">
                 {currencySymbol} {formatAmount(Number(amount || 0) * (usdtRate > 0 ? usdtRate : 18.50))}
@@ -387,7 +402,7 @@ function RechargeContent() {
             type="button"
             onClick={handleContinue}
             disabled={isPending}
-            className="w-full bg-[#03254c] hover:bg-[#021d3c] active:scale-[0.99] transition-all text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-md shadow-blue-950/15 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-75"
+            className="w-full bg-[#0f172a] hover:bg-[#021d3c] active:scale-[0.99] transition-all text-white font-bold py-3.5 rounded-md text-[15px] shadow-md shadow-blue-950/15 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-75"
           >
             {isPending ? (
               <>
@@ -401,8 +416,8 @@ function RechargeContent() {
         </div>
 
         {/* Recharge Notes Card */}
-        <div className="bg-[#f0f6ff] border border-blue-100 rounded-[16px] p-5 mt-4 space-y-3">
-          <div className="flex items-center gap-2 text-[#03254c] font-bold text-[14px]">
+        <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-5 mt-4 space-y-3">
+          <div className="flex items-center gap-2 text-[#0f172a] font-bold text-[14px]">
             <Info size={17} className="shrink-0" />
             <span>Recharge notes</span>
           </div>
@@ -436,7 +451,7 @@ export default function RechargePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#f4f7fb] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#03254c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#0f172a]" />
       </div>
     }>
       <RechargeContent />

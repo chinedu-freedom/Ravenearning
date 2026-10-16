@@ -6,8 +6,12 @@ import {
   ArrowLeft, 
   Eye, 
   EyeOff, 
+  Lock, 
+  KeyRound, 
   ShieldCheck, 
-  Loader2 
+  CheckCircle2, 
+  Loader2,
+  Info
 } from "lucide-react";
 import { usePut } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -15,211 +19,220 @@ import { toast } from "sonner";
 export default function ChangePasswordPage() {
   const router = useRouter();
 
-  const [oldPassword, setOldPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [showOld, setShowOld] = useState(false);
+  const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { mutate: changePassword, isPending } = usePut("/users/me/password");
+  const { mutate: updatePassword, isPending } = usePut("/users/me/password");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!oldPassword) {
-      toast.error("Please enter your old password");
+    if (!currentPassword) {
+      toast.error("Please enter your current password");
       return;
     }
+
     if (!newPassword) {
       toast.error("Please enter your new password");
       return;
     }
-    if (newPassword.length < 6) {
-      toast.error("New password must be at least 6 characters");
+
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters long");
       return;
     }
+
+    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(newPassword)) {
+      toast.error("Password must contain both letters and numbers");
+      return;
+    }
+
+    if (newPassword === currentPassword) {
+      toast.error("New password cannot be the same as your current password");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       toast.error("New passwords do not match");
       return;
     }
 
-    changePassword(
+    updatePassword(
       {
-        currentPassword: oldPassword,
+        currentPassword: currentPassword,
         newPassword: newPassword,
       },
       {
         onSuccess: () => {
-          setOldPassword("");
+          toast.success("Password updated successfully");
+          setCurrentPassword("");
           setNewPassword("");
           setConfirmPassword("");
           setTimeout(() => {
             router.push("/dashboard/account");
-          }, 1000);
+          }, 800);
+        },
+        onError: (err) => {
+          toast.error("Password Update Failed", {
+            description: err?.response?.data?.message || err?.message || "Could not update password",
+          });
         }
       }
     );
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-24 select-none">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
       
-      {/* Header */}
-      <div className="bg-[#111827] px-4 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm border-b border-white/5">
-        <button
-          onClick={() => router.push("/dashboard/account")}
-          className="w-9 h-9 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors text-gray-300 border border-white/5 cursor-pointer"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <h1 className="text-white/90 text-[16px] font-bold">
-          Change Password
-        </h1>
-        <div className="w-9" />
+      {/* Top Header Bar - White background, Text on left, Logo on right */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push("/dashboard/account")}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back to Account"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            Change Password
+          </h1>
+        </div>
+        <div className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-4 space-y-4 max-w-[480px] mx-auto w-full">
-
-        {/* Hero Card - Clean Vibrant Blue */}
-        <div className="bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-[22px] p-5 text-white shadow-xl shadow-sky-950/20 relative overflow-hidden border border-sky-400/20">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none" />
-          
-          <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-xs border border-white/25 text-white px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider mb-2.5">
-            SECURITY CENTER
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
+        
+        {/* Security Overview Stats Card */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
+          <div>
+            <div className="text-[20px] sm:text-[22px] font-black text-slate-900 tracking-tight leading-tight">
+              Login Security
+            </div>
+            <p className="text-[13px] text-slate-500 font-medium mt-1">
+              Protect your account & withdrawals
+            </p>
           </div>
-
-          <h2 className="text-white text-[20px] font-bold tracking-tight mb-1">
-            Change Password
-          </h2>
-          <p className="text-sky-100 text-[12px] leading-relaxed">
-            Update your password and protect withdrawal access.
-          </p>
+          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+            <ShieldCheck size={24} className="stroke-[2.2]" />
+          </div>
         </div>
 
-        {/* Password Form Card */}
-        <form onSubmit={handleSubmit} className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-4">
+        {/* Change Password Form */}
+        <form onSubmit={handleSubmit} className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
           
-          {/* 01 Old Password */}
+          {/* Current Password Field */}
           <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-[6px] bg-[#0284c7]/20 border border-[#0284c7]/30 text-[#38bdf8] text-[10.5px] font-extrabold flex items-center justify-center">
-                01
-              </span>
-              <label className="text-[13px] font-semibold text-white/90">
-                Old Password
-              </label>
-            </div>
-            <div className="relative flex items-center bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              Current Password
+            </label>
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
-                type={showOld ? "text" : "password"}
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
+                type={showCurrent ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
-                className="bg-transparent outline-none text-white text-[14px] w-full pr-8 placeholder:text-gray-500"
+                disabled={isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
               <button
                 type="button"
-                onClick={() => setShowOld(!showOld)}
-                className="absolute right-3 text-gray-500 hover:text-gray-300 transition-colors"
+                onClick={() => setShowCurrent(!showCurrent)}
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
               >
-                {showOld ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          {/* 02 New Password */}
+          {/* New Password Field */}
           <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-[6px] bg-[#0284c7]/20 border border-[#0284c7]/30 text-[#38bdf8] text-[10.5px] font-extrabold flex items-center justify-center">
-                02
-              </span>
-              <label className="text-[13px] font-semibold text-white/90">
-                New Password
-              </label>
-            </div>
-            <div className="relative flex items-center bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              New Password
+            </label>
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
                 type={showNew ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password (min 6 chars)"
-                className="bg-transparent outline-none text-white text-[14px] w-full pr-8 placeholder:text-gray-500"
+                placeholder="At least 8 characters with letters & numbers"
+                disabled={isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
               <button
                 type="button"
                 onClick={() => setShowNew(!showNew)}
-                className="absolute right-3 text-gray-500 hover:text-gray-300 transition-colors"
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
               >
                 {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          {/* 03 Confirm Password */}
+          {/* Confirm Password Field */}
           <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-[6px] bg-[#0284c7]/20 border border-[#0284c7]/30 text-[#38bdf8] text-[10.5px] font-extrabold flex items-center justify-center">
-                03
-              </span>
-              <label className="text-[13px] font-semibold text-white/90">
-                Confirm Password
-              </label>
-            </div>
-            <div className="relative flex items-center bg-[#0b0f19] border border-white/10 rounded-[12px] px-3.5 py-3 focus-within:border-[#0284c7] transition-all">
+            <label className="text-[12.5px] font-bold text-slate-700 block">
+              Confirm New Password
+            </label>
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
                 type={showConfirm ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your new password"
-                className="bg-transparent outline-none text-white text-[14px] w-full pr-8 placeholder:text-gray-500"
+                placeholder="Re-enter your new password"
+                disabled={isPending}
+                className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-3 text-gray-500 hover:text-gray-300 transition-colors"
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                aria-label="Toggle password visibility"
               >
                 {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Action Submit Button */}
           <button
             type="submit"
-            disabled={isPending}
-            className="w-full bg-gradient-to-r from-[#0284c7] to-[#0369a1] hover:opacity-95 text-white font-bold py-3.5 rounded-[12px] text-[15px] shadow-lg shadow-sky-500/20 transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50 mt-3 flex items-center justify-center gap-2"
+            disabled={isPending || !currentPassword || !newPassword || !confirmPassword}
+            className="w-full bg-[#0f172a] hover:bg-[#021d3c] disabled:opacity-50 text-white font-bold py-3.5 rounded-xl text-[14.5px] shadow-md shadow-blue-950/15 cursor-pointer active:scale-[0.98] transition-all flex items-center justify-center gap-2 pt-3"
           >
             {isPending ? (
-              <Loader2 className="animate-spin text-white" size={18} />
+              <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              "Confirm Now"
+              <span>Update Password</span>
             )}
           </button>
 
         </form>
 
-        {/* Security Reminder Card */}
-        <div className="bg-[#111827] rounded-[20px] p-5 border border-white/5 shadow-md space-y-3">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={16} className="text-[#38bdf8]" />
-            <h3 className="text-white/90 font-bold text-[14px]">
-              Password Security Tips
-            </h3>
+        {/* Security Guidelines Card */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs space-y-2">
+          <div className="text-slate-800 font-bold text-[13px]">
+            <span>Password rules</span>
           </div>
-
-          <div className="space-y-2 text-[12px] text-gray-300 leading-relaxed pl-1">
-            <p>
-              1. Never disclose your login password to anyone, including customer support personnel.
-            </p>
-            <p>
-              2. Use a combination of letters, numbers, and symbols to ensure maximum security.
-            </p>
-            <p>
-              3. If you notice any suspicious activity, please change your password immediately.
-            </p>
-          </div>
+          <ul className="text-[12px] text-slate-500 leading-relaxed space-y-1.5 pl-5 list-disc">
+            <li>Password must be at least 8 characters long.</li>
+            <li>Must contain a mix of both letters (A-Z) and numbers (0-9).</li>
+            <li>Do not reuse your current password or easily guessable dates.</li>
+            <li>Platform admins will never ask you for your login password.</li>
+          </ul>
         </div>
 
       </div>

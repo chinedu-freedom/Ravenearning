@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -46,7 +46,7 @@ export default function TeamListPage() {
         {/* Content */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center flex-1 min-h-[300px]">
-            <Loader2 className="w-8 h-8 animate-spin text-[#4f8cff] mb-3" />
+            <Loader2 className="w-8 h-8 animate-spin text-amber-400 mb-3" />
             <span className="text-[12px] text-gray-500 font-medium">Loading team members...</span>
           </div>
         ) : teamList.length === 0 ? (
@@ -66,7 +66,7 @@ export default function TeamListPage() {
               <div key={user.id} className="bg-[#111827] rounded-[16px] px-4 py-3 flex items-center justify-between shadow-md border border-white/5">
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
-                  <div className="w-[48px] h-[48px] rounded-full bg-gradient-to-br from-[#0d9488] to-[#2563eb] flex items-center justify-center text-white font-bold text-[18px] shrink-0">
+                  <div className="w-[48px] h-[48px] rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white font-bold text-[18px] shrink-0 shadow-sm shadow-amber-500/20">
                     {(user.phone || "M").charAt(0).toUpperCase()}
                   </div>
                   
