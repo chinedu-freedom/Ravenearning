@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Volume2, VolumeX, History, Gift, Ticket, HelpCircle, X } from "lucide-react";
+import { ArrowLeft, Volume2, VolumeX, History, Gift, Ticket, HelpCircle, X, Wallet, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import HowToPlayModal from "@/components/HowToPlayModal";
@@ -85,7 +85,7 @@ export default function SpinPage() {
             this.resize();
             this.canvas.style.display = 'block';
             this.particles = [];
-            const colors = ['#f59e0b', '#22c55e', '#f59e0b', '#ef4444', '#f59e0b', '#06b6d4'];
+            const colors = ['#f59e0b', '#22c55e', '#3b82f6', '#ef4444', '#10b981', '#06b6d4'];
             for (let i = 0; i < count; i++) {
                 this.particles.push({
                     x: Math.random() * this.canvas.width,
@@ -158,7 +158,7 @@ export default function SpinPage() {
     if (basePrizes[i]) {
       displaySegments.push({
         label: basePrizes[i].name,
-        color: i % 2 === 0 ? "#fefefe" : "#fdf6e3",
+        color: i % 2 === 0 ? "#ffffff" : "#fef9ee",
         id: basePrizes[i].id,
         value: Number(basePrizes[i].value),
         originalIndex: i
@@ -166,7 +166,7 @@ export default function SpinPage() {
     } else {
       displaySegments.push({
         label: "0.00",
-        color: i % 2 === 0 ? "#fefefe" : "#fdf6e3",
+        color: i % 2 === 0 ? "#ffffff" : "#fef9ee",
         id: `empty-${i}`,
         value: 0,
         originalIndex: i
@@ -180,11 +180,11 @@ export default function SpinPage() {
   // Build the conic-gradient string
   const gradientStops = segments.map((seg, i) => {
     const start = i * segmentDegree;
-    const end = start + segmentDegree;
+    const end = (i + 1) * segmentDegree;
     return `${seg.color} ${start}deg ${end}deg`;
-  }).join(", ");
+  }).join(', ');
 
-  const handleSpin = async () => {
+  const handleSpin = () => {
     if (isSpinning) return;
     
     if (basePrizes.length < 8) {
@@ -245,10 +245,8 @@ export default function SpinPage() {
             wheelRef.current.style.transform = `rotate(${currentRotation}deg)`;
           }
 
-          // Play tick if we crossed a segment threshold
-          // In the original, the threshold grows slightly so it ticks less often at the end
           const tickThreshold = segmentDegree * (0.8 + progress * 0.4);
-          if (currentRotation - lastTickAngle >= tickThreshold) {
+          if (Math.abs(currentRotation - lastTickAngle) >= tickThreshold) {
             playTick();
             lastTickAngle = currentRotation;
           }
@@ -256,24 +254,27 @@ export default function SpinPage() {
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
-            // Animation complete
             setIsSpinning(false);
-            setRotation(newRotation); // sync React state just in case
+            setRotation(newRotation % 360);
             
-            const isWin = rewardAmount > 0;
-
+            // Find winning segment info
+            const wonPrize = basePrizes[prizeIndex];
+            const isWin = Number(rewardAmount) > 0;
+            
             if (isWin) {
               playWin();
-              confettiRef.current?.launch(100);
+              confettiRef.current?.launch(120);
             }
-            
+
             setResultData({
-              isWin: isWin,
-              amount: rewardAmount,
-              message: res.data.prize.name
+              isWin,
+              amount: Number(rewardAmount),
+              message: isWin 
+                ? `Congratulations! You received ${settings.currency_symbol || "R"}${Number(rewardAmount).toFixed(2)}`
+                : "Better luck next time! Try again to win big!"
             });
             setShowResultModal(true);
-            
+
             refetch();
           }
         };
@@ -288,74 +289,96 @@ export default function SpinPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-y-auto [&::-webkit-scrollbar]:hidden pb-20">
-      {/* Header */}
-      <div className="px-4 py-4 flex justify-between items-center bg-[#111827] sticky top-0 z-20 border-b border-white/5">
-        <button 
-          onClick={() => router.back()}
-          className="w-10 h-10 bg-white/5 border border-white/5 rounded-[12px] flex items-center justify-center text-gray-300 shadow-sm cursor-pointer hover:bg-white/10 transition-colors"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <h1 className="text-white/90 text-[18px] font-bold">Lucky Spin</h1>
-        <button 
-          onClick={() => setIsMuted(!isMuted)}
-          className="cursor-pointer w-10 h-10 bg-white/5 border border-white/5 rounded-[12px] flex items-center justify-center text-gray-300 shadow-sm hover:bg-white/10 transition-colors"
-        >
-          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        </button>
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start relative overflow-x-hidden pb-24 select-none">
+      
+      {/* Top Header Bar - Exact matching style to other site headers */}
+      <div className="sticky top-0 z-40 bg-white text-slate-900 border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
+            Lucky Spin
+          </h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setIsMuted(!isMuted)}
+            className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 flex items-center justify-center transition-colors cursor-pointer"
+            title={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          </button>
+          <button
+            onClick={() => setIsHowToPlayOpen(true)}
+            className="w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200/80 flex items-center justify-center transition-colors cursor-pointer"
+            title="Rules"
+          >
+            <HelpCircle size={16} />
+          </button>
+        </div>
       </div>
 
-      <div className="px-4 mt-2 space-y-4 relative z-10">
+      <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4">
         
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-[#111827] p-4 rounded-[16px] border border-white/5 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-2">
-              <div className="w-4 h-4 rounded-[4px] bg-white/10 flex items-center justify-center">
-                <div className="w-2 h-1.5 bg-gray-400 rounded-[1px]"></div>
+        {/* Stats Row - Clean white cards with site colors */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Deposit Balance */}
+          <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Deposit Balance</span>
+              <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <Wallet size={14} />
               </div>
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Deposit Balance</span>
             </div>
-            <div className="text-[20px] font-bold text-amber-400">
+            <div className="text-[20px] font-black text-slate-900 font-mono mt-2">
               {settings.currency_symbol || "R"}{Number(currentBalance).toFixed(2)}
             </div>
           </div>
 
-          <div className="bg-[#111827] p-4 rounded-[16px] border border-white/5 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-2">
-              <Ticket className="text-gray-400 w-4 h-4" />
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Free Spins</span>
+          {/* Free Spins */}
+          <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Free Spins</span>
+              <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center">
+                <Ticket size={14} />
+              </div>
             </div>
-            <div className="text-[20px] font-bold text-amber-400">
-              {freeSpins}
+            <div className="text-[20px] font-black text-amber-500 font-mono mt-2 flex items-baseline gap-1.5">
+              <span>{freeSpins}</span>
+              <span className="text-[11px] text-slate-400 font-sans font-medium">available</span>
             </div>
           </div>
         </div>
 
-        {/* Cost Indicator */}
-        <div className="flex justify-center mt-2 mb-6">
-          <div className="bg-[#111827] px-5 py-2 rounded-full border border-white/5 shadow-sm flex items-center gap-2">
-            <div className="w-4 h-4 bg-gray-400 rounded-[4px]"></div>
-            <span className="text-[13px] font-bold text-white/90">Cost: {settings.currency_symbol || "R"}{cost.toFixed(2)}</span>
+        {/* Cost Indicator Pill */}
+        <div className="flex justify-center">
+          <div className="bg-white px-4 py-1.5 rounded-full border border-slate-200/90 shadow-2xs flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[12px] font-bold text-slate-700">
+              Spin Cost: <span className="font-mono text-emerald-600">{settings.currency_symbol || "R"}{cost.toFixed(2)}</span>
+            </span>
           </div>
         </div>
 
         {/* Wheel Container */}
-        <div className="flex justify-center items-center py-6">
+        <div className="flex justify-center items-center py-4">
           <div className="relative w-[320px] h-[320px]">
             {/* The Outer Gold Ring with Lights */}
-            <div className="absolute inset-0 rounded-full bg-[#0f172a] shadow-[0_0_20px_rgba(245,158,11,0.35)] border-4 border-amber-400 overflow-hidden">
-              {/* Fake lights using CSS repeating conic gradient or positioned dots */}
-              <div className="absolute inset-1 rounded-full border border-amber-300/40"></div>
+            <div className="absolute inset-0 rounded-full bg-[#0f172a] shadow-[0_10px_35px_rgba(245,158,11,0.25)] border-[5px] border-amber-400 overflow-hidden">
+              <div className="absolute inset-1 rounded-full border border-amber-300/40" />
               {Array.from({ length: 24 }).map((_, i) => (
                 <div 
                   key={i}
-                  className="absolute w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_4px_white]"
+                  className="absolute w-2 h-2 bg-amber-200 rounded-full shadow-[0_0_6px_#fde68a]"
                   style={{
                     top: '50%',
                     left: '50%',
-                    transform: `translate(-50%, -50%) rotate(${i * 15}deg) translateY(-150px)`
+                    transform: `translate(-50%, -50%) rotate(${i * 15}deg) translateY(-148px)`
                   }}
                 />
               ))}
@@ -364,7 +387,7 @@ export default function SpinPage() {
             {/* The Inner Spinning Wheel */}
             <div 
               ref={wheelRef}
-              className="absolute inset-[15px] rounded-full overflow-hidden shadow-inner"
+              className="absolute inset-[14px] rounded-full overflow-hidden shadow-inner"
               style={{
                 background: `conic-gradient(${gradientStops})`,
                 transform: `rotate(${rotation}deg)`
@@ -378,7 +401,7 @@ export default function SpinPage() {
                   <div key={i}>
                     {/* Separator Line */}
                     <div 
-                      className="absolute top-0 left-1/2 w-[1px] h-1/2 bg-[#e2e8f0]/40 origin-bottom z-10"
+                      className="absolute top-0 left-1/2 w-[1px] h-1/2 bg-amber-200/60 origin-bottom z-10"
                       style={{ transform: `translateX(-50%) rotate(${lineAngle}deg)` }}
                     />
                     
@@ -390,24 +413,24 @@ export default function SpinPage() {
                           transform: `translateX(-50%) rotate(${angle}deg)`,
                         }}
                       >
-                        <span className="text-[20px] filter drop-shadow-sm">😢</span>
-                        <span className="text-[13px] text-[#ff3333] font-black mt-1.5 tracking-tight">Oops!</span>
-                        <span className="text-[8px] text-[#475569] font-bold uppercase tracking-wider mt-1 whitespace-nowrap">Try Again</span>
+                        <span className="text-[19px] filter drop-shadow-sm">😢</span>
+                        <span className="text-[12px] text-[#ef4444] font-black mt-1 tracking-tight">Oops!</span>
+                        <span className="text-[8px] text-slate-500 font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">Try Again</span>
                       </div>
                     ) : (
                       <div 
-                        className="absolute inset-0 flex items-start justify-center pt-[20px] z-20"
+                        className="absolute inset-0 flex items-start justify-center pt-[18px] z-20"
                         style={{ transform: `rotate(${angle}deg)` }}
                       >
                         <span 
-                          className="text-[15px] font-bold text-slate-800 w-[20px] text-center select-none"
+                          className="text-[14px] font-black text-slate-900 w-[20px] text-center select-none font-mono tracking-tight"
                           style={{ 
                             transform: 'rotate(180deg)',
                             writingMode: 'vertical-rl',
                             textOrientation: 'mixed'
                           }}
                         >
-                          <span className="inline-block mt-4">{seg.label}</span>
+                          <span className="inline-block mt-3">{seg.label}</span>
                         </span>
                       </div>
                     )}
@@ -419,50 +442,52 @@ export default function SpinPage() {
             {/* Center Start Button */}
             <div 
               onClick={handleSpin}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] bg-gradient-to-b from-amber-500 to-amber-700 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] z-30 border-[4px] border-amber-300 hover:scale-105 active:scale-95 transition-all"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[84px] h-[84px] bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center cursor-pointer shadow-[0_4px_20px_rgba(245,158,11,0.5)] z-30 border-[4px] border-amber-200 hover:scale-105 active:scale-95 transition-all"
             >
               {/* Pointer Triangle */}
-              <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[16px] border-b-amber-300"></div>
+              <div className="absolute -top-[16px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[11px] border-l-transparent border-r-[11px] border-r-transparent border-b-[18px] border-b-amber-200" />
               
-              <span className="text-white font-bold text-[16px] drop-shadow-md">Start</span>
+              <div className="flex flex-col items-center leading-none">
+                <span className="text-white font-black text-[17px] tracking-tight drop-shadow-sm uppercase">Spin</span>
+              </div>
             </div>
             
           </div>
         </div>
 
         {/* Recent Wins */}
-        <div className="mt-8">
-          <div className="flex items-center gap-2 mb-4 px-1">
-            <History className="text-amber-400" size={18} />
-            <h3 className="font-bold text-white text-[16px]">Recent Wins</h3>
+        <div className="mt-4">
+          <div className="flex items-center gap-2 mb-3 px-1">
+            <History className="text-amber-500" size={17} />
+            <h3 className="font-bold text-slate-900 text-[15px] tracking-tight">Recent Wins</h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {spinData?.recentWins?.length > 0 ? (
               spinData.recentWins.map((win) => (
-                <div key={win.id} className="bg-[#111827] rounded-[16px] p-4 border border-white/5 shadow-sm flex items-center justify-between">
+                <div key={win.id} className="bg-white rounded-xl p-3.5 border border-slate-200/90 shadow-2xs flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-[12px] flex items-center justify-center ${Number(win.reward_earned) > 0 ? 'bg-green-900/20' : 'bg-white/5'}`}>
-                      <Gift className={Number(win.reward_earned) > 0 ? 'text-[#16a34a]' : 'text-gray-400'} size={20} />
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${Number(win.reward_earned) > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                      <Gift size={18} />
                     </div>
                     <div>
-                      <h4 className="text-[15px] font-bold text-white/90">{win.prize.name}</h4>
-                      <p className="text-[12px] text-gray-500 mt-0.5">{dayjs(win.created_at).format('MMM DD, HH:mm')}</p>
+                      <h4 className="text-[13.5px] font-bold text-slate-900">{win.prize.name}</h4>
+                      <p className="text-[11px] text-slate-400 font-medium">{dayjs(win.created_at).format('MMM DD, HH:mm')}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`text-[15px] font-bold ${Number(win.reward_earned) > 0 ? 'text-[#16a34a]' : 'text-gray-500'}`}>
+                    <div className={`text-[14px] font-black font-mono ${Number(win.reward_earned) > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
                       {Number(win.reward_earned) > 0 ? `+${settings.currency_symbol || "R"}${Number(win.reward_earned).toFixed(2)}` : '0.00'}
                     </div>
-                    <div className="text-[12px] text-gray-400 mt-0.5">
-                      {win.spin_type === 'free' ? 'Free Spin' : `-${settings.currency_symbol || "R"}${cost.toFixed(2)}`}
+                    <div className="text-[10.5px] text-slate-400 font-medium">
+                      {win.spin_type === 'free' ? 'Free Spin' : `Paid Spin`}
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-6 text-gray-400 bg-[#111827] rounded-[16px] border border-white/5 text-sm">
-                No recent wins yet
+              <div className="text-center py-8 text-slate-400 bg-white rounded-xl border border-slate-200/90 text-[12.5px] font-medium">
+                No recent wins yet. Spin the wheel to win instant prizes!
               </div>
             )}
           </div>
@@ -470,62 +495,51 @@ export default function SpinPage() {
 
       </div>
 
-      {/* Floating Help Button */}
-      <button 
-        onClick={() => setIsHowToPlayOpen(true)}
-        className="fixed bottom-[80px] right-4 w-[60px] h-[60px] bg-gradient-to-r from-amber-500 to-amber-600 rounded-full shadow-[0_4px_16px_rgba(245,158,11,0.4)] flex items-center justify-center z-40 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-      >
-        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-          <span className="text-amber-500 font-bold text-[18px]">?</span>
-        </div>
-      </button>
-
       <HowToPlayModal isOpen={isHowToPlayOpen} setIsOpen={setIsHowToPlayOpen} />
 
-      {/* Spin Result Modal */}
+      {/* Spin Result Modal - Site Color Light Theme */}
       {showResultModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#111827] border border-white/10 rounded-[24px] p-8 w-full max-w-[320px] flex flex-col items-center text-center shadow-[0_25px_50px_rgba(0,0,0,0.25)] animate-in zoom-in-95 duration-200 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200/90 rounded-[24px] p-6 w-full max-w-[320px] flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-200 relative select-none">
             
-            {/* Cancel / Close Button */}
+            {/* Close Button */}
             <button
               onClick={() => setShowResultModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer z-20"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer z-20"
               aria-label="Close"
             >
               <X size={16} />
             </button>
 
             <div 
-              className={`w-20 h-20 rounded-full flex items-center justify-center mb-5 text-[40px]`}
-              style={{ background: resultData.isWin ? 'linear-gradient(135deg, rgba(22,163,74,0.2) 0%, rgba(34,197,94,0.1) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)' }}
+              className="w-18 h-18 rounded-full flex items-center justify-center mb-4 text-[36px]"
+              style={{ background: resultData.isWin ? 'rgba(16, 185, 129, 0.12)' : 'rgba(100, 116, 139, 0.1)' }}
             >
               {resultData.isWin ? "🎉" : "😢"}
             </div>
             
-            <h2 className="text-white/90 text-[24px] font-bold mb-2">
+            <h2 className="text-slate-900 text-[22px] font-black tracking-tight mb-1">
               {resultData.isWin ? "You Won!" : "Try Again"}
             </h2>
             
             {resultData.isWin ? (
-              <div className="flex flex-col items-center gap-2 mb-2">
-                <p className="text-[#16a34a] text-[36px] font-extrabold leading-none">
+              <div className="flex flex-col items-center gap-1.5 mb-5 w-full">
+                <p className="text-emerald-600 text-[32px] font-black font-mono leading-none">
                   +{settings.currency_symbol || "R"}{resultData.amount.toFixed(2)}
                 </p>
-                <p className="text-[#64748b] text-[14px]">
+                <p className="text-slate-500 text-[13px] leading-tight mt-1">
                   {resultData.message}
                 </p>
-                <p className="text-amber-400 text-[13px] mt-2 mb-4 flex items-center gap-1.5 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">✓</span>
-                  Added to withdrawable balance
-                </p>
+                <div className="mt-2 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11.5px] font-bold rounded-full">
+                  ✓ Added to withdrawable balance
+                </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-2 mb-6">
-                <p className="text-[#64748b] text-[18px]">
+              <div className="flex flex-col items-center gap-1 mb-5">
+                <p className="text-slate-700 text-[15px] font-bold">
                   Better luck next time!
                 </p>
-                <p className="text-[#64748b] text-[14px]">
+                <p className="text-slate-400 text-[12.5px]">
                   {resultData.message}
                 </p>
               </div>
@@ -533,7 +547,7 @@ export default function SpinPage() {
             
             <button 
               onClick={() => setShowResultModal(false)}
-              className="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white font-semibold rounded-[12px] py-3.5 hover:opacity-95 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
+              className="w-full bg-[#0f172a] hover:bg-[#021d3c] text-white font-bold text-[14px] rounded-xl py-3 shadow-md transition-all cursor-pointer active:scale-95"
             >
               Continue
             </button>
@@ -551,4 +565,3 @@ export default function SpinPage() {
     </div>
   );
 }
-

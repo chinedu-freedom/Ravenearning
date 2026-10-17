@@ -128,8 +128,8 @@ export default function DashboardPage() {
                   <circle cx="23.5" cy="39" r="2" fill="currentColor" />
                 </svg>
               </div>
-              <span className="text-[12px] text-gray-700 font-medium mt-1 leading-tight text-center whitespace-nowrap">
-                Customer Service
+              <span className="text-[12px] text-gray-700 font-medium mt-1 leading-tight text-center">
+                Support
               </span>
             </button>
 
@@ -158,20 +158,20 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 3. Task Center Banner Card */}
+        {/* 3. Lucky Spin Banner Card */}
         <div
-          onClick={() => router.push("/dashboard/task")}
+          onClick={() => router.push("/dashboard/spin")}
           className="relative w-full h-[100px] rounded-2xl overflow-hidden shadow-sm cursor-pointer group active:scale-[0.99] transition-transform"
         >
           <img
-            src="/images/dashboard/task_banner.jpg"
-            alt="Task Center"
+            src="/images/dashboard/spin_banner.jpg"
+            alt="Lucky Spin"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-4">
             <h3 className="text-white text-[18px] font-bold tracking-tight leading-tight drop-shadow-sm">
-              Task Center
+              Lucky Spin
             </h3>
             <button className="mt-2 w-fit px-6 py-1 bg-white text-gray-900 font-bold text-[13px] rounded-full shadow hover:bg-gray-100 transition-all cursor-pointer">
               Go

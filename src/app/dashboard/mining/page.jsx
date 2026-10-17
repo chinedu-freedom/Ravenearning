@@ -336,10 +336,7 @@ export default function MiningPlansPage() {
                   <img src={getPlanImage(selectedPlan, filteredPlans.findIndex(p => p.id === selectedPlan.id))} alt={selectedPlan.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-slate-900 text-[15px] leading-tight">{selectedPlan.name}</h3>
-                  <p className="text-slate-500 text-[11px] font-medium mt-0.5">
-                    {selectedPlan.duration} days • {formatCurrency(selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0))}/day
-                  </p>
+                  <h3 className="font-extrabold text-slate-900 text-[16px] leading-tight">{selectedPlan.name}</h3>
                 </div>
               </div>
               <button
@@ -352,26 +349,23 @@ export default function MiningPlansPage() {
 
             <div className="overflow-y-auto p-5 space-y-5 [&::-webkit-scrollbar]:hidden">
 
-              <div className="flex justify-between items-center py-3.5 bg-slate-50 rounded-2xl border border-slate-100 px-4">
-                <div className="text-center w-1/3">
-                  <div className="text-slate-950 font-black text-[14px]">
-                    {formatCurrency(selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0))}
-                  </div>
-                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Daily Income</div>
+              {/* 1. Properties: Term, Daily Income, Total Expected Revenue */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                  <span className="text-slate-500 text-[12.5px] font-medium">Term</span>
+                  <span className="text-slate-900 text-[14.5px] font-bold">{selectedPlan.duration} days</span>
                 </div>
-                <div className="text-center w-1/3 border-x border-slate-200/80">
-                  <div className="text-slate-800 font-extrabold text-[14px]">{selectedPlan.duration} days</div>
-                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Term</div>
+                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                  <span className="text-slate-500 text-[12.5px] font-medium">Daily Income</span>
+                  <span className="text-slate-900 text-[14.5px] font-bold">{formatCurrency(dailyIncome)}</span>
                 </div>
-                <div className="text-center w-1/3">
-                  <div className="text-slate-900 font-extrabold text-[14px]">
-                    {formatCurrency(selectedPlan.total_revenue ? Number(selectedPlan.total_revenue) : (selectedPlan.daily_income <= 1 ? Number(selectedPlan.min_investment || 0) * Number(selectedPlan.daily_income || 0) : Number(selectedPlan.daily_income || 0)) * Number(selectedPlan.duration || 0))}
-                  </div>
-                  <div className="text-slate-400 text-[10px] font-semibold mt-0.5 uppercase">Total Revenue</div>
+                <div className="flex justify-between items-center pb-1">
+                  <span className="text-slate-500 text-[12.5px] font-medium">Total Expected Revenue</span>
+                  <span className="text-slate-950 text-[15px] font-black">{formatCurrency(totalReturn)}</span>
                 </div>
               </div>
 
-              {/* Available Balance */}
+              {/* 2. Available Balance */}
               <div>
                 <label className="block text-slate-500 text-[12px] font-medium mb-1.5">Available Balance</label>
                 <div className="w-full py-3.5 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col items-center justify-center gap-0.5">
@@ -380,7 +374,7 @@ export default function MiningPlansPage() {
                 </div>
               </div>
 
-              {/* Investment Amount */}
+              {/* 3. Package Price Input */}
               <div>
                 <div className="flex justify-between items-end mb-2">
                   <label className="text-slate-700 text-[12px] font-bold">Package Price</label>
@@ -394,17 +388,6 @@ export default function MiningPlansPage() {
                 />
               </div>
 
-              {/* Earnings Breakdown */}
-              <div className="space-y-3 pt-2">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                  <span className="text-slate-500 text-[12px] font-medium">Daily Income</span>
-                  <span className="text-slate-900 text-[15px] font-bold">{formatCurrency(dailyIncome)}</span>
-                </div>
-                <div className="flex justify-between items-center pb-1">
-                  <span className="text-slate-500 text-[12px] font-medium">Total Expected Revenue</span>
-                  <span className="text-slate-950 text-[15px] font-black">{formatCurrency(totalReturn)}</span>
-                </div>
-              </div>
             </div>
 
             {/* Footer */}

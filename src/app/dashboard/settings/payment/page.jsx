@@ -11,8 +11,10 @@ export default function PaymentSettingsPage() {
   const { data: userRes } = useFetchData("/users/me", ["profile"]);
   const hasPin = !!userRes?.user?.has_withdrawal_pin;
 
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   
@@ -21,18 +23,33 @@ export default function PaymentSettingsPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (hasPin && !currentPassword.trim()) {
+      toast.error("Please enter your current withdrawal password");
+      return;
+    }
     if (!newPassword.trim() || !confirmPassword.trim()) {
-      toast.error("Please fill in both password fields");
+      toast.error("Please fill in both new password fields");
+      return;
+    }
+    if (newPassword.trim().length < 4) {
+      toast.error("Withdrawal password must be at least 4 characters");
       return;
     }
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-    updatePayment({ newPassword }, {
+    const payload = { newPassword: newPassword.trim() };
+    if (hasPin) {
+      payload.currentPassword = currentPassword.trim();
+    }
+    updatePayment(payload, {
       onSuccess: () => {
+        toast.success(hasPin ? "Withdrawal password updated successfully" : "Withdrawal password set successfully");
+        setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
+        router.push("/dashboard/settings");
       }
     });
   };
@@ -76,6 +93,28 @@ export default function PaymentSettingsPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {hasPin && (
+              <div className="space-y-1.5">
+                <label className="block text-white/80 text-[12.5px] font-medium">Current Password</label>
+                <div className="relative">
+                  <input
+                    type={showCurrent ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                    className="w-full bg-[#0b0f19] border border-white/10 rounded-[10px] pl-3.5 pr-10 py-2.5 text-[14px] text-white/90 placeholder-gray-500 focus:outline-none focus:border-amber-400 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrent(!showCurrent)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  >
+                    {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-1.5">
               <label className="block text-white/80 text-[12.5px] font-medium">New Password</label>
               <div className="relative">

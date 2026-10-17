@@ -12,14 +12,12 @@ export default function WelcomeNoticeModal() {
   const settings = settingsRes?.settings || settingsRes || {};
 
   useEffect(() => {
-    // Clear any previous dismissed flags from session
     if (typeof window !== "undefined") {
-      sessionStorage.removeItem("welcome_notice_dismissed");
-    }
-
-    // Pop up whenever the user visits the dashboard home
-    if (pathname === "/dashboard" || pathname === "/dashboard/") {
-      setIsOpen(true);
+      const shouldShow = sessionStorage.getItem("show_welcome_notice");
+      if (shouldShow === "true" && (pathname === "/dashboard" || pathname === "/dashboard/")) {
+        setIsOpen(true);
+        sessionStorage.removeItem("show_welcome_notice");
+      }
     }
   }, [pathname]);
 

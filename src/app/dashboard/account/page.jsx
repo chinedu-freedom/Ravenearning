@@ -86,7 +86,9 @@ export default function AccountPage() {
   const currencySymbol = settings.currency_symbol || "R";
   const cashBalance = userProfile?.balance != null ? Number(userProfile.balance) : 150;
   const cumulativeIncome =
-    userProfile?.cumulative_income != null
+    userProfile?.statistics?.total_income != null
+      ? Number(userProfile.statistics.total_income)
+      : userProfile?.cumulative_income != null
       ? Number(userProfile.cumulative_income)
       : userProfile?.total_income != null
       ? Number(userProfile.total_income)

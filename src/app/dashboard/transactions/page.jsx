@@ -369,7 +369,7 @@ export default function TransactionsPage() {
                           {/* Type */}
                           <td className="py-3.5 px-3.5 whitespace-nowrap">
                             <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-md border text-[11px] font-bold ${item.typeBadgeClass}`}
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[11px] font-bold ${item.typeBadgeClass}`}
                             >
                               {item.typeLabel}
                             </span>

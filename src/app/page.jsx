@@ -80,6 +80,9 @@ export default function LoginPage() {
         if (res?.token) {
           setAuthToken(res.token, keepMeLoggedIn);
         }
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("show_welcome_notice", "true");
+        }
         router.push("/dashboard");
       },
     });

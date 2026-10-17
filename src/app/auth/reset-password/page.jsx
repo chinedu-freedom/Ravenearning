@@ -70,8 +70,8 @@ export default function ResetPasswordPage() {
 
     const phone = sessionStorage.getItem("resetPasswordPhone") || localStorage.getItem("resetEmail");
     if (!phone) {
-      toast.error("Session expired. Please request a new reset link.");
-      router.push("/auth/forgot-password");
+      toast.error("Session expired. Please log in or request a new code.");
+      router.push("/");
       return;
     }
 

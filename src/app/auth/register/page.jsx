@@ -88,6 +88,9 @@ function SignupForm() {
         if (res?.token) {
           setAuthToken(res.token, true);
         }
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("show_welcome_notice", "true");
+        }
         router.push("/dashboard"); 
       },
     });

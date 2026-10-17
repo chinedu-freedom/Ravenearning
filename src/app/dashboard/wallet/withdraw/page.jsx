@@ -219,7 +219,7 @@ function WithdrawContent() {
                     South Africa Bank (Rand)
                   </span>
                   <span className="text-[11.5px] text-slate-500 font-medium">
-                    Withdraw directly to your linked bank account
+                    Payout to linked bank account
                   </span>
                 </div>
               </div>

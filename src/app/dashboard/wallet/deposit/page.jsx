@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   ArrowLeft,
   User,
@@ -145,10 +146,10 @@ function RechargeContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7fb] flex flex-col justify-start">
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start">
       
       {/* Top Header Bar - Clean White */}
-      <div className="sticky top-0 z-40 bg-white border-b border-slate-100/80 px-5 h-16 flex items-center justify-between shadow-xs max-w-[480px] mx-auto w-full">
+      <div className="sticky top-0 z-40 bg-white text-slate-900 border-b border-slate-100 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -162,13 +163,12 @@ function RechargeContent() {
             Recharge
           </h1>
         </div>
-        <div className="flex items-center">
-          <img
-            src="/logo.png"
-            alt="Logo"
-            className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-slate-200/80 shrink-0"
-          />
-        </div>
+        <Link
+          href="/dashboard/account/recharge"
+          className="px-3.5 py-1.5 rounded-full text-[13px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 transition-all shadow-2xs cursor-pointer flex items-center gap-1 active:scale-95"
+        >
+          History
+        </Link>
       </div>
 
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
