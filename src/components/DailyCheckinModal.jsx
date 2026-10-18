@@ -137,9 +137,7 @@ export default function DailyCheckinModal() {
         handleOpenChange(false);
       }
     } catch (error) {
-      toast.error("Claim Failed", {
-        description: error?.response?.data?.error || error?.message || "Could not claim daily reward",
-      });
+      toast.error(error?.response?.data?.error || error?.message || "Could not claim daily reward");
     }
   };
 

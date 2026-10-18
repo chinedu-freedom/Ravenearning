@@ -11,7 +11,6 @@ import {
   Zap, 
   ShieldCheck, 
   TrendingUp, 
-  Sparkles,
   Layers,
   Wallet
 } from "lucide-react";
@@ -210,10 +209,9 @@ export default function MyInvestmentsPage() {
             {activeTab === "active" && (
               <Link
                 href="/dashboard/mining"
-                className="bg-[#0f172a] hover:bg-[#021d3c] text-white font-bold px-5 py-2.5 rounded-md text-[13px] shadow-sm transition-all active:scale-95 cursor-pointer inline-flex items-center gap-1.5 mt-1"
+                className="bg-[#0f172a] hover:bg-[#021d3c] text-white font-bold px-5 py-2.5 rounded-md text-[13px] shadow-sm transition-all active:scale-95 cursor-pointer inline-flex items-center justify-center mt-1"
               >
-                <Sparkles size={14} />
-                <span>Explore Investment Plans</span>
+                Explore Investment Plans
               </Link>
             )}
           </div>

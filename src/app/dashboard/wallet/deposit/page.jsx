@@ -124,7 +124,7 @@ function RechargeContent() {
     submitDeposit(
       {
         amount: rawNum,
-        paymentMethod: "Online Deposit"
+        paymentMethod: "South Africa Bank"
       },
       {
         onSuccess: (res) => {
@@ -406,8 +406,8 @@ function RechargeContent() {
           >
             {isPending ? (
               <>
+                <span>Processing</span>
                 <Loader2 className="w-5 h-5 animate-spin text-white" />
-                <span>Processing...</span>
               </>
             ) : (
               <span>Continue to Payment</span>

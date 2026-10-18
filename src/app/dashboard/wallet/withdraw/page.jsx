@@ -90,13 +90,22 @@ function WithdrawContent() {
       return;
     }
 
+    if (!user?.has_withdrawal_pin) {
+      toast.dismiss();
+      toast.error("Please create your withdrawal password before withdrawing");
+      router.push("/dashboard/account/withdrawal-password");
+      return;
+    }
+
     if (withdrawType === "bank" && !hasLinkedBank) {
+      toast.dismiss();
       toast.error("Please bind your South Africa bank account before withdrawing");
       router.push("/dashboard/account/bind");
       return;
     }
 
     if (withdrawType === "usdt" && !hasLinkedUsdt) {
+      toast.dismiss();
       toast.error("Please bind your USDT crypto wallet address before withdrawing");
       router.push("/dashboard/account/bind");
       return;
@@ -481,8 +490,8 @@ function WithdrawContent() {
             >
               {isPending ? (
                 <>
+                  <span>Processing</span>
                   <Loader2 size={18} className="animate-spin text-white" />
-                  <span>Processing...</span>
                 </>
               ) : (
                 <span>Confirm & Send Payout</span>

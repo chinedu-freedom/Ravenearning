@@ -78,9 +78,7 @@ export default function SecuritySettingsPage() {
           }, 800);
         },
         onError: (err) => {
-          toast.error("Password Update Failed", {
-            description: err?.response?.data?.message || err?.message || "Could not update password",
-          });
+          toast.error(err?.response?.data?.message || err?.message || "Could not update password");
         }
       }
     );

@@ -84,6 +84,7 @@ export default function MiningPlansPage() {
         queryClient.invalidateQueries({ queryKey: ["my-investments"] });
         queryClient.refetchQueries({ queryKey: ["my-investments"] });
         queryClient.invalidateQueries({ queryKey: ["user"] });
+        queryClient.invalidateQueries({ queryKey: ["user-profile"] });
         queryClient.invalidateQueries({ queryKey: ["profile"] });
         queryClient.invalidateQueries({ queryKey: ["transactions"] });
 

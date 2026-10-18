@@ -85,6 +85,13 @@ export default function BindWalletPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!user?.has_withdrawal_pin) {
+      toast.dismiss();
+      toast.error("Please create your withdrawal password first in Account Settings");
+      router.push("/dashboard/account/withdrawal-password");
+      return;
+    }
+
     if (!password) {
       toast.dismiss(); 
       toast.error("Please enter your withdrawal password to confirm");
@@ -280,6 +287,27 @@ export default function BindWalletPage() {
           </div>
         )}
 
+        {/* Withdrawal Password Required Notice if not set yet */}
+        {user && !user.has_withdrawal_pin && (
+          <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl p-4 flex items-start gap-3 shadow-2xs">
+            <AlertCircle className="text-amber-600 shrink-0 mt-0.5" size={18} />
+            <div className="space-y-2 flex-1">
+              <div className="text-[13px] font-bold text-amber-900 leading-tight">
+                Withdrawal Password Required
+              </div>
+              <p className="text-[12px] text-amber-800 leading-relaxed font-normal">
+                You have not created a withdrawal password yet. You must create your security withdrawal password before linking your bank account or USDT address.
+              </p>
+              <Link
+                href="/dashboard/account/withdrawal-password"
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+              >
+                Create Withdrawal Password
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Form Container */}
         <form onSubmit={handleSubmit} className="bg-white rounded-lg p-5 border border-slate-200/90 shadow-2xs space-y-4">
           
@@ -385,19 +413,11 @@ export default function BindWalletPage() {
             </>
           )}
 
-          {/* Withdrawal Password Confirmation Field */}
+          {/* Withdrawal Password Authorization Field */}
           <div className="space-y-1.5 pt-1">
-            <div className="flex items-center justify-between">
-              <label className="text-[13px] font-bold text-slate-900 block">
-                Withdrawal Password
-              </label>
-              <Link
-                href="/dashboard/account/withdrawal-password"
-                className="text-[11.5px] font-bold text-[#0f172a] hover:underline transition-colors"
-              >
-                Set / Update Password
-              </Link>
-            </div>
+            <label className="text-[13px] font-bold text-slate-900 block">
+              Withdrawal Password
+            </label>
             <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 transition-all">
               <Lock size={18} className="text-slate-400 shrink-0" />
               <input
@@ -415,6 +435,9 @@ export default function BindWalletPage() {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            <p className="text-[11.5px] text-slate-500 font-normal pl-0.5">
+              Enter your existing withdrawal password to authorize and save your payout details.
+            </p>
           </div>
 
           {/* Submit Button */}

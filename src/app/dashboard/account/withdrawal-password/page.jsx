@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft, Lock, ShieldCheck, KeyRound, Loader2, Eye, EyeOff, Info } from "lucide-react";
 import { useFetchData, usePut } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -68,9 +69,7 @@ export default function WithdrawalPasswordPage() {
         },
         onError: (err) => {
           toast.dismiss();
-          toast.error("Withdrawal Password Failed", {
-            description: err?.response?.data?.message || err?.message || "Could not update withdrawal password",
-          });
+          toast.error(err?.response?.data?.message || err?.message || "Could not update withdrawal password");
         }
       }
     );
@@ -104,6 +103,19 @@ export default function WithdrawalPasswordPage() {
 
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
         
+        {/* Tab Switcher */}
+        <div className="grid grid-cols-2 p-1 bg-slate-200/70 rounded-xl text-[13px] font-bold">
+          <Link
+            href="/dashboard/account/password"
+            className="py-2.5 text-center text-slate-600 hover:text-slate-900 rounded-lg transition-all"
+          >
+            Login Password
+          </Link>
+          <div className="py-2.5 text-center bg-white text-slate-900 rounded-lg shadow-xs">
+            Withdrawal Password
+          </div>
+        </div>
+
         {/* Security Overview Stats Card */}
         <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
           <div>

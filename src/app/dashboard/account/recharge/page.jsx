@@ -12,6 +12,7 @@ import {
   AlertCircle,
   XCircle,
   Wallet,
+  Landmark,
   Globe
 } from "lucide-react";
 import { useFetchData } from "@/hooks/useApi";
@@ -61,14 +62,16 @@ export default function RechargeRecordPage() {
       })
       .sort((a, b) => new Date(b.created_at || b.timestamp || 0) - new Date(a.created_at || a.timestamp || 0))
       .map((t) => {
-        const desc = t.description || "";
-        let channel = "Online Deposit";
-        if (desc.toLowerCase().includes("usdt")) {
+        const desc = (t.description || "").toLowerCase();
+        const rawDesc = (t.raw_description || "").toLowerCase();
+        const method = (t.payment_method || t.cryptocurrency || "").toLowerCase();
+        const combined = `${desc} ${rawDesc} ${method}`;
+
+        let channel = "South Africa Bank";
+        if (combined.includes("usdt") || combined.includes("trc20") || combined.includes("bep20") || combined.includes("crypto")) {
           channel = "USDT Deposit";
-        } else if (desc.toLowerCase().includes("quickpay")) {
-          channel = "QuickPay";
-        } else if (t.payment_method) {
-          channel = t.payment_method;
+        } else {
+          channel = "South Africa Bank";
         }
 
         return {
@@ -77,7 +80,7 @@ export default function RechargeRecordPage() {
           channel,
           amount: parseFloat(t.amount) || 0,
           status: (t.status || "completed").toLowerCase(),
-          orderId: t.reference || t.reference_id || t.track_id || t.id || `DEP-${Date.now()}`
+          orderId: t.track_id || t.reference || t.reference_id || t.id || `DEP-${Date.now()}`
         };
       });
   }, [transactions]);
@@ -207,7 +210,7 @@ export default function RechargeRecordPage() {
                               {item.channel?.toLowerCase().includes("usdt") ? (
                                 <Wallet size={13} className="text-slate-400 shrink-0" />
                               ) : (
-                                <Globe size={13} className="text-slate-400 shrink-0" />
+                                <Landmark size={13} className="text-slate-400 shrink-0" />
                               )}
                               <span className="font-semibold text-slate-900 text-[12.5px]">
                                 {item.channel}

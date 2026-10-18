@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { 
   ArrowLeft, 
   Eye, 
@@ -78,9 +79,7 @@ export default function ChangePasswordPage() {
           }, 800);
         },
         onError: (err) => {
-          toast.error("Password Update Failed", {
-            description: err?.response?.data?.message || err?.message || "Could not update password",
-          });
+          toast.error(err?.response?.data?.message || err?.message || "Could not update password");
         }
       }
     );
@@ -114,6 +113,19 @@ export default function ChangePasswordPage() {
 
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
         
+        {/* Tab Switcher */}
+        <div className="grid grid-cols-2 p-1 bg-slate-200/70 rounded-xl text-[13px] font-bold">
+          <div className="py-2.5 text-center bg-white text-slate-900 rounded-lg shadow-xs">
+            Login Password
+          </div>
+          <Link
+            href="/dashboard/account/withdrawal-password"
+            className="py-2.5 text-center text-slate-600 hover:text-slate-900 rounded-lg transition-all"
+          >
+            Withdrawal Password
+          </Link>
+        </div>
+
         {/* Security Overview Stats Card */}
         <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
           <div>

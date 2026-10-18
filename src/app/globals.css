@@ -115,3 +115,66 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px rgba(8, 13, 26, 0.75) inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+/* ========================================================
+   UNIFIED SINGLE-LINE TOAST FORMAT (MATCHING IMAGE 1)
+   ======================================================== */
+[data-sonner-toast] {
+  --border-radius: 14px !important;
+  border-radius: 14px !important;
+  font-family: var(--font-poppins), 'Poppins', sans-serif !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+  padding: 13px 18px !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+[data-sonner-toast] [data-content] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+[data-sonner-toast] [data-title] {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+/* Hide multi-line stacked descriptions completely */
+[data-sonner-toast] [data-description] {
+  display: none !important;
+}
+
+/* Success Toast - Light mint green background with crisp green text & icon */
+[data-rich-colors='true'][data-sonner-toast][data-type='success'] {
+  background: #eafbf1 !important;
+  border: 1px solid #bbf7d0 !important;
+  color: #15803d !important;
+}
+
+[data-rich-colors='true'][data-sonner-toast][data-type='success'] [data-title] {
+  color: #15803d !important;
+}
+
+[data-rich-colors='true'][data-sonner-toast][data-type='success'] [data-icon] {
+  color: #16a34a !important;
+}
+
+/* Error Toast - Light red/rose background with crisp red text & icon (Matching Image 1 format) */
+[data-rich-colors='true'][data-sonner-toast][data-type='error'] {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #b91c1c !important;
+}
+
+[data-rich-colors='true'][data-sonner-toast][data-type='error'] [data-title] {
+  color: #b91c1c !important;
+}
+
+[data-rich-colors='true'][data-sonner-toast][data-type='error'] [data-icon] {
+  color: #dc2626 !important;
+}

@@ -69,9 +69,7 @@ export default function TreasurePage() {
         title: "Gift Code Claimed!"
       });
     } catch (error) {
-      toast.error("Redemption Failed", {
-        description: error?.response?.data?.error || error?.message || "Invalid or expired gift code",
-      });
+      toast.error(error?.response?.data?.error || error?.message || "Invalid or expired gift code");
     }
   };
 
@@ -162,10 +160,10 @@ export default function TreasurePage() {
               <input
                 type="text"
                 value={giftCode}
-                onChange={(e) => setGiftCode(e.target.value.toUpperCase())}
-                placeholder="ENTER GIFT CODE HERE"
+                onChange={(e) => setGiftCode(e.target.value)}
+                placeholder="Enter gift code here..."
                 disabled={claimMutation.isPending}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-[13.5px] font-bold font-mono text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:bg-white focus:border-slate-400 focus:outline-none transition-all uppercase tracking-wider"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-[13.5px] font-bold font-mono text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:bg-white focus:border-slate-400 focus:outline-none transition-all tracking-wider"
               />
             </div>
 

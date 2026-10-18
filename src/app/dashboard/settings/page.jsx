@@ -39,7 +39,7 @@ export default function SettingsPage() {
       badge: hasPin 
         ? { text: "Set", bg: "bg-green-500/10 border border-green-500/20", color: "text-green-400" } 
         : { text: "Not Set", bg: "bg-amber-500/10 border border-amber-500/20", color: "text-amber-400" },
-      href: "/dashboard/settings/payment"
+      href: "/dashboard/account/withdrawal-password"
     }
   ];
 

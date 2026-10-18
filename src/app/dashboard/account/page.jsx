@@ -80,17 +80,8 @@ export default function AccountPage() {
   const userLevel = userProfile?.vip_level ? `Lv${userProfile.vip_level}` : "Lv1";
 
   const currencySymbol = settings.currency_symbol || "R";
-  const cashBalance = userProfile?.balance != null ? Number(userProfile.balance) : 150;
-  const cumulativeIncome =
-    userProfile?.statistics?.total_income != null
-      ? Number(userProfile.statistics.total_income)
-      : userProfile?.cumulative_income != null
-      ? Number(userProfile.cumulative_income)
-      : userProfile?.total_income != null
-      ? Number(userProfile.total_income)
-      : userProfile?.withdrawable_balance != null
-      ? Number(userProfile.withdrawable_balance)
-      : 150;
+  const cashBalance = userProfile?.balance != null ? Number(userProfile.balance) : 0;
+  const withdrawableBalance = userProfile?.withdrawable_balance != null ? Number(userProfile.withdrawable_balance) : 0;
 
   const formatAmount = (num) => {
     return Number(num || 0).toLocaleString(undefined, {
@@ -128,7 +119,7 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Balance & Income Columns */}
+        {/* Balance & Profit Columns */}
         <div className="grid grid-cols-2 gap-4 mt-7 pt-2 text-center">
           {/* Account Balance */}
           <div className="flex flex-col items-center justify-center">
@@ -140,13 +131,13 @@ export default function AccountPage() {
             </p>
           </div>
 
-          {/* Cumulative Income */}
+          {/* Profit / Withdrawable Balance */}
           <div className="flex flex-col items-center justify-center">
             <div className="text-[25px] sm:text-[27px] font-semibold text-slate-900 tracking-tight leading-none">
-              {currencySymbol} {formatAmount(cumulativeIncome)}
+              {currencySymbol} {formatAmount(withdrawableBalance)}
             </div>
             <p className="text-[13px] text-gray-500 font-normal mt-2">
-              Cumulative income
+              Profit Balance
             </p>
           </div>
         </div>
