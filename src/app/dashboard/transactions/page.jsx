@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  ArrowDownLeft,
   ArrowUpRight,
   CheckCircle2,
   AlertCircle,
@@ -15,6 +16,8 @@ import { useFetchData } from "@/hooks/useApi";
 
 export default function TransactionsPage() {
   const router = useRouter();
+
+  const [filter, setFilter] = useState("all"); // "all" | "inflow" | "outflow"
 
   const { data: txRes, isLoading } = useFetchData("/users/transactions", ["transactions"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
@@ -226,58 +229,39 @@ export default function TransactionsPage() {
       });
   }, [rawTransactions, currencySymbol]);
 
-  // Total inflow calculation
-  const totalInflow = useMemo(() => {
-    return rawTransactions.reduce((acc, tx) => {
-      const status = (tx.status || "SUCCESS").toUpperCase();
-      if (status !== "SUCCESS" && status !== "APPROVED" && status !== "COMPLETED") {
-        return acc;
+  // Total inflow & outflow calculations
+  const { totalInflow, totalOutflow, inflowCount, outflowCount } = useMemo(() => {
+    let inflow = 0;
+    let outflow = 0;
+    let inCount = 0;
+    let outCount = 0;
+
+    transactions.forEach((item) => {
+      const s = (item.status || "SUCCESS").toLowerCase();
+      if (s === "failed" || s === "rejected") return;
+
+      if (item.isCredit) {
+        inflow += item.amountVal;
+        inCount++;
+      } else {
+        outflow += item.amountVal;
+        outCount++;
       }
+    });
 
-      const typeLower = (tx.type || "").toLowerCase();
-      const descLower = (tx.description || "").toLowerCase();
+    return { totalInflow: inflow, totalOutflow: outflow, inflowCount: inCount, outflowCount: outCount };
+  }, [transactions]);
 
-      let isCredit = false;
-      if (
-        typeLower.includes("deposit") ||
-        typeLower.includes("reward") ||
-        typeLower.includes("bonus") ||
-        typeLower.includes("gift") ||
-        typeLower.includes("checkin") ||
-        typeLower.includes("check-in") ||
-        typeLower.includes("credit") ||
-        typeLower.includes("commission") ||
-        typeLower.includes("referral") ||
-        typeLower.includes("migration") ||
-        typeLower.includes("profit") ||
-        typeLower.includes("payout") ||
-        typeLower.includes("refund") ||
-        descLower.includes("refund") ||
-        descLower.includes("payout") ||
-        descLower.includes("profit")
-      ) {
-        isCredit = true;
-      } else if (
-        tx.balance_before !== undefined &&
-        tx.balance_after !== undefined &&
-        tx.balance_before !== null &&
-        tx.balance_after !== null
-      ) {
-        const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
-        if (diff !== 0) {
-          isCredit = diff > 0;
-        }
-      }
-
-      if (!isCredit) return acc;
-
-      const diff = parseFloat(tx.balance_after) - parseFloat(tx.balance_before);
-      const amountVal = parseFloat(tx.amount) || 0;
-      const addedAmount = diff > 0 ? diff : amountVal;
-
-      return acc + addedAmount;
-    }, 0);
-  }, [rawTransactions]);
+  // Filtered transactions based on active tab
+  const filteredTransactions = useMemo(() => {
+    if (filter === "inflow") {
+      return transactions.filter((t) => t.isCredit);
+    }
+    if (filter === "outflow") {
+      return transactions.filter((t) => !t.isCredit);
+    }
+    return transactions;
+  }, [transactions, filter]);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
@@ -308,18 +292,56 @@ export default function TransactionsPage() {
 
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-4 pb-24 select-none">
         
-        {/* Stats Card - Exactly matching our standard stats card format */}
-        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs flex items-center justify-between">
-          <div>
-            <div className="text-[28px] sm:text-[32px] font-black text-emerald-600 tracking-tight leading-none font-mono">
-              {currencySymbol}{formatAmount(totalInflow)}
+        {/* Dual Stats Cards - Both Inflow & Outflow Side-by-Side */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Total Inflow Card */}
+          <div 
+            onClick={() => setFilter(filter === "inflow" ? "all" : "inflow")}
+            className={`bg-white border rounded-xl p-4 shadow-2xs flex flex-col justify-between cursor-pointer transition-all active:scale-[0.99] ${
+              filter === "inflow" ? "ring-2 ring-emerald-500 border-emerald-400" : "border-slate-200/90 hover:border-slate-300"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] text-slate-500 font-bold uppercase tracking-wider">
+                Inflow
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                <ArrowDownLeft size={16} className="stroke-[2.5]" />
+              </div>
             </div>
-            <p className="text-[13px] text-slate-500 font-medium mt-1.5">
-              Total Inflow ({transactions.length} records)
-            </p>
+            <div className="mt-2.5">
+              <div className="text-[18px] sm:text-[20px] font-black text-emerald-600 tracking-tight leading-none font-mono truncate">
+                +{currencySymbol}{formatAmount(totalInflow)}
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium mt-1">
+                {inflowCount} {inflowCount === 1 ? "credit" : "credits"}
+              </p>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
-            <ArrowUpRight size={22} className="stroke-[2.5]" />
+
+          {/* Total Outflow Card */}
+          <div 
+            onClick={() => setFilter(filter === "outflow" ? "all" : "outflow")}
+            className={`bg-white border rounded-xl p-4 shadow-2xs flex flex-col justify-between cursor-pointer transition-all active:scale-[0.99] ${
+              filter === "outflow" ? "ring-2 ring-rose-500 border-rose-400" : "border-slate-200/90 hover:border-slate-300"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] text-slate-500 font-bold uppercase tracking-wider">
+                Outflow
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                <ArrowUpRight size={16} className="stroke-[2.5]" />
+              </div>
+            </div>
+            <div className="mt-2.5">
+              <div className="text-[18px] sm:text-[20px] font-black text-rose-600 tracking-tight leading-none font-mono truncate">
+                -{currencySymbol}{formatAmount(totalOutflow)}
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium mt-1">
+                {outflowCount} {outflowCount === 1 ? "debit" : "debits"}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -329,6 +351,43 @@ export default function TransactionsPage() {
             <h2 className="text-slate-900 text-[15px] font-bold tracking-tight">
               History
             </h2>
+            
+            {/* Filter Toggle Buttons */}
+            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200/80">
+              <button
+                type="button"
+                onClick={() => setFilter("all")}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                  filter === "all"
+                    ? "bg-white text-slate-900 shadow-2xs"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                All ({transactions.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter("inflow")}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                  filter === "inflow"
+                    ? "bg-emerald-600 text-white shadow-2xs"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                Inflow ({inflowCount})
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter("outflow")}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                  filter === "outflow"
+                    ? "bg-rose-600 text-white shadow-2xs"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                Outflow ({outflowCount})
+              </button>
+            </div>
           </div>
 
           <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
@@ -339,7 +398,7 @@ export default function TransactionsPage() {
                   Loading transactions...
                 </span>
               </div>
-            ) : transactions.length > 0 ? (
+            ) : filteredTransactions.length > 0 ? (
               <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden">
                 <table className="w-full text-left border-collapse min-w-[540px]">
                   <thead>
@@ -352,7 +411,7 @@ export default function TransactionsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-[12.5px]">
-                    {transactions.map((item) => {
+                    {filteredTransactions.map((item) => {
                       const badge = getStatusBadge(item.status);
                       const StatusIcon = badge.icon;
 
@@ -414,7 +473,11 @@ export default function TransactionsPage() {
                   <Inbox size={22} />
                 </div>
                 <p className="text-slate-700 text-[14px] font-bold">
-                  No records yet
+                  {filter === "inflow"
+                    ? "No inflow records yet"
+                    : filter === "outflow"
+                    ? "No outflow records yet"
+                    : "No records yet"}
                 </p>
                 <p className="text-slate-400 text-[12px] mt-1">
                   Your transaction history will appear here.
