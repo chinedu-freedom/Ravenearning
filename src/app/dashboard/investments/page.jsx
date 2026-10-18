@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
@@ -24,7 +24,14 @@ export default function MyInvestmentsPage() {
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
 
-  const { data: invRes, isLoading } = useFetchData("/users/me/investments", ["my-investments"]);
+  const { data: invRes, isLoading, refetch } = useFetchData("/users/me/investments", ["my-investments"], {
+    refetchOnMount: "always",
+    staleTime: 0
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
   const investments = invRes?.data || { 
     active: [], 
     completed: [], 

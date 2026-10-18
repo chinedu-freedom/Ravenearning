@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { X, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useFetchData } from "@/hooks/useApi";
+import { useQueryClient } from "@tanstack/react-query";
 import { postData } from "@/config/apiHelpers";
 import { toast } from "sonner";
 
@@ -27,6 +28,7 @@ export default function MiningPlansPage() {
     ? [...plansRes.data].sort((a, b) => Number(a.min_investment || 0) - Number(b.min_investment || 0))
     : [];
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const productCount = (invRes?.data?.active?.length ?? 0) + (invRes?.data?.completed?.length ?? 0);
   const totalRevenue = userRes?.user?.cumulative_income != null 
@@ -79,12 +81,18 @@ export default function MiningPlansPage() {
       });
       
       if (data?.success) {
+        queryClient.invalidateQueries({ queryKey: ["my-investments"] });
+        queryClient.refetchQueries({ queryKey: ["my-investments"] });
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+
         toast.success(data.message || "Product purchased successfully! Your investment is now running.");
         setSelectedPlan(null);
         setInvestmentAmount("");
         setTimeout(() => {
           router.push("/dashboard/investments");
-        }, 1500);
+        }, 1000);
       } else {
         toast.error(data.error || "Investment failed");
       }
