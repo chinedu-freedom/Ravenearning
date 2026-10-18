@@ -67,10 +67,9 @@ export default function LoginPage() {
     }
 
     const rawDigits = data.phone.replace(/[^0-9]/g, '');
-    const normalizedPhone = rawDigits.startsWith('27') ? rawDigits : `27${rawDigits}`;
 
     const payload = {
-      phone: normalizedPhone,
+      phone: rawDigits,
       password: data.password,
       keepMeLoggedIn,
     };
@@ -114,8 +113,8 @@ export default function LoginPage() {
             <div>
               <Input 
                 label="Phone Number" 
-                prefix="+27" 
-                placeholder="Phone number"
+                maxLength={9} 
+                placeholder="Enter 9-digit phone number"
                 type="tel" 
                 {...register("phone")} 
               />

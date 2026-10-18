@@ -73,12 +73,10 @@ function SignupForm() {
   }
 
   const onSubmit = (data) => {
-    const userPhone = data.phone.trim();
-    const rawDigits = userPhone.replace(/[^0-9]/g, '');
-    const normalizedPhone = rawDigits.startsWith('27') ? rawDigits : `27${rawDigits}`;
+    const rawDigits = data.phone.replace(/[^0-9]/g, '');
 
     const payload = {
-      phone: normalizedPhone,
+      phone: rawDigits,
       referred_by_code: data.referred_by_code?.trim() || undefined,
       password: data.password,
     };
@@ -133,8 +131,8 @@ function SignupForm() {
             <div>
               <Input 
                 label="Phone Number" 
-                prefix="+27" 
-                placeholder="Phone number"
+                maxLength={9} 
+                placeholder="Enter 9-digit phone number"
                 type="tel" 
                 {...register("phone")} 
               />

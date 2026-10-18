@@ -70,14 +70,10 @@ export default function AccountPage() {
     }
   };
 
-  // Format phone number cleanly like screenshot (+27 810770634)
+  // Display 9-digit phone number cleanly
   const formatPhoneNumber = (phone) => {
-    if (!phone) return "+27 810770634";
-    const cleaned = String(phone).replace(/\s+/g, "").replace(/^\+/, "");
-    if (cleaned.startsWith("27")) {
-      return `+27 ${cleaned.substring(2)}`;
-    }
-    return `+27 ${cleaned}`;
+    if (!phone) return "";
+    return String(phone).trim();
   };
 
   const displayPhone = formatPhoneNumber(userProfile?.phone);
