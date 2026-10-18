@@ -31,9 +31,7 @@ export default function MiningPlansPage() {
   const queryClient = useQueryClient();
 
   const productCount = (invRes?.data?.active?.length ?? 0) + (invRes?.data?.completed?.length ?? 0);
-  const totalRevenue = userRes?.user?.cumulative_income != null 
-    ? Number(userRes.user.cumulative_income) 
-    : Number(userRes?.user?.total_income || 0);
+  const profitBalance = Number(userRes?.user?.withdrawable_balance !== undefined ? userRes.user.withdrawable_balance : 0);
   const currencySymbol = settings.currency_symbol || "R";
 
   const formatRevenue = (val) => {
@@ -211,13 +209,13 @@ export default function MiningPlansPage() {
             </span>
           </div>
 
-          {/* Right Column: Total Revenue */}
+          {/* Right Column: Profit Balance (Withdrawal Balance) */}
           <div className="relative z-10 flex flex-col items-start justify-center">
             <span className="text-white text-[28px] sm:text-[30px] font-black leading-none drop-shadow-sm">
-              {currencySymbol} {formatRevenue(totalRevenue)}
+              {currencySymbol} {formatRevenue(profitBalance)}
             </span>
             <span className="text-slate-100 text-[13px] font-medium mt-1.5 drop-shadow-xs">
-              Total revenue
+              Profit balance
             </span>
           </div>
         </div>
