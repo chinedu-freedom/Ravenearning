@@ -33,15 +33,24 @@ export default function TeamPage() {
 
   const teamData = teamRes?.data;
   const overview = teamData?.overview || { new_members_today: 0, new_earnings_today: 0, total_team: 0 };
+
+  const level1Config = Number(settings.level1_commission ?? 30);
+  const level2Config = Number(settings.level2_commission ?? 10);
+  const level3Config = Number(settings.level3_commission ?? 5);
+
   const levels = teamData?.levels || [
-    { level: 1, total_members: 0, valid_members: 0, commission_rate: 36, total_earnings: 0 },
-    { level: 2, total_members: 0, valid_members: 0, commission_rate: 3, total_earnings: 0 },
-    { level: 3, total_members: 0, valid_members: 0, commission_rate: 1, total_earnings: 0 },
+    { level: 1, total_members: 0, valid_members: 0, commission_rate: level1Config, total_earnings: 0 },
+    { level: 2, total_members: 0, valid_members: 0, commission_rate: level2Config, total_earnings: 0 },
+    { level: 3, total_members: 0, valid_members: 0, commission_rate: level3Config, total_earnings: 0 },
   ];
 
-  const l1 = levels[0] || { total_members: 0, total_earnings: 0, commission_rate: 36 };
-  const l2 = levels[1] || { total_members: 0, total_earnings: 0, commission_rate: 3 };
-  const l3 = levels[2] || { total_members: 0, total_earnings: 0, commission_rate: 1 };
+  const l1 = levels[0] || { total_members: 0, total_earnings: 0, commission_rate: level1Config };
+  const l2 = levels[1] || { total_members: 0, total_earnings: 0, commission_rate: level2Config };
+  const l3 = levels[2] || { total_members: 0, total_earnings: 0, commission_rate: level3Config };
+
+  const l1Rate = l1.commission_rate ?? level1Config;
+  const l2Rate = l2.commission_rate ?? level2Config;
+  const l3Rate = l3.commission_rate ?? level3Config;
 
   const totalMembersCount =
     (l1.total_members || 0) + (l2.total_members || 0) + (l3.total_members || 0) || overview.total_team || 0;
@@ -96,7 +105,7 @@ export default function TeamPage() {
 
   return (
     <div className="flex flex-col min-h-full bg-white sm:bg-[#f8fafc] overflow-y-auto [&::-webkit-scrollbar]:hidden pb-16 select-none">
-      
+
       {/* Top Title Header */}
       <div className="px-5 pt-6 pb-2">
         <h1 className="text-slate-900 text-[26px] font-bold tracking-tight leading-tight">
@@ -108,7 +117,7 @@ export default function TeamPage() {
 
         {/* 1. Hero Runner Card */}
         <div className="relative w-full rounded-[24px] overflow-hidden shadow-sm aspect-[0.95/1] sm:aspect-[1.05/1] min-h-[380px] flex flex-col justify-between p-5 text-white">
-          
+
           {/* Background Sun Emblem */}
           <img
             src="/images/dashboard/team_sun_hero.jpg"
@@ -121,7 +130,7 @@ export default function TeamPage() {
 
           {/* Top Row: Total rewards & Total users */}
           <div className="relative z-10 flex items-start justify-between pt-1">
-            
+
             {/* Total rewards */}
             <div
               onClick={() => setShowRewardsModal(true)}
@@ -152,7 +161,7 @@ export default function TeamPage() {
 
           {/* Bottom Row: Invite Code & Invite Link */}
           <div className="relative z-10 grid grid-cols-2 gap-4 pb-1">
-            
+
             {/* Invite Code Column */}
             <div className="flex flex-col justify-end">
               <span className="text-white text-[15px] font-bold tracking-tight mb-1 drop-shadow-sm">
@@ -208,7 +217,7 @@ export default function TeamPage() {
           <div className="grid grid-cols-3 flex-1 text-center items-center">
             <div>
               <div className="text-[20px] font-black text-slate-900 leading-none">
-                {l1.commission_rate || 36}%
+                {l1Rate}%
               </div>
               <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Commission
@@ -250,7 +259,7 @@ export default function TeamPage() {
           <div className="grid grid-cols-3 flex-1 text-center items-center">
             <div>
               <div className="text-[20px] font-black text-slate-900 leading-none">
-                {l2.commission_rate || 3}%
+                {l2Rate}%
               </div>
               <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Commission
@@ -292,7 +301,7 @@ export default function TeamPage() {
           <div className="grid grid-cols-3 flex-1 text-center items-center">
             <div>
               <div className="text-[20px] font-black text-slate-900 leading-none">
-                {l3.commission_rate || 1}%
+                {l3Rate}%
               </div>
               <div className="text-[12px] text-slate-500 mt-1.5 font-medium">
                 Commission
@@ -320,16 +329,16 @@ export default function TeamPage() {
         {/* 5. Rules & Explanation Paragraphs */}
         <div className="text-[13px] text-gray-800 leading-relaxed space-y-2 mt-4 px-1 pb-4">
           <p>
-            When a friend you invite registers and invests, you immediately receive a cash reward equal to 36% of their investment amount.
+            When a friend you invite registers and invests, you immediately receive a cash reward equal to <strong className="font-bold text-slate-900">{l1Rate}%</strong> of their investment amount.
           </p>
           <p>
-            When a member of your Level 2 team invests, you receive a 3% cash reward.
+            When a member of your Level 2 team invests, you receive a <strong className="font-bold text-slate-900">{l2Rate}%</strong> cash reward.
           </p>
           <p>
-            When a member of your Level 3 team invests, you receive a 1% cash reward.
+            When a member of your Level 3 team invests, you receive a <strong className="font-bold text-slate-900">{l3Rate}%</strong> cash reward.
           </p>
           <p>
-            Once your team members invest, the cash rewards are immediately credited to your account balance and are available for instant withdrawal.
+            Once your team members invest, the cash rewards are immediately credited to your withdrawable balance and are available for instant withdrawal.
           </p>
         </div>
 
@@ -339,7 +348,7 @@ export default function TeamPage() {
       {showUsersModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white rounded-t-[28px] sm:rounded-3xl w-full max-w-[440px] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-gray-100">
-            
+
             {/* Header */}
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <div>
@@ -360,11 +369,10 @@ export default function TeamPage() {
                 <button
                   key={lvl}
                   onClick={() => setActiveLevel(lvl)}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    activeLevel === lvl
-                      ? "bg-slate-900 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeLevel === lvl
+                    ? "bg-slate-900 text-white shadow-sm"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
                 >
                   Level {lvl}
                 </button>
@@ -421,7 +429,7 @@ export default function TeamPage() {
       {showRewardsModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white rounded-t-[28px] sm:rounded-3xl w-full max-w-[440px] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-gray-100">
-            
+
             {/* Header */}
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <div>
@@ -441,21 +449,21 @@ export default function TeamPage() {
             {/* Content Summary */}
             <div className="p-5 space-y-3 overflow-y-auto">
               <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 p-4 rounded-2xl">
-                <span className="text-xs text-amber-800 font-medium">Level 1 Direct Referral (36%)</span>
+                <span className="text-xs text-amber-800 font-medium">Level 1 Direct Referral ({l1Rate}%)</span>
                 <div className="text-lg font-bold text-amber-900 mt-1">
                   {currencySymbol} {formatAmount(l1.total_earnings || 0)}
                 </div>
               </div>
 
               <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200/60 p-4 rounded-2xl">
-                <span className="text-xs text-purple-800 font-medium">Level 2 Secondary Referral (3%)</span>
+                <span className="text-xs text-purple-800 font-medium">Level 2 Secondary Referral ({l2Rate}%)</span>
                 <div className="text-lg font-bold text-purple-900 mt-1">
                   {currencySymbol} {formatAmount(l2.total_earnings || 0)}
                 </div>
               </div>
 
               <div className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200/60 p-4 rounded-2xl">
-                <span className="text-xs text-violet-800 font-medium">Level 3 Team Referral (1%)</span>
+                <span className="text-xs text-violet-800 font-medium">Level 3 Team Referral ({l3Rate}%)</span>
                 <div className="text-lg font-bold text-violet-900 mt-1">
                   {currencySymbol} {formatAmount(l3.total_earnings || 0)}
                 </div>

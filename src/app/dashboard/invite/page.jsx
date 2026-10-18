@@ -33,7 +33,9 @@ export default function InvitePage() {
   const invitationCode = user?.referral_code || "------";
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
-  const siteName = settingsRes?.settings?.site_name || "suncerestcapital";
+  const settings = settingsRes?.settings || {};
+  const siteName = settings?.site_name || "suncerestcapital";
+  const totalCommission = Number(settings?.level1_commission || 30) + Number(settings?.level2_commission || 10) + Number(settings?.level3_commission || 5);
 
   useEffect(() => {
     if (invitationCode && invitationCode !== "------" && typeof window !== "undefined") {
@@ -187,7 +189,7 @@ export default function InvitePage() {
             </div>
             
             <p className="text-white/70 text-[10px] leading-relaxed max-w-[260px]">
-              Earn up to 16% in referral bonuses across 4 levels. The more friends you invite, the more you earn
+              Earn up to {totalCommission}% in referral bonuses across 3 levels. The more friends you invite, the more you earn
             </p>
           </div>
         </div>

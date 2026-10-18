@@ -2,15 +2,15 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Sun, 
-  Coins, 
-  TrendingUp, 
-  Calendar, 
-  ShieldCheck, 
-  Zap, 
-  CheckCircle2, 
+import {
+  ArrowLeft,
+  Sun,
+  Coins,
+  TrendingUp,
+  Calendar,
+  ShieldCheck,
+  Zap,
+  CheckCircle2,
   Users,
   Flame,
   Award
@@ -78,7 +78,7 @@ export default function RegulationPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
-      
+
       {/* Top Header Bar - White background, Text on left, Logo on right */}
       <div className="sticky top-0 z-40 bg-white border-b border-slate-100/90 px-5 h-16 flex items-center justify-between shadow-2xs max-w-[480px] mx-auto w-full">
         <div className="flex items-center gap-3">
@@ -104,10 +104,10 @@ export default function RegulationPage() {
 
       {/* Main Container */}
       <div className="w-full max-w-[480px] mx-auto px-4 py-4 space-y-5 pb-24 text-slate-800">
-        
+
         {/* Banner Graphic Card - Exactly matching the reference image layout */}
         <div className="rounded-2xl overflow-hidden shadow-md border border-slate-200/80 bg-[#0f172a] text-white">
-          
+
           {/* Top Hero Banner */}
           <div className="relative p-5 bg-gradient-to-br from-[#021d3c] via-[#092244] to-[#0f172a] border-b border-white/10">
             <div className="flex items-center justify-between mb-2">
@@ -192,9 +192,8 @@ export default function RegulationPage() {
                   return (
                     <tr
                       key={plan.id || idx}
-                      className={`hover:bg-white/5 transition-colors ${
-                        idx % 2 === 0 ? "bg-[#0b1324]" : "bg-[#080e1c]"
-                      }`}
+                      className={`hover:bg-white/5 transition-colors ${idx % 2 === 0 ? "bg-[#0b1324]" : "bg-[#080e1c]"
+                        }`}
                     >
                       {/* Product */}
                       <td className="py-2 px-2.5 whitespace-nowrap">
@@ -260,7 +259,7 @@ export default function RegulationPage() {
 
         {/* Written Information Section - Exactly matching our platform details */}
         <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4 text-[13.5px] leading-relaxed text-slate-700 font-normal">
-          
+
           <p className="font-medium text-slate-900 leading-snug">
             <strong className="capitalize">{siteName}</strong> is an enterprise clean energy and high-yield computational platform specializing in solar-powered digital revenue infrastructure.
           </p>
@@ -277,7 +276,7 @@ export default function RegulationPage() {
               When a member of your Level 3 team invests, you receive a <strong className="text-slate-900 font-bold">{level3}%</strong> cash reward.
             </p>
             <p className="text-emerald-700 font-semibold bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-3 text-[12.5px] leading-relaxed">
-              Once your team members invest, the cash rewards are immediately credited to your account balance and are available for instant withdrawal.
+              Once your team members invest, the cash rewards are immediately credited to your withdrawable balance and are available for instant withdrawal.
             </p>
           </div>
 

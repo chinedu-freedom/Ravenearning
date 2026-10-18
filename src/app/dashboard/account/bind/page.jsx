@@ -287,26 +287,6 @@ export default function BindWalletPage() {
           </div>
         )}
 
-        {/* Withdrawal Password Required Notice if not set yet */}
-        {user && !user.has_withdrawal_pin && (
-          <div className="bg-amber-50/90 border border-amber-200/90 rounded-xl p-4 flex items-start gap-3 shadow-2xs">
-            <AlertCircle className="text-amber-600 shrink-0 mt-0.5" size={18} />
-            <div className="space-y-2 flex-1">
-              <div className="text-[13px] font-bold text-amber-900 leading-tight">
-                Withdrawal Password Required
-              </div>
-              <p className="text-[12px] text-amber-800 leading-relaxed font-normal">
-                You have not created a withdrawal password yet. You must create your security withdrawal password before linking your bank account or USDT address.
-              </p>
-              <Link
-                href="/dashboard/account/withdrawal-password"
-                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
-              >
-                Create Withdrawal Password
-              </Link>
-            </div>
-          </div>
-        )}
 
         {/* Form Container */}
         <form onSubmit={handleSubmit} className="bg-white rounded-lg p-5 border border-slate-200/90 shadow-2xs space-y-4">

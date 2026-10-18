@@ -20,7 +20,7 @@ export default function TaskPage() {
   const router = useRouter();
 
   const { data: tasksData, isLoading, refetch } = useFetchData("/users/tasks", ["user-tasks"]);
-  const claimMutation = usePost("/users/tasks/claim", "user-tasks");
+  const claimMutation = usePost("/users/tasks/claim", ["user-tasks", "user-profile"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
