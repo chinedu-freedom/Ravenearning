@@ -122,7 +122,7 @@ export default function ChangePasswordPage() {
             href="/dashboard/account/withdrawal-password"
             className="py-2.5 text-center text-slate-600 hover:text-slate-900 rounded-lg transition-all"
           >
-            Withdrawal Password
+            Trade Password
           </Link>
         </div>
 

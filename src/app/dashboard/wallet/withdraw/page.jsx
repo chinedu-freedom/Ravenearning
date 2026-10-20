@@ -72,7 +72,7 @@ function WithdrawContent() {
   const handleOpenConfirm = () => {
     if (user && !user.has_withdrawal_pin) {
       toast.dismiss();
-      toast.error("Please create your withdrawal password before withdrawing");
+      toast.error("Please create your trade password before withdrawing");
       router.push("/dashboard/account/withdrawal-password");
       return;
     }
@@ -120,7 +120,7 @@ function WithdrawContent() {
 
   const handleConfirmWithdraw = () => {
     if (!password) {
-      toast.error("Please enter your withdrawal password");
+      toast.error("Please enter your trade password");
       return;
     }
 
@@ -487,10 +487,10 @@ function WithdrawContent() {
               </div>
             </div>
 
-            {/* Withdrawal Password Confirmation Input */}
+            {/* Trade Password Confirmation Input */}
             <div className="space-y-1.5">
               <label className="text-[13px] font-bold text-slate-800 block">
-                Withdrawal Password
+                Trade Password
               </label>
               <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 focus-within:border-[#0f172a] transition-all">
                 <Lock size={16} className="text-slate-400 mr-2 shrink-0" />
@@ -498,7 +498,7 @@ function WithdrawContent() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter withdrawal password"
+                  placeholder="Enter trade password"
                   className="bg-transparent outline-none text-slate-900 font-bold text-[14px] w-full placeholder:font-normal placeholder:text-slate-400"
                 />
                 <button

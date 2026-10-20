@@ -28,22 +28,22 @@ export default function WithdrawalPasswordPage() {
     e.preventDefault();
 
     if (hasExistingPin && !currentPassword) {
-      toast.dismiss(); toast.error("Please enter your current withdrawal password");
+      toast.dismiss(); toast.error("Please enter your current trade password");
       return;
     }
 
     if (!newPassword) {
-      toast.dismiss(); toast.error("Please enter a new withdrawal password");
+      toast.dismiss(); toast.error("Please enter a new trade password");
       return;
     }
 
     if (newPassword.length < 4) {
-      toast.dismiss(); toast.error("Withdrawal password must be at least 4 characters");
+      toast.dismiss(); toast.error("Trade password must be at least 4 characters");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.dismiss(); toast.error("New withdrawal passwords do not match");
+      toast.dismiss(); toast.error("New trade passwords do not match");
       return;
     }
 
@@ -59,7 +59,7 @@ export default function WithdrawalPasswordPage() {
       {
         onSuccess: () => {
           toast.dismiss();
-          toast.success(hasExistingPin ? "Withdrawal password updated successfully!" : "Withdrawal password set successfully!");
+          toast.success(hasExistingPin ? "Trade password updated successfully!" : "Trade password set successfully!");
           setCurrentPassword("");
           setNewPassword("");
           setConfirmPassword("");
@@ -69,7 +69,7 @@ export default function WithdrawalPasswordPage() {
         },
         onError: (err) => {
           toast.dismiss();
-          toast.error(err?.response?.data?.message || err?.message || "Could not update withdrawal password");
+          toast.error(err?.response?.data?.message || err?.message || "Could not update trade password");
         }
       }
     );
@@ -89,7 +89,7 @@ export default function WithdrawalPasswordPage() {
             <ArrowLeft size={16} />
           </button>
           <h1 className="text-slate-900 text-[20px] sm:text-[22px] font-black tracking-tight leading-tight">
-            {hasExistingPin ? "Withdrawal Password" : "Set Withdrawal Password"}
+            {hasExistingPin ? "Trade Password" : "Set Trade Password"}
           </h1>
         </div>
         <div className="flex items-center">
@@ -112,7 +112,7 @@ export default function WithdrawalPasswordPage() {
             Login Password
           </Link>
           <div className="py-2.5 text-center bg-white text-slate-900 rounded-lg shadow-xs">
-            Withdrawal Password
+            Trade Password
           </div>
         </div>
 
@@ -134,18 +134,18 @@ export default function WithdrawalPasswordPage() {
         {/* Form Card */}
         <form onSubmit={handleSubmit} className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
 
-          {/* Current Withdrawal Password */}
+          {/* Current Trade Password */}
           {hasExistingPin && (
             <div className="space-y-1.5">
               <label className="text-[12.5px] font-bold text-slate-700 block">
-                Current Withdrawal Password
+                Current Trade Password
               </label>
               <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
                 <input
                   type={showCurrent ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current withdrawal password"
+                  placeholder="Enter current trade password"
                   disabled={updatePinMutation.isPending}
                   className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
                 />
@@ -161,17 +161,17 @@ export default function WithdrawalPasswordPage() {
             </div>
           )}
 
-          {/* New Withdrawal Password */}
+          {/* New Trade Password */}
           <div className="space-y-1.5">
             <label className="text-[12.5px] font-bold text-slate-700 block">
-              {hasExistingPin ? "New Withdrawal Password" : "Create Withdrawal Password"}
+              {hasExistingPin ? "New Trade Password" : "Create Trade Password"}
             </label>
             <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
                 type={showNew ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter 4-6 digit withdrawal password"
+                placeholder="Enter 4-6 digit trade password"
                 disabled={updatePinMutation.isPending}
                 className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
@@ -186,17 +186,17 @@ export default function WithdrawalPasswordPage() {
             </div>
           </div>
 
-          {/* Confirm New Withdrawal Password */}
+          {/* Confirm New Trade Password */}
           <div className="space-y-1.5">
             <label className="text-[12.5px] font-bold text-slate-700 block">
-              Confirm {hasExistingPin ? "New " : ""}Withdrawal Password
+              Confirm {hasExistingPin ? "New " : ""}Trade Password
             </label>
             <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all">
               <input
                 type={showConfirm ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Re-enter withdrawal password"
+                placeholder="Re-enter trade password"
                 disabled={updatePinMutation.isPending}
                 className="bg-transparent outline-none text-slate-900 text-[13.5px] w-full pr-8 placeholder:text-slate-400 font-medium"
               />
@@ -220,7 +220,7 @@ export default function WithdrawalPasswordPage() {
             {updatePinMutation.isPending ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              <span>{hasExistingPin ? "Update Withdrawal Password" : "Set Withdrawal Password"}</span>
+              <span>{hasExistingPin ? "Update Trade Password" : "Set Trade Password"}</span>
             )}
           </button>
 
@@ -232,7 +232,7 @@ export default function WithdrawalPasswordPage() {
             <span>Important Notice</span>
           </div>
           <p className="text-[12px] text-slate-500 leading-relaxed">
-            Your withdrawal password is used exclusively to authorize cash withdrawals and bind destination bank details. Keep it private at all times.
+            Your trade password is used exclusively to authorize cash withdrawals and bind destination bank details. Keep it private at all times.
           </p>
         </div>
 

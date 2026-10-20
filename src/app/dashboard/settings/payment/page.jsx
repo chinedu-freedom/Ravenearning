@@ -24,7 +24,7 @@ export default function PaymentSettingsPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (hasPin && !currentPassword.trim()) {
-      toast.error("Please enter your current withdrawal password");
+      toast.error("Please enter your current trade password");
       return;
     }
     if (!newPassword.trim() || !confirmPassword.trim()) {
@@ -32,7 +32,7 @@ export default function PaymentSettingsPage() {
       return;
     }
     if (newPassword.trim().length < 4) {
-      toast.error("Withdrawal password must be at least 4 characters");
+      toast.error("Trade password must be at least 4 characters");
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -45,7 +45,7 @@ export default function PaymentSettingsPage() {
     }
     updatePayment(payload, {
       onSuccess: () => {
-        toast.success(hasPin ? "Withdrawal password updated successfully" : "Withdrawal password set successfully");
+        toast.success(hasPin ? "Trade password updated successfully" : "Trade password set successfully");
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
@@ -71,11 +71,11 @@ export default function PaymentSettingsPage() {
         <div className="bg-[#111827] rounded-[16px] border border-white/5 shadow-sm p-5">
 
           <h2 className="text-white/90 text-[15px] font-bold mb-1.5">
-            {hasPin ? "Change Withdrawal Password" : "Withdrawal Password"}
+            {hasPin ? "Change Trade Password" : "Trade Password"}
           </h2>
           <p className="text-gray-400 text-[12.5px] leading-relaxed mb-4">
             {hasPin 
-              ? "Update your separate withdrawal password to keep your account withdrawals secure." 
+              ? "Update your separate trade password to keep your account withdrawals secure." 
               : "Set a separate password for withdrawals to add an extra layer of security to your account."
             }
           </p>

@@ -32,7 +32,7 @@ export default function SettingsPage() {
 
     {
       id: "payment",
-      label: "Withdrawal Password",
+      label: "Trade Password",
       icon: Lock,
       iconBg: "bg-white/5",
       iconColor: "text-amber-400",

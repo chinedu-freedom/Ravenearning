@@ -87,14 +87,14 @@ export default function BindWalletPage() {
 
     if (!user?.has_withdrawal_pin) {
       toast.dismiss();
-      toast.error("Please create your withdrawal password first in Account Settings");
+      toast.error("Please create your trade password first in Account Settings");
       router.push("/dashboard/account/withdrawal-password");
       return;
     }
 
     if (!password) {
       toast.dismiss(); 
-      toast.error("Please enter your withdrawal password to confirm");
+      toast.error("Please enter your trade password to confirm");
       return;
     }
 
@@ -393,10 +393,10 @@ export default function BindWalletPage() {
             </>
           )}
 
-          {/* Withdrawal Password Authorization Field */}
+          {/* Trade Password Authorization Field */}
           <div className="space-y-1.5 pt-1">
             <label className="text-[13px] font-bold text-slate-900 block">
-              Withdrawal Password
+              Trade Password
             </label>
             <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-md px-3.5 py-3 focus-within:bg-white focus-within:border-slate-400 transition-all">
               <Lock size={18} className="text-slate-400 shrink-0" />
@@ -404,7 +404,7 @@ export default function BindWalletPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter withdrawal password to confirm"
+                placeholder="Enter trade password to confirm"
                 className="bg-transparent outline-none text-slate-900 text-[13.5px] font-semibold w-full placeholder:text-slate-400 placeholder:font-normal"
               />
               <button
@@ -416,7 +416,7 @@ export default function BindWalletPage() {
               </button>
             </div>
             <p className="text-[11.5px] text-slate-500 font-normal pl-0.5">
-              Enter your existing withdrawal password to authorize and save your payout details.
+              Enter your existing trade password to authorize and save your payout details.
             </p>
           </div>
 
