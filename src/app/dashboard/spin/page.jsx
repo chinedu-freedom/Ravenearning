@@ -1,14 +1,31 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Volume2, VolumeX, History, Gift, Ticket, HelpCircle, X, Wallet, Sparkles } from "lucide-react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+
+// Lucky Spin functionality has been disabled/removed as requested.
+export default function SpinPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/dashboard");
+  }, [router]);
+
+  return null;
+}
+
+/*
+// ========================================================
+// --- COMMENTED OUT SPIN FUNCTIONALITY (PREVIOUS CODE) ---
+// ========================================================
+import { useState, useRef } from "react";
+import { ArrowLeft, Volume2, VolumeX, History, Gift, Ticket, HelpCircle, X, Wallet, Sparkles } from "lucide-react";
 import { useFetchData, usePost } from "@/hooks/useApi";
 import HowToPlayModal from "@/components/HowToPlayModal";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 
-export default function SpinPage() {
+function LegacySpinPage() {
   const router = useRouter();
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
@@ -565,3 +582,4 @@ export default function SpinPage() {
     </div>
   );
 }
+*/

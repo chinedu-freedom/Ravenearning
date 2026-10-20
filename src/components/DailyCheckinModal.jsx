@@ -132,7 +132,7 @@ export default function DailyCheckinModal() {
       if (result?.success || result?.message) {
         confettiRef.current?.launch(150);
         await refetch();
-        const claimedAmt = result?.amount || result?.rewardAmount || 10;
+        const claimedAmt = result?.amount ?? result?.rewardAmount ?? 1;
         setClaimedModalData({ isOpen: true, amount: claimedAmt });
         handleOpenChange(false);
       }

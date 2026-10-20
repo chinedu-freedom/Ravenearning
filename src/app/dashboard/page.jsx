@@ -34,6 +34,13 @@ export default function DashboardPage() {
   };
 
   const supportLink = settings?.telegram_support || settings?.telegram_channel || settings?.telegram_link || "https://t.me/suncerestcapital";
+  const whatsappGroupLink = settings?.whatsapp_group || settings?.whatsapp_link || "https://chat.whatsapp.com/IUJGcWWHKsfD4H62oMIWyI?s=cl&p=a&mlu=4&ilr=4";
+
+  const handleOpenWhatsApp = () => {
+    if (typeof window !== "undefined") {
+      window.open(whatsappGroupLink, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <div className="min-h-full bg-[#f8fafc] text-slate-900 pb-10 select-none">
@@ -158,23 +165,26 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 3. Lucky Spin Banner Card */}
+        {/* 3. Official WhatsApp Group Banner Card */}
         <div
-          onClick={() => router.push("/dashboard/spin")}
+          onClick={handleOpenWhatsApp}
           className="relative w-full h-[100px] rounded-2xl overflow-hidden shadow-sm cursor-pointer group active:scale-[0.99] transition-transform"
         >
           <img
-            src="/images/dashboard/spin_banner.jpg"
-            alt="Lucky Spin"
+            src="/images/dashboard/whatsapp_banner.jpg"
+            alt="WhatsApp Community"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-4">
-            <h3 className="text-white text-[18px] font-bold tracking-tight leading-tight drop-shadow-sm">
-              Lucky Spin
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent flex flex-col justify-center px-4">
+            <span className="text-emerald-400 font-bold text-[11px] uppercase tracking-wider drop-shadow-xs">
+              Official Community
+            </span>
+            <h3 className="text-white text-[18px] font-bold tracking-tight leading-tight drop-shadow-sm mt-0.5">
+              WhatsApp Group
             </h3>
-            <button className="mt-2 w-fit px-6 py-1 bg-white text-gray-900 font-bold text-[13px] rounded-full shadow hover:bg-gray-100 transition-all cursor-pointer">
-              Go
+            <button className="mt-2 w-fit px-5 py-1 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-[12.5px] rounded-full shadow transition-all cursor-pointer">
+              Join Group
             </button>
           </div>
         </div>
