@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -16,8 +16,6 @@ import { useFetchData } from "@/hooks/useApi";
 
 export default function TransactionsPage() {
   const router = useRouter();
-
-  const [filter, setFilter] = useState("all"); // "all" | "inflow" | "outflow"
 
   const { data: txRes, isLoading } = useFetchData("/users/transactions", ["transactions"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
@@ -252,16 +250,8 @@ export default function TransactionsPage() {
     return { totalInflow: inflow, totalOutflow: outflow, inflowCount: inCount, outflowCount: outCount };
   }, [transactions]);
 
-  // Filtered transactions based on active tab
-  const filteredTransactions = useMemo(() => {
-    if (filter === "inflow") {
-      return transactions.filter((t) => t.isCredit);
-    }
-    if (filter === "outflow") {
-      return transactions.filter((t) => !t.isCredit);
-    }
-    return transactions;
-  }, [transactions, filter]);
+  // All transactions
+  const filteredTransactions = transactions;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-start select-none">
@@ -295,12 +285,7 @@ export default function TransactionsPage() {
         {/* Dual Stats Cards - Both Inflow & Outflow Side-by-Side */}
         <div className="grid grid-cols-2 gap-3">
           {/* Total Inflow Card */}
-          <div 
-            onClick={() => setFilter(filter === "inflow" ? "all" : "inflow")}
-            className={`bg-white border rounded-xl p-4 shadow-2xs flex flex-col justify-between cursor-pointer transition-all active:scale-[0.99] ${
-              filter === "inflow" ? "ring-2 ring-emerald-500 border-emerald-400" : "border-slate-200/90 hover:border-slate-300"
-            }`}
-          >
+          <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[12px] text-slate-500 font-bold uppercase tracking-wider">
                 Inflow
@@ -320,12 +305,7 @@ export default function TransactionsPage() {
           </div>
 
           {/* Total Outflow Card */}
-          <div 
-            onClick={() => setFilter(filter === "outflow" ? "all" : "outflow")}
-            className={`bg-white border rounded-xl p-4 shadow-2xs flex flex-col justify-between cursor-pointer transition-all active:scale-[0.99] ${
-              filter === "outflow" ? "ring-2 ring-rose-500 border-rose-400" : "border-slate-200/90 hover:border-slate-300"
-            }`}
-          >
+          <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[12px] text-slate-500 font-bold uppercase tracking-wider">
                 Outflow
@@ -351,43 +331,6 @@ export default function TransactionsPage() {
             <h2 className="text-slate-900 text-[15px] font-bold tracking-tight">
               History
             </h2>
-            
-            {/* Filter Toggle Buttons */}
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200/80">
-              <button
-                type="button"
-                onClick={() => setFilter("all")}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                  filter === "all"
-                    ? "bg-white text-slate-900 shadow-2xs"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                All ({transactions.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter("inflow")}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                  filter === "inflow"
-                    ? "bg-emerald-600 text-white shadow-2xs"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Inflow ({inflowCount})
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter("outflow")}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
-                  filter === "outflow"
-                    ? "bg-rose-600 text-white shadow-2xs"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Outflow ({outflowCount})
-              </button>
-            </div>
           </div>
 
           <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
@@ -473,11 +416,7 @@ export default function TransactionsPage() {
                   <Inbox size={22} />
                 </div>
                 <p className="text-slate-700 text-[14px] font-bold">
-                  {filter === "inflow"
-                    ? "No inflow records yet"
-                    : filter === "outflow"
-                    ? "No outflow records yet"
-                    : "No records yet"}
+                  No records yet
                 </p>
                 <p className="text-slate-400 text-[12px] mt-1">
                   Your transaction history will appear here.
