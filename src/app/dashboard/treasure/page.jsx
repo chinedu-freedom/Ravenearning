@@ -30,12 +30,23 @@ export default function TreasurePage() {
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
 
-  const telegramLink = 
+  const ensureExternalUrl = (url) => {
+    if (!url) return "";
+    let clean = String(url).trim();
+    if (clean.startsWith("@")) clean = `t.me/${clean.slice(1)}`;
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = `https://${clean}`;
+    }
+    return clean;
+  };
+
+  const telegramLink = ensureExternalUrl(
     settings.telegram_channel_link || 
     settings.telegram_channel || 
     settings.telegram_support || 
     settings.telegram_link || 
-    "https://t.me/suncerestcapital";
+    "https://t.me/suncerestcapital"
+  );
 
   const claims = historyData?.claims || [];
 

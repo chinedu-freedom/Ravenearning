@@ -30,9 +30,19 @@ export default function HelpCenterPage() {
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
 
+  const ensureExternalUrl = (url) => {
+    if (!url) return "";
+    let clean = String(url).trim();
+    if (clean.startsWith("@")) clean = `t.me/${clean.slice(1)}`;
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = `https://${clean}`;
+    }
+    return clean;
+  };
+
   const handleLink = (link) => {
     if (link) {
-      window.open(link, "_blank");
+      window.open(ensureExternalUrl(link), "_blank", "noopener,noreferrer");
     }
   };
 

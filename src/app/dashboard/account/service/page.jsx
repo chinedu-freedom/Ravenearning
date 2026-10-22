@@ -23,9 +23,19 @@ export default function CustomerServicePage() {
     settings.telegram_channel_link ||
     "https://t.me/suncerestcapital";
 
+  const ensureExternalUrl = (url) => {
+    if (!url) return "";
+    let clean = String(url).trim();
+    if (clean.startsWith("@")) clean = `t.me/${clean.slice(1)}`;
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = `https://${clean}`;
+    }
+    return clean;
+  };
+
   const handleOpenLink = (url) => {
     if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(ensureExternalUrl(url), "_blank", "noopener,noreferrer");
     }
   };
 

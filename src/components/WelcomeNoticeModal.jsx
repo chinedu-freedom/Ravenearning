@@ -26,7 +26,7 @@ export default function WelcomeNoticeModal() {
   };
 
   const handleTelegramClick = () => {
-    const telegramUrl =
+    let rawUrl =
       settings.telegram_channel_link ||
       settings.telegram_channel ||
       settings.telegram_group ||
@@ -35,7 +35,14 @@ export default function WelcomeNoticeModal() {
       settings.telegram_support_link ||
       settings.telegram_link ||
       "https://t.me/suncerestcapital";
-    window.open(telegramUrl, "_blank", "noopener,noreferrer");
+
+    let clean = String(rawUrl).trim();
+    if (clean.startsWith("@")) clean = `t.me/${clean.slice(1)}`;
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = `https://${clean}`;
+    }
+
+    window.open(clean, "_blank", "noopener,noreferrer");
     handleDismiss();
   };
 
