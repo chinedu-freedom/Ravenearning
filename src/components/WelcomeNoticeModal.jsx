@@ -26,7 +26,15 @@ export default function WelcomeNoticeModal() {
   };
 
   const handleTelegramClick = () => {
-    const telegramUrl = settings.telegram_support || "https://t.me/suncerestcapital";
+    const telegramUrl =
+      settings.telegram_channel_link ||
+      settings.telegram_channel ||
+      settings.telegram_group ||
+      settings.telegram_group_chat ||
+      settings.telegram_support ||
+      settings.telegram_support_link ||
+      settings.telegram_link ||
+      "https://t.me/suncerestcapital";
     window.open(telegramUrl, "_blank", "noopener,noreferrer");
     handleDismiss();
   };
@@ -87,7 +95,7 @@ export default function WelcomeNoticeModal() {
             7. You can purchase multiple devices to earn more income.
           </p>
           <p className="font-semibold text-slate-800">
-            8. {siteName} will be launched in South Africa on August.
+            8. {siteName} will be launched in South Africa on October.
           </p>
         </div>
 
