@@ -23,13 +23,13 @@ import {
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 
-const PRESET_AMOUNTS = [200, 500, 1000];
+const PRESET_AMOUNTS = [300, 500, 1000];
 
 function RechargeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-    const [amount, setAmount] = useState("200");
+    const [amount, setAmount] = useState("300");
   const [selectedMethod, setSelectedMethod] = useState("bank"); // "bank" | "usdt"
 
   const handleSwitchMethod = (method) => {
@@ -37,7 +37,7 @@ function RechargeContent() {
     if (method === "usdt") {
       setAmount("20");
     } else {
-      setAmount("200");
+      setAmount("300");
     }
   };
   const [usdtNetwork, setUsdtNetwork] = useState("TRC20"); // "TRC20" | "BEP20"
@@ -50,7 +50,7 @@ function RechargeContent() {
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   const currencySymbol = settings.currency_symbol || "R";
-  const minDeposit = Number(settings.min_deposit || 200);
+  const minDeposit = Number(settings.min_deposit || 300);
   const maxDeposit = Number(settings.max_deposit || 10000000);
 
   const { data: userRes, refetch: refetchUser } = useFetchData("/users/me", ["user-profile"]);
@@ -79,7 +79,7 @@ function RechargeContent() {
   const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
       const usdtRate = Number(settings.usdt_rate_zar || 18.50);
-  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [200, 500, 1000];
+  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [300, 500, 1000];
   const activeUsdtAddress = usdtNetwork === "BEP20"
     ? (settings.usdt_bep20_address || "0xC6DD6e8d226bc069Dd6F8745F3D468EA502F9892")
     : (settings.usdt_trc20_address || "TXmvGTE6PREAYxWarUissgHWMU9f6dhV4V");
@@ -366,7 +366,7 @@ function RechargeContent() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder={selectedMethod === "usdt" ? "20" : "200"}
+              placeholder={selectedMethod === "usdt" ? "20" : "300"}
               className="bg-transparent text-slate-900 font-bold text-[16px] outline-none flex-1 placeholder:text-slate-400 font-mono"
             />
             {amount && (
