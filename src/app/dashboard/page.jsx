@@ -33,12 +33,40 @@ export default function DashboardPage() {
     });
   };
 
-  const supportLink = settings?.telegram_support || settings?.telegram_channel || settings?.telegram_link || "https://t.me/suncerestcapital";
-  const whatsappGroupLink = settings?.whatsapp_group || settings?.whatsapp_link || "https://chat.whatsapp.com/IUJGcWWHKsfD4H62oMIWyI?s=cl&p=a&mlu=4&ilr=4";
+  const ensureExternalUrl = (url) => {
+    if (!url) return "";
+    let clean = String(url).trim();
+    if (clean.startsWith("@")) clean = `t.me/${clean.slice(1)}`;
+    if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+      clean = `https://${clean}`;
+    }
+    return clean;
+  };
+
+  const supportLink = ensureExternalUrl(
+    settings?.telegram_support ||
+    settings?.telegram_support_link ||
+    settings?.telegram_group ||
+    settings?.telegram_group_chat ||
+    settings?.telegram_channel ||
+    settings?.telegram_link ||
+    "https://t.me/suncerestcapital"
+  );
+  const whatsappGroupLink = ensureExternalUrl(
+    settings?.whatsapp_group ||
+    settings?.whatsapp_link ||
+    "https://chat.whatsapp.com/IUJGcWWHKsfD4H62oMIWyI?s=cl&p=a&mlu=4&ilr=4"
+  );
 
   const handleOpenWhatsApp = () => {
     if (typeof window !== "undefined") {
       window.open(whatsappGroupLink, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const handleOpenSupport = () => {
+    if (typeof window !== "undefined") {
+      window.open(supportLink, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -123,7 +151,7 @@ export default function DashboardPage() {
 
             {/* Customer Service */}
             <button
-              onClick={() => window.open(supportLink, "_blank")}
+              onClick={handleOpenSupport}
               className="flex flex-col items-center justify-center group cursor-pointer active:scale-95 transition-transform"
             >
               <div className="w-12 h-12 flex items-center justify-center text-[#64748b] group-hover:text-slate-900 transition-colors">
