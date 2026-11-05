@@ -33,11 +33,11 @@ function WithdrawContent() {
   // Fetch settings & current user profile
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
   const minWithdrawal = Number(settings.min_withdrawal || 100);
   const maxWithdrawal = Number(settings.max_withdrawal || 5000000);
   const feePercent = Number(settings.withdrawal_charge || 15);
-  const usdtRate = Number(settings.usdt_rate_zar || 18.50);
+  const usdtRate = Number(settings.usdt_rate_etb || settings.usdt_rate || settings.usdt_rate_zar || 120.00);
 
   const { data: userRes, refetch: refetchUser, isLoading: isLoadingUser } = useFetchData("/users/me", ["user-profile"]);
   const user = userRes?.user;
@@ -58,7 +58,7 @@ function WithdrawContent() {
   const numAmount = Number(amount || 0);
   const feeAmount = (numAmount * feePercent) / 100;
   const netReceived = Math.max(0, numAmount - feeAmount);
-  const usdtEquivalent = (netReceived / (usdtRate > 0 ? usdtRate : 18.50)).toFixed(2);
+  const usdtEquivalent = (netReceived / (usdtRate > 0 ? usdtRate : 120.00)).toFixed(2);
 
   const formatAmount = (num) => {
     return Number(num || 0).toLocaleString("en-US", {
@@ -103,7 +103,7 @@ function WithdrawContent() {
 
     if (withdrawType === "bank" && !hasLinkedBank) {
       toast.dismiss();
-      toast.error("Please bind your South Africa bank account before withdrawing");
+      toast.error("Please bind your Ethiopia bank account before withdrawing");
       router.push("/dashboard/account/bind");
       return;
     }
@@ -212,7 +212,7 @@ function WithdrawContent() {
           </label>
 
           <div className="space-y-2">
-            {/* South Africa Bank Option */}
+            {/* Ethiopia Bank Option */}
             <div
               onClick={() => setWithdrawType("bank")}
               className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
@@ -229,10 +229,10 @@ function WithdrawContent() {
                 </div>
                 <div>
                   <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
-                    South Africa Bank (Rand)
+                    Ethiopia Bank (Birr)
                   </span>
                   <span className="text-[11.5px] text-slate-500 font-medium">
-                    Payout to linked bank account
+                    Payout to linked bank account / Telebirr
                   </span>
                 </div>
               </div>
@@ -327,7 +327,7 @@ function WithdrawContent() {
                       No Bank Linked
                     </span>
                     <span className="text-[11.5px] text-amber-800 font-medium block mt-0.5 truncate">
-                      Tap to link South Africa bank
+                      Tap to link Ethiopia bank
                     </span>
                   </div>
                 </div>

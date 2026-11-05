@@ -23,19 +23,32 @@ import {
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 
-const SOUTH_AFRICA_BANKS = [
-  "Capitec Bank",
-  "First National Bank (FNB)",
-  "ABSA Bank",
-  "Standard Bank",
-  "Nedbank",
-  "TymeBank",
-  "African Bank",
-  "Discovery Bank",
-  "Bank Zero",
-  "Bidvest Bank",
-  "Grindrod Bank",
-  "SASFIN Bank"
+const ETHIOPIA_BANKS = [
+  "Commercial Bank of Ethiopia (CBE)",
+  "Telebirr",
+  "Awash Bank",
+  "Dashen Bank",
+  "Bank of Abyssinia",
+  "Wegagen Bank",
+  "Hibret Bank (United Bank)",
+  "Nib International Bank",
+  "Cooperative Bank of Oromia",
+  "Lion International Bank",
+  "Zemen Bank",
+  "Oromia Bank",
+  "Berhan Bank",
+  "Bunna International Bank",
+  "Abay Bank",
+  "Addis International Bank",
+  "Enat Bank",
+  "Global Bank Ethiopia",
+  "Sinqee Bank",
+  "Amhara Bank",
+  "Gadaa Bank",
+  "Tsedey Bank",
+  "Hijra Bank",
+  "ZamZam Bank",
+  "CBE Birr"
 ];
 
 export default function BindWalletPage() {
@@ -76,7 +89,7 @@ export default function BindWalletPage() {
   }, [user, bankDetails]);
 
   // Filter bank search
-  const filteredBanks = SOUTH_AFRICA_BANKS.filter((b) =>
+  const filteredBanks = ETHIOPIA_BANKS.filter((b) =>
     b.toLowerCase().includes(bankSearch.toLowerCase())
   );
 
@@ -196,7 +209,7 @@ export default function BindWalletPage() {
           </label>
 
           <div className="space-y-2">
-            {/* South Africa Bank Option */}
+            {/* Ethiopia Bank Option */}
             <div
               onClick={() => setWalletType("bank")}
               className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
@@ -213,10 +226,10 @@ export default function BindWalletPage() {
                 </div>
                 <div>
                   <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
-                    South Africa Bank (Rand)
+                    Ethiopia Bank (Birr)
                   </span>
                   <span className="text-[11.5px] text-slate-500 font-medium">
-                    Local South African bank account payout
+                    Local Ethiopian bank account / Telebirr payout
                   </span>
                 </div>
               </div>
@@ -292,7 +305,7 @@ export default function BindWalletPage() {
         <form onSubmit={handleSubmit} className="bg-white rounded-lg p-5 border border-slate-200/90 shadow-2xs space-y-4">
           
           {walletType === "bank" ? (
-            /* South Africa Bank Form Fields */
+            /* Ethiopia Bank Form Fields */
             <>
               {/* Account Holder Name */}
               <div className="space-y-1.5">
@@ -324,7 +337,7 @@ export default function BindWalletPage() {
                   <div className="flex items-center gap-3 min-w-0">
                     <Landmark size={18} className="text-slate-400 shrink-0" />
                     <span className={`text-[13.5px] truncate font-semibold ${selectedBank ? "text-slate-900" : "text-slate-400 font-normal"}`}>
-                      {selectedBank || "Choose South Africa Bank"}
+                      {selectedBank || "Choose Ethiopia Bank"}
                     </span>
                   </div>
                   <ChevronRight size={16} className="text-slate-400 shrink-0 ml-2" />
@@ -447,7 +460,7 @@ export default function BindWalletPage() {
               1. Please ensure you double-check your account details before saving to avoid withdrawal delays.
             </p>
             <p>
-              2. Both South Africa Bank Accounts and USDT Crypto Wallet addresses are supported for payouts.
+              2. Both Ethiopia Bank Accounts (or Telebirr) and USDT Crypto Wallet addresses are supported for payouts.
             </p>
             <p>
               3. If you encounter any problems during the binding process, please contact online customer support.

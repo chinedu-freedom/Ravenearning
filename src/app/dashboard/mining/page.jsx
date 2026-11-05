@@ -32,7 +32,7 @@ export default function MiningPlansPage() {
 
   const productCount = (invRes?.data?.active?.length ?? 0) + (invRes?.data?.completed?.length ?? 0);
   const profitBalance = Number(userRes?.user?.withdrawable_balance !== undefined ? userRes.user.withdrawable_balance : 0);
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
 
   const formatRevenue = (val) => {
     return Number(val || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -129,7 +129,7 @@ export default function MiningPlansPage() {
 
   // Format currency helper
   const formatCurrency = (val) => {
-    const symbol = settings.currency_symbol || "R";
+    const symbol = settings.currency_symbol || "Br";
     return `${symbol} ${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
 

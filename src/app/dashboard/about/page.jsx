@@ -48,7 +48,7 @@ export default function AboutPage() {
         </p>
 
         <p>
-          Security and liquidity remain fundamental to <span className="capitalize">{siteName}</span>. The platform implements institutional-level multi-signature vault custody, 256-bit encryption protocols, and audited reserve management to protect investor capital at every stage. Members benefit from total liquidity flexibility, with daily earnings automatically credited every 24 hours, alongside frictionless local banking settlement in South African Rand (Rand) and global cryptocurrency transfers.
+          Security and liquidity remain fundamental to <span className="capitalize">{siteName}</span>. The platform implements institutional-level multi-signature vault custody, 256-bit encryption protocols, and audited reserve management to protect investor capital at every stage. Members benefit from total liquidity flexibility, with daily earnings automatically credited every 24 hours, alongside frictionless local banking settlement in Ethiopian Birr (ETB) and global cryptocurrency transfers.
         </p>
 
         <p>

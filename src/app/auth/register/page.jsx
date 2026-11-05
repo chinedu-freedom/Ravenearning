@@ -131,7 +131,7 @@ function SignupForm() {
             <div>
               <Input 
                 label="Phone Number" 
-                prefix="+27"
+                prefix="+251"
                 maxLength={9} 
                 placeholder="Enter phone number"
                 type="tel" 

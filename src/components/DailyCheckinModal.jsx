@@ -223,7 +223,7 @@ export default function DailyCheckinModal() {
         isOpen={claimedModalData.isOpen}
         onClose={() => setClaimedModalData({ isOpen: false, amount: 0 })}
         amount={claimedModalData.amount}
-        currencySymbol={settings?.currency_symbol || "R"}
+        currencySymbol={settings?.currency_symbol || "Br"}
         title="Daily Reward Claimed!"
       />
     </>
@@ -233,7 +233,7 @@ export default function DailyCheckinModal() {
 function RewardCard({ reward, isNext, settings }) {
   const isClaimed = reward.status === 'claimed';
   const isAvailable = reward.status === 'available' || isNext;
-  const symbol = settings?.currency_symbol || "R";
+  const symbol = settings?.currency_symbol || "Br";
   
   return (
     <div className={`

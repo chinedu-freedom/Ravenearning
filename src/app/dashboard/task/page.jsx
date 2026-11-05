@@ -23,7 +23,7 @@ export default function TaskPage() {
   const claimMutation = usePost("/users/tasks/claim", ["user-tasks", "user-profile"]);
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
 
   const confettiCanvasRef = useRef(null);
   const confettiRef = useRef(null);

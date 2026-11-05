@@ -49,7 +49,7 @@ function RechargeContent() {
   // Fetch settings & current user profile
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
   const minDeposit = Number(settings.min_deposit || 300);
   const maxDeposit = Number(settings.max_deposit || 10000000);
 
@@ -78,7 +78,7 @@ function RechargeContent() {
 
   const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
-      const usdtRate = Number(settings.usdt_rate_zar || 18.50);
+  const usdtRate = Number(settings.usdt_rate_etb || settings.usdt_rate || settings.usdt_rate_zar || 120.00);
   const presets = selectedMethod === "usdt" ? [20, 50, 100] : [300, 500, 1000];
   const activeUsdtAddress = usdtNetwork === "BEP20"
     ? (settings.usdt_bep20_address || "0xC6DD6e8d226bc069Dd6F8745F3D468EA502F9892")
@@ -92,11 +92,11 @@ function RechargeContent() {
     }
 
     if (selectedMethod === "usdt") {
-      const zarEquivalent = rawNum * (usdtRate > 0 ? usdtRate : 18.50);
+      const etbEquivalent = rawNum * (usdtRate > 0 ? usdtRate : 120.00);
 
       submitDeposit(
         {
-          amount: zarEquivalent,
+          amount: etbEquivalent,
           paymentMethod: `${rawNum} USDT (${usdtNetwork} Deposit)`
         },
         {
@@ -124,7 +124,7 @@ function RechargeContent() {
     submitDeposit(
       {
         amount: rawNum,
-        paymentMethod: "South Africa Bank"
+        paymentMethod: "Ethiopia Bank"
       },
       {
         onSuccess: (res) => {
@@ -195,7 +195,7 @@ function RechargeContent() {
           </label>
           
           <div className="space-y-2">
-            {/* South Africa Bank Option */}
+            {/* Ethiopia Bank Option */}
             <div
               onClick={() => handleSwitchMethod("bank")}
               className={`w-full p-3.5 rounded-md border flex items-center justify-between cursor-pointer transition-all ${
@@ -212,10 +212,10 @@ function RechargeContent() {
                 </div>
                 <div>
                   <span className="text-[13.5px] font-bold text-slate-900 block leading-tight">
-                    South Africa Bank (Rand)
+                    Ethiopia Bank (Birr)
                   </span>
                   <span className="text-[11.5px] text-slate-500 font-medium">
-                    Instant automated online bank transfer
+                    Instant automated online bank transfer / Telebirr
                   </span>
                 </div>
               </div>
@@ -325,7 +325,7 @@ function RechargeContent() {
         <div className="pt-1">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-slate-900 text-[16px] font-bold tracking-tight">
-              Select amount ({selectedMethod === "usdt" ? "USDT" : "Rand"})
+              Select amount ({selectedMethod === "usdt" ? "USDT" : "Birr"})
             </h2>
             {selectedMethod === "usdt" && (
               <span className="text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
@@ -384,9 +384,9 @@ function RechargeContent() {
           {/* Dynamic Conversion Display for USDT */}
           {selectedMethod === "usdt" ? (
             <div className="bg-amber-50/80 border border-amber-200/80 rounded-md p-3 mt-2.5 flex items-center justify-between">
-              <span className="text-slate-600 text-[12px] font-medium">Converted Rand Value:</span>
+              <span className="text-slate-600 text-[12px] font-medium">Converted Birr Value:</span>
               <span className="text-amber-700 font-black text-[15px] font-mono">
-                {currencySymbol} {formatAmount(Number(amount || 0) * (usdtRate > 0 ? usdtRate : 18.50))}
+                {currencySymbol} {formatAmount(Number(amount || 0) * (usdtRate > 0 ? usdtRate : 120.00))}
               </span>
             </div>
           ) : (

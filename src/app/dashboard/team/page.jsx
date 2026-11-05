@@ -23,7 +23,7 @@ export default function TeamPage() {
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
 
   const { data: teamRes, isLoading: isLoadingTeam } = useFetchData("/users/team", ["team-stats"]);
   const { data: memberListRes, isLoading: isLoadingMembers } = useFetchData(

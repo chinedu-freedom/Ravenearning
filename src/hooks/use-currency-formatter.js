@@ -10,11 +10,11 @@ function getFormatter(locale, options) {
   return formatterCache.get(key);
 }
 
-export function useCurrencyFormat(defaultCurrency = 'ZAR') {
+export function useCurrencyFormat(defaultCurrency = 'ETB') {
   const formatCurrency = useMemo(() => {
     return (amount, currency = defaultCurrency, options = {}) => {
       try {
-        const formatter = getFormatter("en-ZA", {
+        const formatter = getFormatter("en-ET", {
           style: 'currency',
           currency,
           minimumFractionDigits: 0,
@@ -24,7 +24,7 @@ export function useCurrencyFormat(defaultCurrency = 'ZAR') {
         return formatter.format(amount);
       } catch (error) {
         console.error('Currency formatting error:', error);
-        return `${currency} ${amount.toFixed(2)}`;
+        return `${currency === 'ETB' ? 'Br' : currency} ${amount.toFixed(2)}`;
       }
     };
   }, [defaultCurrency]);

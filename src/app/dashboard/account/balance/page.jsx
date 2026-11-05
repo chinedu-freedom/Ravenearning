@@ -20,7 +20,7 @@ export default function BalancePage() {
   // Fetch settings & current balance
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
 
   const { data: userRes } = useFetchData("/users/me", ["user-profile"]);
   const user = userRes?.user;

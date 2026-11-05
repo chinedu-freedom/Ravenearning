@@ -28,15 +28,15 @@ export default function WalletPage() {
 
   const toggleCurrency = () => {
     if (!user?.country) return;
-    const localCurrency = user.country.currency_code?.trim() ? user.country.currency_code : "ZAR";
+    const localCurrency = user.country.currency_code?.trim() ? user.country.currency_code : "ETB";
     const baseCurrency = settings.currency_name || "USDT";
     setCurrency(prev => (prev === "USDT" || prev === baseCurrency) ? localCurrency : baseCurrency);
   };
 
   const formatMoney = (amountUSD) => {
     const usd = parseFloat(amountUSD || 0);
-    const baseCurrency = settings.currency_name || "ZAR";
-    const baseSymbol = settings.currency_symbol || "R";
+    const baseCurrency = settings.currency_name || "ETB";
+    const baseSymbol = settings.currency_symbol || "Br";
     if (currency === "USDT" || currency === baseCurrency) {
       return `${baseSymbol}${usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     } else {
@@ -129,7 +129,7 @@ export default function WalletPage() {
               onClick={toggleCurrency}
               className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-[9px] font-bold hover:bg-white/20 transition-colors cursor-pointer border border-white/10 backdrop-blur-sm text-slate-200"
             >
-              {(currency === "USDT" || currency === (settings.currency_name || "USDT")) ? (settings.currency_name || "USDT") : (user?.country?.currency_code || "ZAR")} {(currency === "USDT" || currency === (settings.currency_name || "USDT")) ? <ChevronDown size={10} /> : <ChevronUp size={10} />}
+              {(currency === "USDT" || currency === (settings.currency_name || "USDT")) ? (settings.currency_name || "USDT") : (user?.country?.currency_code || "ETB")} {(currency === "USDT" || currency === (settings.currency_name || "USDT")) ? <ChevronDown size={10} /> : <ChevronUp size={10} />}
             </button>
           </div>
 
@@ -207,7 +207,7 @@ export default function WalletPage() {
                          <div className={`text-[13px] font-bold ${
                            getIsCredit(tx) ? 'text-green-500' : 'text-red-500'
                          }`}>
-                           {getIsCredit(tx) ? '+' : '-'}{settings.currency_symbol || "R"}{Number(tx.amount).toFixed(2)}
+                           {getIsCredit(tx) ? '+' : '-'}{settings.currency_symbol || "Br"}{Number(tx.amount).toFixed(2)}
                          </div>
                       </div>
                    </div>

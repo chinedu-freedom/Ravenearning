@@ -79,7 +79,7 @@ export default function AccountPage() {
   const displayPhone = formatPhoneNumber(userProfile?.phone);
   const userLevel = userProfile?.vip_level ? `Lv${userProfile.vip_level}` : "Lv1";
 
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
   const cashBalance = userProfile?.balance != null ? Number(userProfile.balance) : 0;
   const withdrawableBalance = userProfile?.withdrawable_balance != null ? Number(userProfile.withdrawable_balance) : 0;
 

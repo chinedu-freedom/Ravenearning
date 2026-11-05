@@ -22,7 +22,7 @@ export default function RechargeRecordPage() {
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
 
   // Fetch user transactions
   const { data: txRes, isLoading } = useFetchData("/users/transactions", ["user-transactions"]);
@@ -67,11 +67,11 @@ export default function RechargeRecordPage() {
         const method = (t.payment_method || t.cryptocurrency || "").toLowerCase();
         const combined = `${desc} ${rawDesc} ${method}`;
 
-        let channel = "South Africa Bank";
+        let channel = "Ethiopia Bank";
         if (combined.includes("usdt") || combined.includes("trc20") || combined.includes("bep20") || combined.includes("crypto")) {
           channel = "USDT Deposit";
         } else {
-          channel = "South Africa Bank";
+          channel = "Ethiopia Bank";
         }
 
         return {

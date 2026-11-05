@@ -21,7 +21,7 @@ export default function DashboardPage() {
     return <PageLoader />;
   }
 
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
   const balance = parseFloat(userProfile?.balance ?? 150);
   const cumulativeIncome = parseFloat(userProfile?.statistics?.total_income ?? userProfile?.withdrawable_balance ?? 150);
   const totalWithdrawal = parseFloat(userProfile?.statistics?.total_withdrawal ?? 0);

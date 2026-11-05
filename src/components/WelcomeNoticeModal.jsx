@@ -49,6 +49,7 @@ export default function WelcomeNoticeModal() {
   if (!isOpen) return null;
 
   const siteName = settings.site_name || "suncerestcapital";
+  const currencySymbol = settings.currency_symbol || "Br";
   const regBonus = Number(settings.registration_bonus ?? 100);
   const refComm = Number(settings.level1_commission || 30);
 
@@ -81,13 +82,13 @@ export default function WelcomeNoticeModal() {
         {/* Content List Body */}
         <div className="flex-1 min-h-0 p-5 overflow-y-auto text-slate-700 text-[13px] leading-relaxed space-y-3 overscroll-contain">
           <p className="font-semibold text-slate-800">
-            1. Invest in ZAR and earn daily cash income.
+            1. Invest in Birr (ETB) and earn daily cash income.
           </p>
           <p className="font-semibold text-slate-800">
-            2. Registration Bonus: ZAR{regBonus}.
+            2. Registration Bonus: {currencySymbol}{regBonus}.
           </p>
           <p className="font-semibold text-slate-800">
-            3. Daily Check-in Bonus: ZAR1.
+            3. Daily Check-in Bonus: {currencySymbol}1.
           </p>
           <p className="font-semibold text-slate-800">
             4. Daily return.
@@ -102,7 +103,7 @@ export default function WelcomeNoticeModal() {
             7. You can purchase multiple devices to earn more income.
           </p>
           <p className="font-semibold text-slate-800">
-            8. {siteName} will be launched in South Africa on October.
+            8. {siteName} is officially available in Ethiopia.
           </p>
         </div>
 

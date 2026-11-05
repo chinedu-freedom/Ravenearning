@@ -3,7 +3,7 @@ import { useFetchData } from "@/hooks/useApi";
 
 export default function CurrencyFormatter({ amount }) {
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
-  const symbol = settingsRes?.settings?.currency_symbol || "R";
+  const symbol = settingsRes?.settings?.currency_symbol || "Br";
 
   if (amount === undefined || amount === null) return null;
 

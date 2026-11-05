@@ -9,6 +9,10 @@ export default function TeamListPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(1);
 
+  const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
+  const settings = settingsRes?.settings || {};
+  const currencySymbol = settings.currency_symbol || "Br";
+
   const { data: teamListRes, isLoading } = useFetchData(`/users/team/list?level=${activeTab}`, ["team-list", activeTab]);
   const teamList = teamListRes?.data || [];
 
@@ -87,20 +91,20 @@ export default function TeamListPage() {
                   <div className="flex items-baseline gap-2 -mb-0.5">
                     <span className="text-gray-400 text-[11px]">Balance:</span>
                     <span className="text-white/90 font-bold text-[14px]">
-                      R{Number(user.balance).toFixed(2)}
+                      {currencySymbol}{Number(user.balance).toFixed(2)}
                     </span>
                   </div>
                   
                   <div className="flex items-baseline gap-2 -mb-0.5">
                     <span className="text-gray-400 text-[11px]">Recharged:</span>
                     <span className="text-[#fbbf24] font-bold text-[13px]">
-                      R{Number(user.deposited_amount || 0).toFixed(2)}
+                      {currencySymbol}{Number(user.deposited_amount || 0).toFixed(2)}
                     </span>
                   </div>
 
                   <div className="flex items-baseline gap-2 -mb-0.5">
                     <span className="text-gray-400 text-[11px]">Invested:</span>
-                    <span className="text-[#34d399] font-bold text-[13px]">R {Number(user.invested_amount || 0).toFixed(2)}
+                    <span className="text-[#34d399] font-bold text-[13px]">{currencySymbol} {Number(user.invested_amount || 0).toFixed(2)}
                     </span>
                   </div>
                 </div>

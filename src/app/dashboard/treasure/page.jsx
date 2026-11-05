@@ -28,7 +28,7 @@ export default function TreasurePage() {
   const claimMutation = usePost("/users/treasure/claim", ["treasure-history"], false, { showToast: false });
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
 
   const ensureExternalUrl = (url) => {
     if (!url) return "";

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Gift, Sparkles, X } from "lucide-react";
 
-export default function RewardClaimModal({ isOpen, onClose, amount, currencySymbol = "R", title = "Reward Claimed!" }) {
+export default function RewardClaimModal({ isOpen, onClose, amount, currencySymbol = "Br", title = "Reward Claimed!" }) {
   useEffect(() => {
     if (isOpen) {
       import("canvas-confetti").then((module) => {

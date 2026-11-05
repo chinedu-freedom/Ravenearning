@@ -12,7 +12,7 @@ export default function RegulationPage() {
 
   const settings = settingsRes?.settings || {};
   const siteName = settings.site_name || "Sun Crest Capital";
-  const currencySymbol = settings.currency_symbol || "R";
+  const currencySymbol = settings.currency_symbol || "Br";
   const registrationBonus = settings.registration_bonus ?? 100;
   const level1 = settings.level1_commission ?? 30;
   const level2 = settings.level2_commission ?? 3;
@@ -153,7 +153,7 @@ export default function RegulationPage() {
                 8
               </span>
               <p>
-                <strong className="capitalize">{siteName}</strong> officially established in South Africa, providing certified clean energy solutions and reliable capital growth.
+                <strong className="capitalize">{siteName}</strong> officially established in Ethiopia, providing certified clean energy solutions and reliable capital growth.
               </p>
             </div>
           </div>
