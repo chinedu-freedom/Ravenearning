@@ -49,7 +49,7 @@ export default function WelcomeNoticeModal() {
   if (!isOpen) return null;
 
   const siteName = settings.site_name || "suncerestcapital";
-  const currencySymbol = settings.currency_symbol || "Br";
+  const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
   const regBonus = Number(settings.registration_bonus ?? 100);
   const refComm = Number(settings.level1_commission || 30);
 

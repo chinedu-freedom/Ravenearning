@@ -12,7 +12,7 @@ export default function RegulationPage() {
 
   const settings = settingsRes?.settings || {};
   const siteName = settings.site_name || "Sun Crest Capital";
-  const currencySymbol = settings.currency_symbol || "Br";
+  const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
   const registrationBonus = settings.registration_bonus ?? 100;
   const level1 = settings.level1_commission ?? 30;
   const level2 = settings.level2_commission ?? 3;

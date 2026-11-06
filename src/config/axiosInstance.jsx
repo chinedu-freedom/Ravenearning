@@ -26,7 +26,34 @@ axiosInstance.interceptors.request.use(
 
 // Global response interceptor
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Automatically normalize currency and country for Ethiopia if backend has legacy defaults
+    if (response?.data) {
+      const s = response.data.settings;
+      if (s && typeof s === "object") {
+        if (!s.currency_symbol || s.currency_symbol === "R" || s.currency_symbol === "ZAR") {
+          s.currency_symbol = "Br";
+        }
+        if (!s.currency_name || s.currency_name === "ZAR") {
+          s.currency_name = "ETB";
+        }
+      }
+
+      const u = response.data.user;
+      if (u && typeof u === "object" && u.country) {
+        if (u.country.currency_symbol === "R" || !u.country.currency_symbol) {
+          u.country.currency_symbol = "Br";
+        }
+        if (u.country.currency_code === "ZAR" || !u.country.currency_code) {
+          u.country.currency_code = "ETB";
+        }
+        if (u.country.country_name === "South Africa" || !u.country.country_name) {
+          u.country.country_name = "Ethiopia";
+        }
+      }
+    }
+    return response;
+  },
   async (error) => {
     // Only redirect to login on 401 Unauthorized (expired/invalid auth token)
     if (error?.response?.status === 401 && typeof window !== "undefined") {

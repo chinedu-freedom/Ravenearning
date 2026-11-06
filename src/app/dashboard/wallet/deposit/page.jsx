@@ -49,7 +49,7 @@ function RechargeContent() {
   // Fetch settings & current user profile
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "Br";
+  const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
   const minDeposit = Number(settings.min_deposit || 300);
   const maxDeposit = Number(settings.max_deposit || 10000000);
 

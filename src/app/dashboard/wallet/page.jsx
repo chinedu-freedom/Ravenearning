@@ -35,8 +35,8 @@ export default function WalletPage() {
 
   const formatMoney = (amountUSD) => {
     const usd = parseFloat(amountUSD || 0);
-    const baseCurrency = settings.currency_name || "ETB";
-    const baseSymbol = settings.currency_symbol || "Br";
+    const baseCurrency = (settings.currency_name && settings.currency_name !== "ZAR") ? settings.currency_name : "ETB";
+    const baseSymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
     if (currency === "USDT" || currency === baseCurrency) {
       return `${baseSymbol}${usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     } else {
@@ -207,7 +207,7 @@ export default function WalletPage() {
                          <div className={`text-[13px] font-bold ${
                            getIsCredit(tx) ? 'text-green-500' : 'text-red-500'
                          }`}>
-                           {getIsCredit(tx) ? '+' : '-'}{settings.currency_symbol || "Br"}{Number(tx.amount).toFixed(2)}
+                           {getIsCredit(tx) ? '+' : '-'}{(settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br"}{Number(tx.amount).toFixed(2)}
                          </div>
                       </div>
                    </div>

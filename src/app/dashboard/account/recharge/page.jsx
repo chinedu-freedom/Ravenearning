@@ -22,7 +22,7 @@ export default function RechargeRecordPage() {
 
   const { data: settingsRes } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "Br";
+  const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
 
   // Fetch user transactions
   const { data: txRes, isLoading } = useFetchData("/users/transactions", ["user-transactions"]);

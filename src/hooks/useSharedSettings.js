@@ -9,7 +9,14 @@ export function useSharedSettings() {
     const savedCurrency = localStorage.getItem("preferredCurrency");
     const savedVisibility = localStorage.getItem("balanceVisible");
     
-    if (savedCurrency) setCurrencyState(savedCurrency);
+    if (savedCurrency) {
+      if (savedCurrency === "ZAR" || savedCurrency === "R") {
+        setCurrencyState("ETB");
+        try { localStorage.setItem("preferredCurrency", "ETB"); } catch(e) {}
+      } else {
+        setCurrencyState(savedCurrency);
+      }
+    }
     if (savedVisibility !== null) setShowBalanceState(savedVisibility === "true");
 
     // Listen for custom events to sync state across components

@@ -33,7 +33,7 @@ function WithdrawContent() {
   // Fetch settings & current user profile
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
-  const currencySymbol = settings.currency_symbol || "Br";
+  const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
   const minWithdrawal = Number(settings.min_withdrawal || 100);
   const maxWithdrawal = Number(settings.max_withdrawal || 5000000);
   const feePercent = Number(settings.withdrawal_charge || 15);
