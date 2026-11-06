@@ -25,7 +25,7 @@ function WithdrawContent() {
   const router = useRouter();
 
   const [withdrawType, setWithdrawType] = useState("bank"); // "bank" | "usdt"
-  const [amount, setAmount] = useState("100");
+  const [amount, setAmount] = useState("200");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -34,7 +34,7 @@ function WithdrawContent() {
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
-  const minWithdrawal = Number(settings.min_withdrawal || 100);
+  const minWithdrawal = Number(settings.min_withdrawal || 200);
   const maxWithdrawal = Number(settings.max_withdrawal || 5000000);
   const feePercent = Number(settings.withdrawal_charge || 15);
   const usdtRate = Number(settings.usdt_rate_etb || settings.usdt_rate || settings.usdt_rate_zar || 120.00);

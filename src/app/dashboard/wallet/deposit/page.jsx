@@ -23,13 +23,13 @@ import {
 import { useFetchData, usePost } from "@/hooks/useApi";
 import { toast } from "sonner";
 
-const PRESET_AMOUNTS = [300, 500, 1000];
+const PRESET_AMOUNTS = [600, 1000, 3000];
 
 function RechargeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-    const [amount, setAmount] = useState("300");
+  const [amount, setAmount] = useState("600");
   const [selectedMethod, setSelectedMethod] = useState("bank"); // "bank" | "usdt"
 
   const handleSwitchMethod = (method) => {
@@ -37,11 +37,11 @@ function RechargeContent() {
     if (method === "usdt") {
       setAmount("20");
     } else {
-      setAmount("300");
+      setAmount("600");
     }
   };
   const [usdtNetwork, setUsdtNetwork] = useState("TRC20"); // "TRC20" | "BEP20"
-    const [proofBase64, setProofBase64] = useState("");
+  const [proofBase64, setProofBase64] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
   const [orderData, setOrderData] = useState(null);
@@ -50,7 +50,7 @@ function RechargeContent() {
   const { data: settingsRes, isLoading: isLoadingSettings } = useFetchData("/settings", ["platform-settings"]);
   const settings = settingsRes?.settings || {};
   const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
-  const minDeposit = Number(settings.min_deposit || 300);
+  const minDeposit = Number(settings.min_deposit || 600);
   const maxDeposit = Number(settings.max_deposit || 10000000);
 
   const { data: userRes, refetch: refetchUser } = useFetchData("/users/me", ["user-profile"]);
@@ -79,7 +79,7 @@ function RechargeContent() {
   const { mutate: submitDeposit, isPending } = usePost("/users/deposit", null, false, { showToast: false });
 
   const usdtRate = Number(settings.usdt_rate_etb || settings.usdt_rate || settings.usdt_rate_zar || 120.00);
-  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [300, 500, 1000];
+  const presets = selectedMethod === "usdt" ? [20, 50, 100] : [600, 1000, 3000];
   const activeUsdtAddress = usdtNetwork === "BEP20"
     ? (settings.usdt_bep20_address || "0xC6DD6e8d226bc069Dd6F8745F3D468EA502F9892")
     : (settings.usdt_trc20_address || "TXmvGTE6PREAYxWarUissgHWMU9f6dhV4V");
@@ -366,7 +366,7 @@ function RechargeContent() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder={selectedMethod === "usdt" ? "20" : "300"}
+              placeholder={selectedMethod === "usdt" ? "20" : "600"}
               className="bg-transparent text-slate-900 font-bold text-[16px] outline-none flex-1 placeholder:text-slate-400 font-mono"
             />
             {amount && (

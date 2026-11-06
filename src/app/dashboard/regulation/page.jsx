@@ -13,10 +13,10 @@ export default function RegulationPage() {
   const settings = settingsRes?.settings || {};
   const siteName = settings.site_name || "Sun Crest Capital";
   const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
-  const registrationBonus = settings.registration_bonus ?? 100;
-  const level1 = settings.level1_commission ?? 30;
-  const level2 = settings.level2_commission ?? 3;
-  const level3 = settings.level3_commission ?? 2;
+  const registrationBonus = settings.registration_bonus ?? 200;
+  const level1 = settings.level1_commission ?? 22;
+  const level2 = settings.level2_commission ?? 2;
+  const level3 = settings.level3_commission ?? 1;
   const openTime = settings.withdrawal_open_time || "09:00";
   const closeTime = settings.withdrawal_close_time || "18:00";
 
@@ -90,7 +90,7 @@ export default function RegulationPage() {
                 1
               </span>
               <p>
-                Invest <strong className="text-slate-900">{currencySymbol}200</strong> and start generating automated daily returns immediately.
+                Invest <strong className="text-slate-900">{currencySymbol}600</strong> and start generating automated daily returns immediately.
               </p>
             </div>
 
@@ -108,7 +108,7 @@ export default function RegulationPage() {
                 3
               </span>
               <p>
-                Daily check-in bonus: <strong className="text-slate-900">{currencySymbol}1</strong> available every 24 hours.
+                Daily check-in bonus: <strong className="text-slate-900">{currencySymbol}10</strong> available every 24 hours.
               </p>
             </div>
 

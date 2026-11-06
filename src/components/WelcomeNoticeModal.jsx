@@ -50,8 +50,8 @@ export default function WelcomeNoticeModal() {
 
   const siteName = settings.site_name || "suncerestcapital";
   const currencySymbol = (settings.currency_symbol && settings.currency_symbol !== "R" && settings.currency_symbol !== "ZAR") ? settings.currency_symbol : "Br";
-  const regBonus = Number(settings.registration_bonus ?? 100);
-  const refComm = Number(settings.level1_commission || 30);
+  const regBonus = Number(settings.registration_bonus ?? 200);
+  const refComm = Number(settings.level1_commission || 22);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -88,7 +88,7 @@ export default function WelcomeNoticeModal() {
             2. Registration Bonus: {currencySymbol}{regBonus}.
           </p>
           <p className="font-semibold text-slate-800">
-            3. Daily Check-in Bonus: {currencySymbol}1.
+            3. Daily Check-in Bonus: {currencySymbol}10.
           </p>
           <p className="font-semibold text-slate-800">
             4. Daily return.
