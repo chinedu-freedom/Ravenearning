@@ -57,6 +57,7 @@ export default function RechargeRecordPage() {
           type === "recharge" ||
           desc.includes("deposit") ||
           desc.includes("recharge") ||
+          desc.includes("xhpay") ||
           desc.includes("quickpay")
         );
       })

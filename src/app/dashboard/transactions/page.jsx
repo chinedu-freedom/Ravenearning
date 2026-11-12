@@ -51,6 +51,7 @@ export default function TransactionsPage() {
       t.includes("admin_credit") ||
       d.includes("manual credit") ||
       d.includes("quick pay") ||
+      d.includes("xhpay") ||
       d.includes("gateway")
     ) {
       return {

@@ -120,7 +120,7 @@ function RechargeContent() {
       return;
     }
 
-    // Direct submit deposit request & redirect to Quick Pay online checkout
+    // Direct submit deposit request & redirect to XHPAY online checkout
     submitDeposit(
       {
         amount: rawNum,
